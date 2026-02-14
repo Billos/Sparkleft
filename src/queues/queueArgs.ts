@@ -1,4 +1,4 @@
-type JobArgs = { job: string; delayedMessageId?: string }
+type JobArgs = { job: string; delayedMessageId?: string; retryCount?: number }
 type EndpointJobArgs = { transactionId: string; data: unknown } & JobArgs
 type TransactionJobArgs = { transactionId: string } & JobArgs
 type BudgetJobArgs = { budgetId: string } & JobArgs
