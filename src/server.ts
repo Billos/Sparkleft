@@ -2,8 +2,7 @@ import express from "express"
 import pino from "pino"
 
 import { env } from "./config"
-import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
-import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
+import { settingTransactionAttributes } from "./endpoints/settingTransactionAttributes"
 import { webhook } from "./endpoints/webhook"
 import { AssertTransactionExistsMiddleware } from "./utils/assertTransactionExistsMiddleware"
 import { ParseBodyMiddleware } from "./utils/middleware"
@@ -20,14 +19,14 @@ app.get(
   "/transaction/:transactionId/budget/:budget_id",
   TokenMiddleware,
   AssertTransactionExistsMiddleware,
-  settingBudgetForTransaction,
+  settingTransactionAttributes,
   TransactionResultMiddleware,
 )
 app.get(
   "/transaction/:transactionId/category/:category_id",
   TokenMiddleware,
   AssertTransactionExistsMiddleware,
-  settingCategoryForTransaction,
+  settingTransactionAttributes,
   TransactionResultMiddleware,
 )
 app.post("/webhook", verifyWebhookMiddleware, webhook)
