@@ -76,8 +76,14 @@ async function job(transactionId: string) {
 
   const apis = generateMarkdownApiCalls(categories, transactionId)
   const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
+
+  // Add link to category selection UI
+  const categorySelectionUrl = new URL(`/transaction/${transactionId}/categories`, env.serviceUrl)
+  categorySelectionUrl.searchParams.append("api_token", env.apiToken)
+  const categorySelectionLink = `[Select Category](<${categorySelectionUrl.toString()}>)`
+
   const apiLinks = apis.length > 0 ? `\n- ${apis.join("\n- ")}` : ""
-  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description}\n${link}${apiLinks}`
+  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description}\n${link} | ${categorySelectionLink}${apiLinks}`
   const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
     const messageExists = await notifier.hasMessageId(messageId)
