@@ -5,6 +5,7 @@ import pino from "pino"
 
 import { env } from "./config"
 import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
+import { createNewCategory } from "./endpoints/createNewCategory"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { webhook } from "./endpoints/webhook"
@@ -40,6 +41,13 @@ app.get(
   "/transaction/:transactionId/category/:category_id",
   TokenMiddleware,
   AssertTransactionExistsMiddleware,
+  settingCategoryForTransaction,
+  TransactionResultMiddleware,
+)
+app.get(
+  "/transaction/:transactionId/newCategory",
+  TokenMiddleware,
+  createNewCategory,
   settingCategoryForTransaction,
   TransactionResultMiddleware,
 )

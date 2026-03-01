@@ -20,3 +20,10 @@ html(lang="en")
               button.category-btn(type="submit")= category.attributes.name
         else
           .no-categories No categories available
+      .container
+        h1 Create New Category
+        form(method="GET", action=`/transaction/${transactionId}/newCategory`, style="margin: 0;")
+          .items
+            input(type="hidden", name="api_token", value=token)
+            input(type="text", name="name", pattern="^[^\s]+$", required, placeholder="New category")
+            button(type="submit") Add Category
