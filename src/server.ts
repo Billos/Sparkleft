@@ -2,6 +2,7 @@ import express from "express"
 import pino from "pino"
 
 import { env } from "./config"
+import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { webhook } from "./endpoints/webhook"
@@ -23,6 +24,7 @@ app.get(
   settingBudgetForTransaction,
   TransactionResultMiddleware,
 )
+app.get("/transaction/:transactionId/categories", TokenMiddleware, AssertTransactionExistsMiddleware, categoriesForTransaction)
 app.get(
   "/transaction/:transactionId/category/:category_id",
   TokenMiddleware,
