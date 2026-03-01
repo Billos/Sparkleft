@@ -7,6 +7,10 @@ import { getBudgetName } from "../utils/budgetName"
 
 const logger = pino()
 
+function escapeHtml(unsafe: string): string {
+  return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
+}
+
 export async function categoriesForTransaction(req: Request<{ transactionId: string }>, res: Response) {
   logger.info("=================================== Showing categories for transaction ===================================")
   const { transactionId } = req.params
@@ -20,7 +24,7 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
   const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
 
   // Get transaction details for display
-  const transactionLink = `${env.fireflyUrl?.replace("/api", "")}/transactions/show/${transactionId}`
+  const transactionLink = escapeHtml(`${env.fireflyUrl?.replace("/api", "")}/transactions/show/${transactionId}`)
 
   // Build HTML
   const html = `
@@ -125,10 +129,10 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
                 ? categories
                     .map(
                       (category: CategoryRead) => `
-                <form method="GET" action="/transaction/${transactionId}/category/${category.id}" style="margin: 0;">
-                    <input type="hidden" name="api_token" value="${req.query.api_token || ""}">
+                <form method="GET" action="/transaction/${escapeHtml(transactionId)}/category/${escapeHtml(category.id)}" style="margin: 0;">
+                    <input type="hidden" name="api_token" value="${escapeHtml((req.query.api_token as string) || "")}">
                     <button type="submit" class="category-btn">
-                        ${category.attributes.name}
+                        ${escapeHtml(category.attributes.name)}
                     </button>
                 </form>
             `,
