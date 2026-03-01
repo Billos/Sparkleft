@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
 
   server:
-    image: docker.io/billos/sparkleft:2.11.1
+    image: docker.io/billos/sparkleft:2.11.2
     command: ["start:server"]
     env_file:
       - .env
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   worker:
-    image: docker.io/billos/sparkleft:2.11.1
+    image: docker.io/billos/sparkleft:2.11.2
     command: ["start:worker"]
     env_file:
       - .env

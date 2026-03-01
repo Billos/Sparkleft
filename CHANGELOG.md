@@ -1,3 +1,10 @@
+## [2.11.2](https://github.com/Billos/Sparkleft/compare/2.11.1...2.11.2) (2026-03-01)
+
+
+### Bug Fixes
+
+* repair and simplify the transaction link ([265a844](https://github.com/Billos/Sparkleft/commit/265a8443bf405dfd0b9697c23288db2f2ba245c6))
+
 ## [2.11.1](https://github.com/Billos/Sparkleft/compare/2.11.0...2.11.1) (2026-03-01)
 
 
