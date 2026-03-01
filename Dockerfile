@@ -15,6 +15,8 @@ RUN apk add tzdata
 COPY ./package.json ./package.json
 RUN yarn install --frozen-lockfile --production && yarn cache clean
 COPY --from=builder /app/build ./build
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/templates ./templates
 
 EXPOSE 3000
 
