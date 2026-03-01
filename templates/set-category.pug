@@ -11,6 +11,8 @@ html(lang="en")
       .subtitle
         | Choose a category for this transaction
         br
+        h2= description
+        h2= amount + " " + currency
         a(href=transactionLink target="_blank") View transaction in Firefly III →
       .categories
         if categories.length > 0

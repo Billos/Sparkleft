@@ -29,6 +29,9 @@ h1 {
   margin-bottom: 10px;
   text-align: center;
 }
+h2 {
+  margin: 10px;
+}
 .subtitle {
   color: #666;
   text-align: center;

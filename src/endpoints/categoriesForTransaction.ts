@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import pino from "pino"
 
 import { env } from "../config"
-import { CategoriesService } from "../types"
+import { CategoriesService, TransactionsService } from "../types"
 import { getBudgetName } from "../utils/budgetName"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
@@ -19,9 +19,20 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
+  const {
+    data: {
+      attributes: {
+        transactions: [{ description, amount, currency_symbol: currency }],
+      },
+    },
+  } = await TransactionsService.getTransaction(transactionId)
+
   res.render("set-category", {
     categories,
     transactionId,
+    description,
+    amount: Number(amount).toFixed(2),
+    currency,
     transactionLink: getTransactionShowLink(transactionId),
     token: req.query.api_token,
   })
