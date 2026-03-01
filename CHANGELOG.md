@@ -1,3 +1,14 @@
+# [2.11.0](https://github.com/Billos/Sparkleft/compare/2.10.2...2.11.0) (2026-03-01)
+
+
+### Features
+
+* add a link to the selection of categories in the uncategorized transaction message ([26fa67b](https://github.com/Billos/Sparkleft/commit/26fa67bb81fa7dbc47df5b0416532bd046c03adb))
+* Add Pug templating and static asset serving ([b1e59d0](https://github.com/Billos/Sparkleft/commit/b1e59d07c21be8de3fd7475315c4052ee79f0b3f))
+* Create new category in the set category UI ([c06bbc8](https://github.com/Billos/Sparkleft/commit/c06bbc84a5478539d0515e33e4e2a2037994363a))
+* Generic css style ([77bae8e](https://github.com/Billos/Sparkleft/commit/77bae8ec110107d2da149c8d5aed77651792b37f))
+* Web UI to reach manually set the Category, not hiding the categories ([27d1bd5](https://github.com/Billos/Sparkleft/commit/27d1bd58e691358d84695e86b2d0fc4a6b106faf))
+
 ## [2.10.2](https://github.com/Billos/Sparkleft/compare/2.10.1...2.10.2) (2026-02-28)
 
 
