@@ -1,3 +1,10 @@
+## [2.11.3](https://github.com/Billos/Sparkleft/compare/2.11.2...2.11.3) (2026-03-01)
+
+
+### Bug Fixes
+
+* improve description in set category template ([a673494](https://github.com/Billos/Sparkleft/commit/a673494dc11977509e47c83c460c81605514c600))
+
 ## [2.11.2](https://github.com/Billos/Sparkleft/compare/2.11.1...2.11.2) (2026-03-01)
 
 
