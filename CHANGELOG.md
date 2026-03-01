@@ -1,3 +1,10 @@
+## [2.11.1](https://github.com/Billos/Sparkleft/compare/2.11.0...2.11.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* move public and templates folder to root ([300f10c](https://github.com/Billos/Sparkleft/commit/300f10c73e17f1ec83f21a9d7a9807ac85f17d30))
+
 # [2.11.0](https://github.com/Billos/Sparkleft/compare/2.10.2...2.11.0) (2026-03-01)
 
 
