@@ -1,0 +1,22 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Select Category
+    link(rel="stylesheet" href="/public/style.css")
+  body
+    .container
+      h1 Select Category
+      .subtitle
+        | Choose a category for this transaction
+        br
+        a(href=transactionLink target="_blank") View transaction in Firefly III →
+      .categories
+        if categories.length > 0
+          each category in categories
+            form(method="GET", action=`/transaction/${transactionId}/category/${category.id}`, style="margin: 0;")
+              input(type="hidden", name="api_token", value=token)
+              button.category-btn(type="submit")= category.attributes.name
+        else
+          .no-categories No categories available

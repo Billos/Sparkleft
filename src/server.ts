@@ -1,3 +1,5 @@
+import { join } from "path"
+
 import express from "express"
 import pino from "pino"
 
@@ -14,6 +16,13 @@ import { verifyWebhookMiddleware } from "./utils/webhookSecret"
 
 const logger = pino()
 const app = express()
+
+const staticPath = join(__dirname, "public")
+logger.info("Serving static files from %s", staticPath)
+
+app.use("/public", express.static(staticPath))
+app.set("views", "./templates")
+app.set("view engine", "pug")
 
 app.use(ParseBodyMiddleware)
 
