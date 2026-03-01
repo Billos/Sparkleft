@@ -4,6 +4,7 @@ import pino from "pino"
 import { env } from "../config"
 import { CategoriesService } from "../types"
 import { getBudgetName } from "../utils/budgetName"
+import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 const logger = pino()
 
@@ -18,13 +19,10 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
-  // Get transaction details for display
-  const transactionLink = encodeURIComponent(`${env.fireflyUrl?.replace("/api", "")}/transactions/show/${transactionId}`)
-
   res.render("set-category", {
     categories,
     transactionId,
-    transactionLink,
+    transactionLink: getTransactionShowLink(transactionId),
     token: req.query.api_token,
   })
 }
