@@ -1,3 +1,10 @@
+## [2.12.1](https://github.com/Billos/Sparkleft/compare/2.12.0...2.12.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* Repair new category pattern ([0525b99](https://github.com/Billos/Sparkleft/commit/0525b99f231fb9b0af0695c9fcc43c72b2792209))
+
 # [2.12.0](https://github.com/Billos/Sparkleft/compare/2.11.3...2.12.0) (2026-03-03)
 
 
