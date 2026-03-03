@@ -1,3 +1,11 @@
+# [2.12.0](https://github.com/Billos/Sparkleft/compare/2.11.3...2.12.0) (2026-03-03)
+
+
+### Features
+
+* Add job to clean up notification messages when a transaction is updated ([0651657](https://github.com/Billos/Sparkleft/commit/0651657999066de8e33280e8ebfe7ac349d31dc8))
+* add job to remove transaction messages when updated ([2336714](https://github.com/Billos/Sparkleft/commit/23367148b9bafdee36c4bdaf1cef430555af7786))
+
 ## [2.11.3](https://github.com/Billos/Sparkleft/compare/2.11.2...2.11.3) (2026-03-01)
 
 
