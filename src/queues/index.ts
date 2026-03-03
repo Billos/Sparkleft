@@ -10,6 +10,7 @@ import { addJobToQueue } from "./jobs"
 import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"
 import * as Init from "./jobs/init"
 import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
+import * as RemoveTransactionMessages from "./jobs/removeTransactionMessages"
 import * as SetBudgetForTransaction from "./jobs/setBudgetForTransaction"
 import * as SetCategoryForTransaction from "./jobs/setCategoryForTransaction"
 import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
@@ -47,6 +48,7 @@ const jobDefinitions: JobDefinition[] = [
 const transactionJobDefinitions: TransactionJobDefinition[] = [
   UnbudgetedTransactions,
   UncategorizedTransactions,
+  RemoveTransactionMessages,
 ]
 
 const endpointJobDefinitions: EndpointJobDefinition[] = [
