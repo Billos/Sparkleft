@@ -27,5 +27,5 @@ html(lang="en")
         form(method="GET", action=`/transaction/${transactionId}/newCategory`, style="margin: 0;")
           .items
             input(type="hidden", name="api_token", value=token)
-            input(type="text", name="name", pattern="^[^\s]+$", required, placeholder="New category")
+            input(type="text", name="name", pattern="^[A-Za-z]+$", required, placeholder="New category")
             button(type="submit") Add Category
