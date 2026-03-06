@@ -7,7 +7,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sed -i 's/docker.io\\/billos\\/sparkleft:.*/docker.io\\/billos\\/sparkleft:${nextRelease.version}/g' docker-compose*.yml"
+        "prepareCmd": "sed -i 's/docker.io\\/billos\\/sparkleft:.*/docker.io\\/billos\\/sparkleft:${nextRelease.version}/g' docker-compose*.yml && npm version ${nextRelease.version} --no-git-tag-version"
       }
     ],
     "@semantic-release/release-notes-generator",
