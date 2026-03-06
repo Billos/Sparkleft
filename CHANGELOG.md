@@ -1,3 +1,10 @@
+# [2.13.0](https://github.com/Billos/Sparkleft/compare/2.12.3...2.13.0) (2026-03-06)
+
+
+### Features
+
+* add /about page ([#35](https://github.com/Billos/Sparkleft/issues/35)) ([a21d7f7](https://github.com/Billos/Sparkleft/commit/a21d7f7a76894cf17497a56dd83107af8e79173d))
+
 ## [2.12.3](https://github.com/Billos/Sparkleft/compare/2.12.2...2.12.3) (2026-03-06)
 
 
