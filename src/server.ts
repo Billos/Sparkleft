@@ -2,6 +2,7 @@ import express from "express"
 import pino from "pino"
 
 import { env } from "./config"
+import { about } from "./endpoints/about"
 import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
@@ -45,6 +46,7 @@ app.get(
   TransactionResultMiddleware,
 )
 app.post("/webhook", verifyWebhookMiddleware, webhook)
+app.get("/about", about)
 
 async function startServer() {
   try {

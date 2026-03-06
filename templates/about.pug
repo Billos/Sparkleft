@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title About – Sparkleft
+    link(rel="stylesheet" href="/public/style.css")
+  body
+    .container
+      h1= name
+      .subtitle
+        p= description
+      .info-list
+        .info-row
+          span.info-label Version
+          span.info-value= version
+        .info-row
+          span.info-label Author
+          span.info-value= author
+        .info-row
+          span.info-label License
+          span.info-value= license
+        if repository
+          .info-row
+            span.info-label Source
+            span.info-value
+              a(href=repository target="_blank" rel="noopener noreferrer")= repository
