@@ -88,6 +88,11 @@ export abstract class AbstractNotifier implements Notifier {
   }
 
   public async deleteMessage(type: MessageType, id: string, transactionId: string): Promise<void> {
+    const exists = await this.hasMessageId(id)
+    if (!exists) {
+      logger.info("No message with id %s to delete for type %s and transaction %s", id, type, transactionId)
+      return
+    }
     try {
       await this.unsetMessageId(type, transactionId)
     } catch (err) {
@@ -102,7 +107,7 @@ export abstract class AbstractNotifier implements Notifier {
   }
 
   public async hasMessageId(messageId: string): Promise<boolean> {
-    return this.hasMessageIdImpl(messageId)
+    return await this.hasMessageIdImpl(messageId)
   }
 
   public async deleteAllMessages(): Promise<void> {
