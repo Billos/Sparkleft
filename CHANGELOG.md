@@ -1,3 +1,10 @@
+## [2.13.1](https://github.com/Billos/Sparkleft/compare/2.13.0...2.13.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* update package.json version during semantic-release ([#36](https://github.com/Billos/Sparkleft/issues/36)) ([5d01378](https://github.com/Billos/Sparkleft/commit/5d01378e3e3120622ae57acecacf31c34e0cfd17))
+
 # [2.13.0](https://github.com/Billos/Sparkleft/compare/2.12.3...2.13.0) (2026-03-06)
 
 
