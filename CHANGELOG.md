@@ -1,3 +1,10 @@
+## [2.12.3](https://github.com/Billos/Sparkleft/compare/2.12.2...2.12.3) (2026-03-06)
+
+
+### Bug Fixes
+
+* missing await on hasMessageIdImpl and add debug logging for absent messages in GotifyNotifier ([#34](https://github.com/Billos/Sparkleft/issues/34)) ([3dfc560](https://github.com/Billos/Sparkleft/commit/3dfc5601268cdf358a992a93b39525b6e5a1fddc))
+
 ## [2.12.2](https://github.com/Billos/Sparkleft/compare/2.12.1...2.12.2) (2026-03-06)
 
 
