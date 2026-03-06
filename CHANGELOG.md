@@ -1,3 +1,11 @@
+## [2.12.2](https://github.com/Billos/Sparkleft/compare/2.12.1...2.12.2) (2026-03-06)
+
+
+### Bug Fixes
+
+* Ensure transaction.notes is not null in notifier.unsetMessageId ([ac57bc2](https://github.com/Billos/Sparkleft/commit/ac57bc2692acea060825b0b194abb4de3f1f9e84))
+* null check for transaction.notes in unsetMessageId ([4a8155c](https://github.com/Billos/Sparkleft/commit/4a8155c6904f853d2ba9171f411d0cdacd18d862))
+
 ## [2.12.1](https://github.com/Billos/Sparkleft/compare/2.12.0...2.12.1) (2026-03-03)
 
 
