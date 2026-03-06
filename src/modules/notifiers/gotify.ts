@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios"
+import pino from "pino"
 
 import { env } from "../../config"
 import { AbstractNotifier } from "./notifier"
@@ -8,6 +9,8 @@ interface GetMessage {
     id: number
   }[]
 }
+
+const logger = pino()
 
 export class GotifyNotifier extends AbstractNotifier {
   private request: AxiosInstance = axios.create({ baseURL: env.gotifyUrl, headers: { "X-Gotify-Key": env.gotifyToken } })
@@ -30,8 +33,10 @@ export class GotifyNotifier extends AbstractNotifier {
   }
 
   override async deleteMessageImpl(id: string): Promise<void> {
-    if (this.hasMessageIdImpl(id)) {
+    if (await this.hasMessageIdImpl(id)) {
       await this.request.delete(`/message/${id}?token=${env.gotifyUserToken}`)
+    } else {
+      logger.info("No message with id %s to delete", id)
     }
   }
 
