@@ -77,7 +77,7 @@ export abstract class AbstractNotifier implements Notifier {
 
   private async unsetMessageId(type: MessageType, transactionId: string): Promise<void> {
     const transaction = await this.getTransaction(transactionId)
-    const notes = transaction.notes.replace(new RegExp(`${type}: (\\d+)`), "")
+    const notes = (transaction.notes || "").replace(new RegExp(`${type}: (\\d+)`), "")
     await this.setNotes(transactionId, notes)
   }
 
