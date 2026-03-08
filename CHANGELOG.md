@@ -1,3 +1,10 @@
+## [2.13.2](https://github.com/Billos/Sparkleft/compare/2.13.1...2.13.2) (2026-03-08)
+
+
+### Bug Fixes
+
+* Add error info to "Delaying job" log message ([#37](https://github.com/Billos/Sparkleft/issues/37)) ([dc64e21](https://github.com/Billos/Sparkleft/commit/dc64e21711d0dbf333d9a71e5bbd762f321a1f49))
+
 ## [2.13.1](https://github.com/Billos/Sparkleft/compare/2.13.0...2.13.1) (2026-03-06)
 
 
