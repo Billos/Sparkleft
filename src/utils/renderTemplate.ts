@@ -3,6 +3,28 @@ import path from "path"
 import nunjucks from "nunjucks"
 
 import { env } from "../config"
+import { BudgetRead, CategoryRead, TransactionSplit } from "../types"
+
+export type UncategorizedTransactionContext = {
+  transaction: TransactionSplit
+  transactionId: string
+  categories: CategoryRead[]
+}
+
+export type UnbudgetedTransactionContext = {
+  transaction: TransactionSplit
+  transactionId: string
+  budgets: BudgetRead[]
+}
+
+export type BudgetOverspentContext = {
+  budgetName: string
+  spent: number
+  limit: number
+  currencySymbol: string
+}
+
+export type TemplateContext = UncategorizedTransactionContext | UnbudgetedTransactionContext | BudgetOverspentContext
 
 // Resolve the templates/notifications directory relative to this source file.
 // __dirname is src/utils (tsx dev mode) or build/utils (compiled production mode).
@@ -34,6 +56,6 @@ njkEnv.addFilter("toFixed", (value: number | string, decimals: number) => {
   return isNaN(num) ? String(value) : num.toFixed(decimals)
 })
 
-export function renderTemplate(templateName: string, context: object): string {
+export function renderTemplate(templateName: string, context: TemplateContext): string {
   return njkEnv.render(templateName, context).trim()
 }
