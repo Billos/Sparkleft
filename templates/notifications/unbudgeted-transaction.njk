@@ -1,5 +1,5 @@
 `{{ amount }} {{ currencySymbol }}` {{ description }}
-[Link](<{{ transactionLink }}>)
+[Link](<{{ fireflyUrl }}/transactions/show/{{ transactionId }}>)
 {% for budget in budgets %}
 - [`{{ budget.attributes.name }}`](<{{ serviceUrl }}/transaction/{{ transactionId }}/budget/{{ budget.id }}?api_token={{ apiToken }}>)
 {% endfor %}

@@ -4,7 +4,6 @@ import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
 import { BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
-import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../jobs"
@@ -50,8 +49,8 @@ async function job(transactionId: string) {
     amount: parseFloat(amount).toFixed(currency_decimal_places),
     currencySymbol: currency_symbol,
     description,
-    transactionLink: getTransactionShowLink(transactionId),
     transactionId,
+    fireflyUrl: env.fireflyUrl,
     serviceUrl: env.serviceUrl,
     apiToken: env.apiToken,
     budgets,

@@ -5,7 +5,6 @@ import { notifier } from "../../modules/notifiers"
 import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
-import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addTransactionJobToQueue } from "../jobs"
@@ -69,8 +68,8 @@ async function job(transactionId: string) {
     amount: parseFloat(amount).toFixed(currency_decimal_places),
     currencySymbol: currency_symbol,
     description,
-    transactionLink: getTransactionShowLink(transactionId),
     transactionId,
+    fireflyUrl: env.fireflyUrl,
     serviceUrl: env.serviceUrl,
     apiToken: env.apiToken,
     categories,
