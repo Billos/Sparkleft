@@ -2,10 +2,10 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
+import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
-import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
+import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addTransactionJobToQueue } from "../jobs"
 
@@ -31,16 +31,6 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
     transactions.push(...filteredData)
   }
   return transactions
-}
-
-function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: string): String[] {
-  const ret = []
-  for (const { id, attributes } of categories) {
-    const url = new URL(`/transaction/${transactionId}/category/${id}`, env.serviceUrl)
-    url.searchParams.append("api_token", env.apiToken)
-    ret.push(`[\`${attributes.name}\`](<${url.toString()}>)`)
-  }
-  return ret
 }
 
 async function job(transactionId: string) {
@@ -74,16 +64,13 @@ async function job(transactionId: string) {
   const hiddenCategoriesSet = new Set(env.hiddenCategories)
   const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
 
-  const apis = generateMarkdownApiCalls(categories, transactionId)
-  const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
-
-  // Add link to category selection UI
-  const categorySelectionUrl = new URL(`/transaction/${transactionId}/categories`, env.serviceUrl)
-  categorySelectionUrl.searchParams.append("api_token", env.apiToken)
-  const categorySelectionLink = `[Select Category](<${categorySelectionUrl.toString()}>)`
-
-  const apiLinks = apis.length > 0 ? `\n- ${apis.join("\n- ")}` : ""
-  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description}\n${link} | ${categorySelectionLink}${apiLinks}`
+  const msg = renderTemplate("uncategorized-transaction.njk", {
+    amount: parseFloat(amount).toFixed(currency_decimal_places),
+    currencySymbol: currency_symbol,
+    description,
+    transactionId,
+    categories,
+  })
   const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
     const messageExists = await notifier.hasMessageId(messageId)

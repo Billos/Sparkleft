@@ -1,0 +1,5 @@
+`{{ amount }} {{ currencySymbol }}` {{ description }}
+[Link](<{{ env.fireflyUrl }}/transactions/show/{{ transactionId }}>) | [Select Category](<{{ env.serviceUrl }}/transaction/{{ transactionId }}/categories?api_token={{ env.apiToken }}>)
+{% for category in categories %}
+- [`{{ category.attributes.name }}`](<{{ env.serviceUrl }}/transaction/{{ transactionId }}/category/{{ category.id }}?api_token={{ env.apiToken }}>)
+{% endfor %}

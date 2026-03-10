@@ -4,6 +4,7 @@ import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
 import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../types"
 import { getDateNow } from "../../utils/date"
+import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addBudgetJobToQueue } from "../jobs"
 
@@ -55,12 +56,12 @@ async function job(budgetId: string) {
   }
 
   const title = "Warning"
-  const budgetsLink = `[View Budgets](<${env.fireflyUrl}/budgets>)`
-  const message = `Budget **${budget.attributes.name}** is overspent!
-  \nSpent: \`${spent} ${currencySymbol}\` 
-  \nLimit: \`${limit} ${currencySymbol}\` 
-  \nNew limit set to \`${spent} ${currencySymbol}\`
-  \n${budgetsLink}`
+  const message = renderTemplate("budget-overspent.njk", {
+    budgetName: budget.attributes.name,
+    spent,
+    limit,
+    currencySymbol,
+  })
   await notifier.notify(title, message)
   return
 }
