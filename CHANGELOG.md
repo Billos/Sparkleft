@@ -1,3 +1,10 @@
+# [2.15.0](https://github.com/Billos/Sparkleft/compare/2.14.0...2.15.0) (2026-03-10)
+
+
+### Features
+
+* Nunjucks to render the notifications([#39](https://github.com/Billos/Sparkleft/issues/39)) ([84b2924](https://github.com/Billos/Sparkleft/commit/84b2924119818997b4bf8ce82ce4e1acabf963db)), closes [#40](https://github.com/Billos/Sparkleft/issues/40)
+
 # [2.14.0](https://github.com/Billos/Sparkleft/compare/2.13.2...2.14.0) (2026-03-10)
 
 
