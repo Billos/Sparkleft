@@ -46,9 +46,7 @@ njkEnv.addFilter("toFixed", (value: number | string, decimals: number) => {
   return isNaN(num) ? String(value) : num.toFixed(decimals)
 })
 
-njkEnv.addFilter("UrlFireflyTransactionShow", (transactionId: string) =>
-  `${env.fireflyUrl}/transactions/show/${transactionId}`,
-)
+njkEnv.addFilter("UrlFireflyTransactionShow", (transactionId: string) => `${env.fireflyUrl}/transactions/show/${transactionId}`)
 
 njkEnv.addFilter("UrlFireflyBudgets", () => `${env.fireflyUrl}/budgets`)
 
@@ -66,8 +64,7 @@ njkEnv.addFilter(
 
 njkEnv.addFilter(
   "UrlSparkleftCategorySetUI",
-  (transactionId: string) =>
-    `${env.serviceUrl}/transaction/${transactionId}/categories?api_token=${env.apiToken}`,
+  (transactionId: string) => `${env.serviceUrl}/transaction/${transactionId}/categories?api_token=${env.apiToken}`,
 )
 
 export function renderTemplate(templateName: string, context: TemplateContext): string {
