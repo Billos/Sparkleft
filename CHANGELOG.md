@@ -1,3 +1,10 @@
+# [2.14.0](https://github.com/Billos/Sparkleft/compare/2.13.2...2.14.0) (2026-03-10)
+
+
+### Features
+
+* Add budgets link to overspend notification ([74d59df](https://github.com/Billos/Sparkleft/commit/74d59dfbfb9baf5c1eca71dbf338dd9777a144ad))
+
 ## [2.13.2](https://github.com/Billos/Sparkleft/compare/2.13.1...2.13.2) (2026-03-08)
 
 
