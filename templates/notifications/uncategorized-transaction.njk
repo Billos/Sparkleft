@@ -1,5 +1,5 @@
 `{{ transaction.amount | toFixed(transaction.currency_decimal_places) }} {{ transaction.currency_symbol }}` {{ transaction.description }}
-[Link](<{{ env.fireflyUrl }}/transactions/show/{{ transactionId }}>) | [Select Category](<{{ env.serviceUrl }}/transaction/{{ transactionId }}/categories?api_token={{ env.apiToken }}>)
+[Link](<{{ transactionId | UrlFireflyTransactionShow }}>) | [Select Category](<{{ transactionId | UrlSparkleftCategorySetUI }}>)
 {% for category in categories %}
-- [`{{ category.attributes.name }}`](<{{ env.serviceUrl }}/transaction/{{ transactionId }}/category/{{ category.id }}?api_token={{ env.apiToken }}>)
+- [`{{ category.attributes.name }}`](<{{ transactionId | UrlSparkleftCategorySet(category.id) }}>)
 {% endfor %}
