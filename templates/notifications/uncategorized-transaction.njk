@@ -1,5 +1,5 @@
 `{{ amount }} {{ currencySymbol }}` {{ description }}
 [Link](<{{ transactionLink }}>) | [Select Category](<{{ serviceUrl }}/transaction/{{ transactionId }}/categories?api_token={{ apiToken }}>)
 {% for category in categories %}
-- [`{{ category.name }}`](<{{ serviceUrl }}/transaction/{{ transactionId }}/category/{{ category.id }}?api_token={{ apiToken }}>)
+- [`{{ category.attributes.name }}`](<{{ serviceUrl }}/transaction/{{ transactionId }}/category/{{ category.id }}?api_token={{ apiToken }}>)
 {% endfor %}

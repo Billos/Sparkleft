@@ -2,7 +2,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
+import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
@@ -63,9 +63,7 @@ async function job(transactionId: string) {
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
   const hiddenCategoriesSet = new Set(env.hiddenCategories)
-  const categories = allCategories
-    .filter(({ attributes: { name } }: CategoryRead) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
-    .map(({ id: categoryId, attributes }: CategoryRead) => ({ id: categoryId, name: attributes.name }))
+  const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
 
   const msg = renderTemplate("uncategorized-transaction.njk", {
     amount: parseFloat(amount).toFixed(currency_decimal_places),

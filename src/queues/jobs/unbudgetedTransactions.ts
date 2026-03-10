@@ -2,7 +2,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
+import { BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
 import { renderTemplate } from "../../utils/renderTemplate"
@@ -44,9 +44,7 @@ async function job(transactionId: string) {
 
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const { data: allBudgets } = await BudgetsService.listBudget(null, 50, 1)
-  const budgets = allBudgets
-    .filter(({ attributes: { name } }: BudgetRead) => name !== billsBudgetName)
-    .map(({ id: budgetId, attributes }: BudgetRead) => ({ id: budgetId, name: attributes.name }))
+  const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
   const msg = renderTemplate("unbudgeted-transaction.njk", {
     amount: parseFloat(amount).toFixed(currency_decimal_places),
