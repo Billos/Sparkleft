@@ -61,7 +61,6 @@ async function job(budgetId: string) {
     spent,
     limit,
     currencySymbol,
-    budgetsUrl: `${env.fireflyUrl}/budgets`,
   })
   await notifier.notify(title, message)
   return
