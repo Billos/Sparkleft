@@ -1,3 +1,10 @@
+## [2.15.1](https://github.com/Billos/Sparkleft/compare/2.15.0...2.15.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* budget overspend notification missing line breaks ([#42](https://github.com/Billos/Sparkleft/issues/42)) ([003c84d](https://github.com/Billos/Sparkleft/commit/003c84d357ad350033d0c678e99bc0d91f7e2c00))
+
 # [2.15.0](https://github.com/Billos/Sparkleft/compare/2.14.0...2.15.0) (2026-03-10)
 
 
