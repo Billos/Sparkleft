@@ -14,7 +14,7 @@ export class DiscordNotifier extends AbstractNotifier {
     await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
   }
 
-  override async sendMessageImpl(content: string): Promise<string> {
+  override async sendMessageImpl(_title: string, content: string): Promise<string> {
     const result = await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
     return `${result.data.id}`
   }
