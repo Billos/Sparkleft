@@ -5,6 +5,7 @@ import { notifier } from "../../modules/notifiers"
 import { BudgetRead, BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
+import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../jobs"
 import * as CheckBudgetLimit from "./checkBudgetLimit"
@@ -12,14 +13,12 @@ import * as CheckBudgetLimit from "./checkBudgetLimit"
 const id = JobIds.UNBUDGETED_TRANSACTIONS
 
 const logger = pino()
-function generateMarkdownApiCalls(budgets: BudgetRead[], transactionId: string): String[] {
-  const ret = []
-  for (const { id, attributes } of budgets) {
+function buildBudgetLinks(budgets: BudgetRead[], transactionId: string): { name: string; url: string }[] {
+  return budgets.map(({ id, attributes }) => {
     const url = new URL(`/transaction/${transactionId}/budget/${id}`, env.serviceUrl)
     url.searchParams.append("api_token", env.apiToken)
-    ret.push(`[\`${attributes.name}\`](<${url.toString()}>)`)
-  }
-  return ret
+    return { name: attributes.name, url: url.toString() }
+  })
 }
 
 async function job(transactionId: string) {
@@ -54,10 +53,14 @@ async function job(transactionId: string) {
   const { data: allBudgets } = await BudgetsService.listBudget(null, 50, 1)
   const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
-  const apis = generateMarkdownApiCalls(budgets, transactionId)
-  const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
-  const apiLinks = apis.length > 0 ? `\n- ${apis.join("\n- ")}` : ""
-  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description}\n${link}${apiLinks}`
+  const budgetLinks = buildBudgetLinks(budgets, transactionId)
+  const msg = renderTemplate("unbudgeted-transaction.njk", {
+    amount: parseFloat(amount).toFixed(currency_decimal_places),
+    currencySymbol: currency_symbol,
+    description,
+    transactionLink: getTransactionShowLink(transactionId),
+    budgets: budgetLinks,
+  })
   const messageId = await notifier.getMessageId("BudgetMessageId", transactionId)
   if (messageId) {
     const messageExists = await notifier.hasMessageId(messageId)

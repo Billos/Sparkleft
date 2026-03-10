@@ -6,6 +6,7 @@ import { CategoriesService, CategoryRead, TransactionRead, TransactionsService, 
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
 import { getTransactionShowLink } from "../../utils/getTransactionShowLink"
+import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addTransactionJobToQueue } from "../jobs"
 
@@ -33,14 +34,12 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
   return transactions
 }
 
-function generateMarkdownApiCalls(categories: CategoryRead[], transactionId: string): String[] {
-  const ret = []
-  for (const { id, attributes } of categories) {
+function buildCategoryLinks(categories: CategoryRead[], transactionId: string): { name: string; url: string }[] {
+  return categories.map(({ id, attributes }) => {
     const url = new URL(`/transaction/${transactionId}/category/${id}`, env.serviceUrl)
     url.searchParams.append("api_token", env.apiToken)
-    ret.push(`[\`${attributes.name}\`](<${url.toString()}>)`)
-  }
-  return ret
+    return { name: attributes.name, url: url.toString() }
+  })
 }
 
 async function job(transactionId: string) {
@@ -74,16 +73,18 @@ async function job(transactionId: string) {
   const hiddenCategoriesSet = new Set(env.hiddenCategories)
   const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
 
-  const apis = generateMarkdownApiCalls(categories, transactionId)
-  const link = `[Link](<${getTransactionShowLink(transactionId)}>)`
-
-  // Add link to category selection UI
+  const categoryLinks = buildCategoryLinks(categories, transactionId)
   const categorySelectionUrl = new URL(`/transaction/${transactionId}/categories`, env.serviceUrl)
   categorySelectionUrl.searchParams.append("api_token", env.apiToken)
-  const categorySelectionLink = `[Select Category](<${categorySelectionUrl.toString()}>)`
 
-  const apiLinks = apis.length > 0 ? `\n- ${apis.join("\n- ")}` : ""
-  const msg = `\`${parseFloat(amount).toFixed(currency_decimal_places)} ${currency_symbol}\` ${description}\n${link} | ${categorySelectionLink}${apiLinks}`
+  const msg = renderTemplate("uncategorized-transaction.njk", {
+    amount: parseFloat(amount).toFixed(currency_decimal_places),
+    currencySymbol: currency_symbol,
+    description,
+    transactionLink: getTransactionShowLink(transactionId),
+    categorySelectionLink: categorySelectionUrl.toString(),
+    categories: categoryLinks,
+  })
   const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
     const messageExists = await notifier.hasMessageId(messageId)

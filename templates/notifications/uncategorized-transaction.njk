@@ -1,0 +1,5 @@
+`{{ amount }} {{ currencySymbol }}` {{ description }}
+[Link](<{{ transactionLink }}>) | [Select Category](<{{ categorySelectionLink }}>)
+{% for category in categories %}
+- [`{{ category.name }}`](<{{ category.url }}>)
+{% endfor %}

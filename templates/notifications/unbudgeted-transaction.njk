@@ -1,0 +1,5 @@
+`{{ amount }} {{ currencySymbol }}` {{ description }}
+[Link](<{{ transactionLink }}>)
+{% for budget in budgets %}
+- [`{{ budget.name }}`](<{{ budget.url }}>)
+{% endfor %}
