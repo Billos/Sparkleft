@@ -69,9 +69,6 @@ async function job(transactionId: string) {
     currencySymbol: currency_symbol,
     description,
     transactionId,
-    fireflyUrl: env.fireflyUrl,
-    serviceUrl: env.serviceUrl,
-    apiToken: env.apiToken,
     categories,
   })
   const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)

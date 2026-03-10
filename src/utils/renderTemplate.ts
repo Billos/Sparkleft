@@ -2,6 +2,8 @@ import path from "path"
 
 import nunjucks from "nunjucks"
 
+import { env } from "../config"
+
 // Resolve the templates/notifications directory relative to this source file.
 // __dirname is src/utils (tsx dev mode) or build/utils (compiled production mode).
 // Going two levels up from either location reaches the project root, where
@@ -15,6 +17,16 @@ const njkEnv = nunjucks.configure(templatesDir, {
   autoescape: false,
   trimBlocks: true,
   lstripBlocks: true,
+})
+
+// Expose a subset of the application env config as a dedicated namespace in all templates.
+// Only values that templates legitimately need are included; sensitive credentials
+// (fireflyToken, webhookSecret, redis password, etc.) are intentionally excluded.
+// Templates can reference these values as {{ env.fireflyUrl }}, {{ env.apiToken }}, etc.
+njkEnv.addGlobal("env", {
+  fireflyUrl: env.fireflyUrl,
+  serviceUrl: env.serviceUrl,
+  apiToken: env.apiToken,
 })
 
 export function renderTemplate(templateName: string, context: object): string {
