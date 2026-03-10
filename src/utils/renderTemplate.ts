@@ -29,6 +29,11 @@ njkEnv.addGlobal("env", {
   apiToken: env.apiToken,
 })
 
+njkEnv.addFilter("toFixed", (value: number | string, decimals: number) => {
+  const num = parseFloat(String(value))
+  return isNaN(num) ? String(value) : num.toFixed(decimals)
+})
+
 export function renderTemplate(templateName: string, context: object): string {
   return njkEnv.render(templateName, context).trim()
 }

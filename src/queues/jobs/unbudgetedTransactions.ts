@@ -24,7 +24,7 @@ async function job(transactionId: string) {
   } = await TransactionsService.getTransaction(transactionId)
 
   // Ensure the transaction is a withdrawal
-  const { type, amount, currency_decimal_places, currency_symbol } = transaction
+  const { type } = transaction
   if (type !== TransactionTypeProperty.WITHDRAWAL) {
     logger.info("Transaction %s is not a withdrawal", transactionId)
     return
@@ -46,8 +46,6 @@ async function job(transactionId: string) {
   const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
   const msg = renderTemplate("unbudgeted-transaction.njk", {
-    amount: parseFloat(amount).toFixed(currency_decimal_places),
-    currencySymbol: currency_symbol,
     transaction,
     transactionId,
     budgets,
