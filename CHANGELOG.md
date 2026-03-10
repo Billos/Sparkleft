@@ -1,3 +1,10 @@
+## [2.15.2](https://github.com/Billos/Sparkleft/compare/2.15.1...2.15.2) (2026-03-10)
+
+
+### Bug Fixes
+
+* Refactor and type the template parameters ([#43](https://github.com/Billos/Sparkleft/issues/43)) ([54d9359](https://github.com/Billos/Sparkleft/commit/54d9359a90121ee4d763bef0f9c504b75e40a30b))
+
 ## [2.15.1](https://github.com/Billos/Sparkleft/compare/2.15.0...2.15.1) (2026-03-10)
 
 
