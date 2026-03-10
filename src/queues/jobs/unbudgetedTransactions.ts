@@ -13,13 +13,6 @@ import * as CheckBudgetLimit from "./checkBudgetLimit"
 const id = JobIds.UNBUDGETED_TRANSACTIONS
 
 const logger = pino()
-function buildBudgetLinks(budgets: BudgetRead[], transactionId: string): { name: string; url: string }[] {
-  return budgets.map(({ id, attributes }) => {
-    const url = new URL(`/transaction/${transactionId}/budget/${id}`, env.serviceUrl)
-    url.searchParams.append("api_token", env.apiToken)
-    return { name: attributes.name, url: url.toString() }
-  })
-}
 
 async function job(transactionId: string) {
   logger.info("Creating a new message for unbudgeted transaction with key %s", transactionId)
@@ -51,15 +44,19 @@ async function job(transactionId: string) {
 
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const { data: allBudgets } = await BudgetsService.listBudget(null, 50, 1)
-  const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
+  const budgets = allBudgets
+    .filter(({ attributes: { name } }: BudgetRead) => name !== billsBudgetName)
+    .map(({ id: budgetId, attributes }: BudgetRead) => ({ id: budgetId, name: attributes.name }))
 
-  const budgetLinks = buildBudgetLinks(budgets, transactionId)
   const msg = renderTemplate("unbudgeted-transaction.njk", {
     amount: parseFloat(amount).toFixed(currency_decimal_places),
     currencySymbol: currency_symbol,
     description,
     transactionLink: getTransactionShowLink(transactionId),
-    budgets: budgetLinks,
+    transactionId,
+    serviceUrl: env.serviceUrl,
+    apiToken: env.apiToken,
+    budgets,
   })
   const messageId = await notifier.getMessageId("BudgetMessageId", transactionId)
   if (messageId) {

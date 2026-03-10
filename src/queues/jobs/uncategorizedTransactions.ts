@@ -34,14 +34,6 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
   return transactions
 }
 
-function buildCategoryLinks(categories: CategoryRead[], transactionId: string): { name: string; url: string }[] {
-  return categories.map(({ id, attributes }) => {
-    const url = new URL(`/transaction/${transactionId}/category/${id}`, env.serviceUrl)
-    url.searchParams.append("api_token", env.apiToken)
-    return { name: attributes.name, url: url.toString() }
-  })
-}
-
 async function job(transactionId: string) {
   logger.info("Creating a new message for uncategorized transaction with key %s", transactionId)
   const {
@@ -71,19 +63,19 @@ async function job(transactionId: string) {
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
   const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
   const hiddenCategoriesSet = new Set(env.hiddenCategories)
-  const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
-
-  const categoryLinks = buildCategoryLinks(categories, transactionId)
-  const categorySelectionUrl = new URL(`/transaction/${transactionId}/categories`, env.serviceUrl)
-  categorySelectionUrl.searchParams.append("api_token", env.apiToken)
+  const categories = allCategories
+    .filter(({ attributes: { name } }: CategoryRead) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
+    .map(({ id: categoryId, attributes }: CategoryRead) => ({ id: categoryId, name: attributes.name }))
 
   const msg = renderTemplate("uncategorized-transaction.njk", {
     amount: parseFloat(amount).toFixed(currency_decimal_places),
     currencySymbol: currency_symbol,
     description,
     transactionLink: getTransactionShowLink(transactionId),
-    categorySelectionLink: categorySelectionUrl.toString(),
-    categories: categoryLinks,
+    transactionId,
+    serviceUrl: env.serviceUrl,
+    apiToken: env.apiToken,
+    categories,
   })
   const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
   if (messageId) {
