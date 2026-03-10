@@ -1,4 +1,4 @@
-`{{ amount }} {{ currencySymbol }}` {{ description }}
+`{{ transaction.amount | toFixed(transaction.currency_decimal_places) }} {{ transaction.currency_symbol }}` {{ transaction.description }}
 [Link](<{{ env.fireflyUrl }}/transactions/show/{{ transactionId }}>)
 {% for budget in budgets %}
 - [`{{ budget.attributes.name }}`](<{{ env.serviceUrl }}/transaction/{{ transactionId }}/budget/{{ budget.id }}?api_token={{ env.apiToken }}>)
