@@ -55,10 +55,12 @@ async function job(budgetId: string) {
   }
 
   const title = "Warning"
+  const budgetsLink = `[View Budgets](<${env.fireflyUrl}/budgets>)`
   const message = `Budget **${budget.attributes.name}** is overspent!
   \nSpent: \`${spent} ${currencySymbol}\` 
   \nLimit: \`${limit} ${currencySymbol}\` 
-  \nNew limit set to \`${spent} ${currencySymbol}\``
+  \nNew limit set to \`${spent} ${currencySymbol}\`
+  \n${budgetsLink}`
   await notifier.notify(title, message)
   return
 }
