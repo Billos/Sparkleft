@@ -6,7 +6,7 @@ export default [
   {
     languageOptions: { parser, parserOptions: { ecmaVersion: 2022, project: "./tsconfig.json" } },
     files: ["**/*.ts"],
-    ignores: ["./src/types/**/*.ts", "./src/paypalTypes/**/*.ts"],
+    ignores: ["./src/types/**/*.ts", "./src/paypalTypes/**/*.ts", "./src/__tests__/**/*.ts"],
     plugins: { "@typescript-eslint": typescriptPlugin, "@stylistic/js": stylistic, "@stylistic/ts": stylistic },
     settings: {
       "import/resolver": {
@@ -60,6 +60,16 @@ export default [
         "error",
         { allowAfterThis: true, allow: ["_id"] },
       ],
+    },
+  },
+  {
+    languageOptions: { parser, parserOptions: { ecmaVersion: 2022, project: "./tsconfig.test.json" } },
+    files: ["src/__tests__/**/*.ts"],
+    plugins: { "@typescript-eslint": typescriptPlugin, "@stylistic/js": stylistic, "@stylistic/ts": stylistic },
+    rules: {
+      "@stylistic/js/quotes": ["error", "double"],
+      "prefer-template": "error",
+      "no-useless-concat": "error",
     },
   },
 ]
