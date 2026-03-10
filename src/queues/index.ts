@@ -105,7 +105,14 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
   ].join("\n")
   const delayedMessageId = await notifier.sendMessageImpl(title, message)
 
-  logger.info("Delaying job %s (%s) until %s - Attempt: %d - Error: %s", job.id, job.name, delayed.toISO(), retryCount, err?.message ?? "Unknown error")
+  logger.info(
+    "Delaying job %s (%s) until %s - Attempt: %d - Error: %s",
+    job.id,
+    job.name,
+    delayed.toISO(),
+    retryCount,
+    err?.message ?? "Unknown error",
+  )
   await job.updateData({ ...job.data, delayedMessageId, retryCount })
   await job.moveToDelayed(timestamp, job.token)
   throw new DelayedError("Job delayed due to error")
