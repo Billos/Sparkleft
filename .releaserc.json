@@ -7,7 +7,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sed -i 's/docker.io\\/billos\\/sparkleft:.*/docker.io\\/billos\\/sparkleft:${nextRelease.version}/g' docker-compose*.yml && npm version ${nextRelease.version} --no-git-tag-version"
+        "prepareCmd": "sed -i 's/docker.io\\/billos\\/sparkleft:.*/docker.io\\/billos\\/sparkleft:${nextRelease.version}/g' docker-compose*.yml && npm version ${nextRelease.version} --no-git-tag-version && npm run test:coverage"
       }
     ],
     "@semantic-release/release-notes-generator",
@@ -18,7 +18,8 @@
         "assets": [
           "package.json",
           "CHANGELOG.md",
-          "docker-compose.yml"
+          "docker-compose.yml",
+          "coverage/coverage-summary.json"
         ],
         "message": "chore(release): Bump version to ${nextRelease.version} [skip ci]"
       }
