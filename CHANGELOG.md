@@ -1,3 +1,10 @@
+# [2.16.0](https://github.com/Billos/Sparkleft/compare/2.15.2...2.16.0) (2026-03-12)
+
+
+### Features
+
+* Add tests framework and coverage summary to release commit ([#45](https://github.com/Billos/Sparkleft/issues/45)) ([486d8fd](https://github.com/Billos/Sparkleft/commit/486d8fd5e0b10e53e8011fdad9d131b21885b609))
+
 ## [2.15.2](https://github.com/Billos/Sparkleft/compare/2.15.1...2.15.2) (2026-03-10)
 
 
