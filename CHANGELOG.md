@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/Billos/Sparkleft/compare/2.16.0...2.17.0) (2026-03-12)
+
+
+### Features
+
+* deploy HTML coverage report to GitHub Pages on release ([#46](https://github.com/Billos/Sparkleft/issues/46)) ([3d64068](https://github.com/Billos/Sparkleft/commit/3d64068e73e895be804903dde8989a6a614a2ec1))
+
 # [2.16.0](https://github.com/Billos/Sparkleft/compare/2.15.2...2.16.0) (2026-03-12)
 
 
