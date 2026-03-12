@@ -1,5 +1,7 @@
 # Sparkleft
 
+[![Coverage Report](https://img.shields.io/badge/coverage-report-blue)](https://billos.github.io/Sparkleft/)
+
 /!\ Read the state of the project section before using this project /!\
 
 This project is a quick draft to handle 2 things:
