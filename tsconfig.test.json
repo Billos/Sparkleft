@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["src/__tests__/**/*"],
+  "exclude": ["node_modules", "build", "src/paypalTypes", "src/types"]
+}

@@ -7,7 +7,7 @@ import { env } from "../config"
 
 const logger = pino()
 
-function verifyWebhookSignature(signatureHeader: string, rawBody: string, secret: string): boolean {
+export function verifyWebhookSignature(signatureHeader: string, rawBody: string, secret: string): boolean {
   // Parse la signature : t=...,v1=...
   const parts = signatureHeader.split(",")
   const timestampPart = parts.find((p) => p.startsWith("t="))
@@ -26,6 +26,10 @@ function verifyWebhookSignature(signatureHeader: string, rawBody: string, secret
   const expectedSignature = crypto.createHmac("sha3-256", secret).update(signedPayload, "utf8").digest("hex")
 
   // Comparaison en temps constant
+  if (expectedSignature.length !== receivedSignature.length) {
+    return false
+  }
+
   return crypto.timingSafeEqual(Buffer.from(expectedSignature, "hex"), Buffer.from(receivedSignature, "hex"))
 }
 
