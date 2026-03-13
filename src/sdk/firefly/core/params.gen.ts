@@ -142,7 +142,7 @@ export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsCo
             const name = field.map || key;
             (params[field.in] as Record<string, unknown>)[name] = value;
           } else {
-            params[field.map] = value;
+            (params as Record<string, unknown>)[field.map] = value;
           }
         } else {
           const extra = extraPrefixes.find(([prefix]) => key.startsWith(prefix));
