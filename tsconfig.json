@@ -27,6 +27,10 @@
     "build",
     "src/paypalTypes",
     "src/types",
-    "src/**/*.test.ts"
+    "src/**/*.test.ts",
+    "src/**/*.gen.ts"
+  ],
+  "references": [
+    { "path": "./tsconfig.gen.json" }
   ]
 }

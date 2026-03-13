@@ -53,6 +53,9 @@ web_modules/
 # TypeScript cache
 *.tsbuildinfo
 
+# Generated declaration files for auto-generated SDK modules
+gen-types/
+
 # Optional npm cache directory
 .npm
 

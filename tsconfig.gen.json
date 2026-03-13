@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "noCheck": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "gen-types",
+    "rootDir": "src",
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "moduleDetection": "force",
+    "allowJs": true,
+    "lib": ["ES2023", "DOM"],
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "src/**/*.gen.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

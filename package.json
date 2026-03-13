@@ -9,7 +9,7 @@
   "license": "GPL-3.0-only",
   "author": "billos",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc --build tsconfig.json",
     "dev:server": "yarn dev:server:raw | pino-pretty -c",
     "dev:server:raw": "tsx watch --clear-screen=false src/server.ts",
     "dev:worker": "yarn dev:worker:raw | pino-pretty -c",
@@ -23,7 +23,7 @@
     "start:worker": "node build/worker.js | pino-pretty -c",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --build --dry",
     "types:api:generate": "openapi-ts"
   },
   "dependencies": {
