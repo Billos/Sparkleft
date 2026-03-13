@@ -1,4 +1,4 @@
-import { BudgetsService } from "../types"
+import { BudgetsService } from "../sdk/firefly"
 
 export async function getBudgetName(budgetId: string): Promise<string | null> {
   try {

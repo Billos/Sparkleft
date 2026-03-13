@@ -4,7 +4,7 @@ import pino from "pino"
 
 import { env } from "../config"
 import { notifier } from "../modules/notifiers"
-import { AboutService } from "../types"
+import { AboutService } from "../sdk/firefly"
 import { JobIds } from "./constants"
 import { addJobToQueue } from "./jobs"
 import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"

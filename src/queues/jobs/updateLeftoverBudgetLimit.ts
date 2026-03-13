@@ -9,7 +9,7 @@ import {
   BudgetsService,
   InsightGroupEntry,
   InsightService,
-} from "../../types"
+} from "../../sdk/firefly"
 import { getDateNow } from "../../utils/date"
 import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"

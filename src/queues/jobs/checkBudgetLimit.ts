@@ -2,7 +2,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../types"
+import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../sdk/firefly"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"

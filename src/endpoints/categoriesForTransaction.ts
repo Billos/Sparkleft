@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import pino from "pino"
 
 import { env } from "../config"
-import { CategoriesService, TransactionsService } from "../types"
+import { CategoriesService, TransactionsService } from "../sdk/firefly"
 import { getBudgetName } from "../utils/budgetName"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 

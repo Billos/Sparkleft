@@ -1,10 +1,9 @@
 import { Request, Response } from "express"
 import pino from "pino"
 
-import { BudgetProperties } from "../paypalTypes"
+import { BudgetProperties, Transaction, WebhookTrigger } from "../sdk/firefly"
 import { budgetJobDefinitions, jobDefinitions, transactionJobDefinitions } from "../queues"
 import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/jobs"
-import { Transaction, WebhookTrigger } from "../types"
 
 // type BudgetTriggers = WebhookTrigger.STORE_BUDGET | WebhookTrigger.UPDATE_BUDGET | WebhookTrigger.DESTROY_BUDGET | WebhookTrigger.STORE_UPDATE_BUDGET_LIMIT
 // type TransactionTriggers = WebhookTrigger.STORE_TRANSACTION | WebhookTrigger.UPDATE_TRANSACTION | WebhookTrigger.DESTROY_TRANSACTION

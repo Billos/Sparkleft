@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 
-import { CategoriesService } from "../types"
+import { CategoriesService } from "../sdk/firefly"
 
 const logger = pino()
 
