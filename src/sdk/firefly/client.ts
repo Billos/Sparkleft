@@ -8,3 +8,10 @@ export const client = createClient({
     Authorization: `Bearer ${env.fireflyToken}`,
   },
 });
+
+export const paypalClient = createClient({
+  baseURL: `${env.fireflyUrl}/api`,
+  headers: {
+    Authorization: `Bearer ${env.fireflyPaypalAccountToken}`,
+  },
+});
