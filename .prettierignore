@@ -1,4 +1,5 @@
 src/types
 src/paypalTypes
+src/sdk/firefly
 CHANGELOG.md
 codeql.yml
