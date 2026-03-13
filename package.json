@@ -24,8 +24,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "type-check": "tsc --noEmit",
-    "types:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.4.17-v1.yaml --output ./src/types",
-    "types:paypal:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.4.17-v1.yaml --output ./src/paypalTypes"
+    "types:api:generate": "openapi-ts"
   },
   "dependencies": {
     "axios": "^1.7.9",
@@ -52,7 +51,7 @@
     "@typescript-eslint/parser": "^8.16.0",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.15.0",
-    "openapi-typescript-codegen": "^0.29.0",
+    "@hey-api/openapi-ts": "^0.94.1",
     "prettier": "^3.6.0",
     "prettier-plugin-multiline-arrays": "^4.0.3",
     "prettier-plugin-organize-imports": "^4.1.0",
