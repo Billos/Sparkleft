@@ -2532,7 +2532,7 @@ export type RecurrenceRepetition = {
      * - For 'weekly', it is day of the week between 1 and 7 (Monday - Sunday).
      * - For 'ndom', it is '1,2' or '4,5' or something else, where the first number is the week in the month, and the second number is the day in the week (between 1 and 7). '2,3' means: the 2nd Wednesday of the month
      * - For 'monthly' it is the day of the month (1 - 31)
-     * - For yearly, it is a full date, ie '2026-02-01'. The year you use does not matter.
+     * - For yearly, it is a full date, ie '2026-03-01'. The year you use does not matter.
      *
      */
     moment: string;
@@ -2567,7 +2567,7 @@ export type RecurrenceRepetitionStore = {
      * - For 'weekly', it is day of the week between 1 and 7 (Monday - Sunday).
      * - For 'ndom', it is '1,2' or '4,5' or something else, where the first number is the week in the month, and the second number is the day in the week (between 1 and 7). '2,3' means: the 2nd Wednesday of the month
      * - For 'monthly' it is the day of the month (1 - 31)
-     * - For yearly, it is a full date, ie '2026-02-01'. The year you use does not matter.
+     * - For yearly, it is a full date, ie '2026-03-01'. The year you use does not matter.
      *
      */
     moment: string;
@@ -2594,7 +2594,7 @@ export type RecurrenceRepetitionUpdate = {
      * - For 'weekly', it is day of the week between 1 and 7 (Monday - Sunday).
      * - For 'ndom', it is '1,2' or '4,5' or something else, where the first number is the week in the month, and the second number is the day in the week (between 1 and 7). '2,3' means: the 2nd Wednesday of the month
      * - For 'monthly' it is the day of the month (1 - 31)
-     * - For yearly, it is a full date, ie '2026-02-01'. The year you use does not matter.
+     * - For yearly, it is a full date, ie '2026-03-01'. The year you use does not matter.
      *
      */
     moment?: string;
@@ -5434,7 +5434,7 @@ export type RecurrenceRepetitionWritable = {
      * - For 'weekly', it is day of the week between 1 and 7 (Monday - Sunday).
      * - For 'ndom', it is '1,2' or '4,5' or something else, where the first number is the week in the month, and the second number is the day in the week (between 1 and 7). '2,3' means: the 2nd Wednesday of the month
      * - For 'monthly' it is the day of the month (1 - 31)
-     * - For yearly, it is a full date, ie '2026-02-01'. The year you use does not matter.
+     * - For yearly, it is a full date, ie '2026-03-01'. The year you use does not matter.
      *
      */
     moment: string;
