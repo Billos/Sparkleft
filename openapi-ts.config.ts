@@ -8,6 +8,10 @@ export default defineConfig({
     {
       client: '@hey-api/client-axios',
       name: '@hey-api/sdk',
+      operations: {
+        containerName: '{{name}}Service',
+        strategy: 'byTags',
+      },
     },
   ],
 });
