@@ -1,13 +1,16 @@
 import { createClient } from "@hey-api/client-axios";
 
 import { env } from "../../config";
+import { client } from "./core/client.gen";
 
-export const client = createClient({
-  baseURL: `${env.fireflyUrl}/api`,
+client.setConfig({
   auth: env.fireflyToken,
+  baseURL: `${env.fireflyUrl}/api`,
 });
 
 export const paypalClient = createClient({
-  baseURL: `${env.fireflyUrl}/api`,
   auth: env.fireflyPaypalAccountToken,
+  baseURL: `${env.fireflyUrl}/api`,
 });
+
+export { client };
