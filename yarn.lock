@@ -373,6 +373,11 @@
   resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-2.1.1.tgz"
   integrity sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==
 
+"@hey-api/client-axios@0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@hey-api/client-axios/-/client-axios-0.9.1.tgz#69c0438de334eaacff1930c2d56afad29fe53101"
+  integrity sha512-fvpOdnEz6tu5T2+IMNZW3g9mAZwaXavqpsvtapEZNtYxyYtQ+lQs9wJn/VPhZEvdXAXu8HPTCRpmfa0t1aRATA==
+
 "@hey-api/codegen-core@0.7.2":
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/@hey-api/codegen-core/-/codegen-core-0.7.2.tgz#7031a9348a490e8694eeffa8d4d6da33af79fbc2"
