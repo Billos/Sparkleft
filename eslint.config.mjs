@@ -6,7 +6,7 @@ export default [
   {
     languageOptions: { parser, parserOptions: { ecmaVersion: 2022, project: "./tsconfig.json" } },
     files: ["**/*.ts"],
-    ignores: ["./src/types/**/*.ts", "./src/paypalTypes/**/*.ts", "./src/__tests__/**/*.ts", "./src/sdk/firefly/*.gen.ts", "./src/sdk/firefly/index.ts", "./src/sdk/firefly/client/**/*.ts", "./src/sdk/firefly/core/**/*.ts"],
+    ignores: ["./src/types/**/*.ts", "./src/paypalTypes/**/*.ts", "./src/__tests__/**/*.ts", "./src/sdk/firefly/**/*.ts"],
     plugins: { "@typescript-eslint": typescriptPlugin, "@stylistic/js": stylistic, "@stylistic/ts": stylistic },
     settings: {
       "import/resolver": {
