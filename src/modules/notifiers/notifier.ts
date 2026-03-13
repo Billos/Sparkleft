@@ -1,6 +1,6 @@
 import pino from "pino"
 
-import { TransactionSplit, TransactionsService } from "../../types"
+import { TransactionSplit, TransactionsService } from "../../sdk/firefly/core"
 
 const logger = pino()
 export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 
-import { TransactionsService } from "../types"
+import { TransactionsService } from "../sdk/firefly/core"
 
 const logger = pino()
 

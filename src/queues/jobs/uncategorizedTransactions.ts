@@ -2,7 +2,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
+import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../sdk/firefly/core"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"

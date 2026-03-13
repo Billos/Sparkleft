@@ -24,7 +24,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "type-check": "tsc --noEmit",
-    "types:api:generate": "openapi-ts --input https://api-docs.firefly-iii.org/firefly-iii-6.4.17-v1.yaml --output ./src/types",
+    "types:api:generate": "openapi-ts",
     "types:paypal:api:generate": "openapi-ts --input https://api-docs.firefly-iii.org/firefly-iii-6.4.17-v1.yaml --output ./src/paypalTypes"
   },
   "dependencies": {

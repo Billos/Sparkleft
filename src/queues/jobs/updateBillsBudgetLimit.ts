@@ -1,7 +1,7 @@
 import pino from "pino"
 
 import { env } from "../../config"
-import { BillsService, BudgetLimitStore, BudgetsService } from "../../types"
+import { BillsService, BudgetLimitStore, BudgetsService } from "../../sdk/firefly/core"
 import { getDateNow } from "../../utils/date"
 import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"

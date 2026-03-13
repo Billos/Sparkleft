@@ -3,7 +3,7 @@ import path from "path"
 import nunjucks from "nunjucks"
 
 import { env } from "../config"
-import { BudgetRead, CategoryRead, TransactionSplit } from "../types"
+import { BudgetRead, CategoryRead, TransactionSplit } from "../sdk/firefly/core"
 
 export type TemplateContext = {
   transaction?: TransactionSplit

@@ -1,7 +1,7 @@
 import pino from "pino"
 
 import { notifier } from "../../modules/notifiers"
-import { TransactionsService } from "../../types"
+import { TransactionsService } from "../../sdk/firefly/core"
 import { JobIds } from "../constants"
 
 const id = JobIds.SET_BUDGET_FOR_TRANSACTION

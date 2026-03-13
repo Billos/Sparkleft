@@ -3,7 +3,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../../paypalTypes"
-import { TransactionsService } from "../../types"
+import { TransactionsService } from "../../sdk/firefly/core"
 import { getDateNow } from "../../utils/date"
 import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"

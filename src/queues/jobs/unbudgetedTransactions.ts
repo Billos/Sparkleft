@@ -2,7 +2,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
+import { BudgetsService, TransactionsService, TransactionTypeProperty } from "../../sdk/firefly/core"
 import { getBudgetName } from "../../utils/budgetName"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
