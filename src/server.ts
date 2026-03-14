@@ -7,6 +7,7 @@ import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
+import { triggerAutoImport } from "./endpoints/triggerAutoImport"
 import { webhook } from "./endpoints/webhook"
 import { AssertTransactionExistsMiddleware } from "./utils/assertTransactionExistsMiddleware"
 import { ParseBodyMiddleware } from "./utils/middleware"
@@ -46,6 +47,7 @@ app.get(
   TransactionResultMiddleware,
 )
 app.post("/webhook", verifyWebhookMiddleware, webhook)
+app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.get("/about", about)
 
 async function startServer() {

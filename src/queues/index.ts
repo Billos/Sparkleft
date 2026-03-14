@@ -7,6 +7,7 @@ import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
 import { JobIds } from "./constants"
 import { addJobToQueue } from "./jobs"
+import * as AutoImport from "./jobs/autoImport"
 import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"
 import * as Init from "./jobs/init"
 import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
@@ -43,6 +44,7 @@ const jobDefinitions: JobDefinition[] = [
   UpdateLeftoversBudgetLimit,
   UpdateBillsBudgetLimit,
   LinkPaypalTransactions,
+  AutoImport,
 ]
 
 const transactionJobDefinitions: TransactionJobDefinition[] = [
