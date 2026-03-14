@@ -3,6 +3,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
+import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 
 const id = JobIds.AUTO_IMPORT
@@ -23,7 +24,8 @@ async function job() {
   logger.info("Triggering auto-import at %s/autoimport with directory: %s", env.importerUrl, env.importDirectory)
   await axios.post(url)
   logger.info("Auto-import triggered successfully")
-  await notifier.notify("Auto Import", "Auto-import completed successfully.")
+  const msg = renderTemplate("auto-import.njk", { importDirectory: env.importDirectory })
+  await notifier.notify("Auto Import", msg)
 }
 
 async function init() {}
