@@ -2,6 +2,7 @@ import axios from "axios"
 import pino from "pino"
 
 import { env } from "../../config"
+import { notifier } from "../../modules/notifiers"
 import { JobIds } from "../constants"
 
 const id = JobIds.AUTO_IMPORT
@@ -22,6 +23,7 @@ async function job() {
   logger.info("Triggering auto-import at %s/autoimport with directory: %s", env.importerUrl, env.importDirectory)
   await axios.post(url)
   logger.info("Auto-import triggered successfully")
+  await notifier.notify("Auto Import", "Auto-import completed successfully.")
 }
 
 async function init() {}
