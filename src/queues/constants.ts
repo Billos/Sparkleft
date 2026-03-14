@@ -9,6 +9,7 @@ export enum JobIds {
   SET_BUDGET_FOR_TRANSACTION = "set-budget-for-transaction",
   REMOVE_TRANSACTION_MESSAGES = "remove-transaction-messages",
   INIT = "init",
+  AUTO_IMPORT = "auto-import",
 }
 
 export const JOB_DELAYS: Record<JobIds, number> = {
@@ -22,6 +23,7 @@ export const JOB_DELAYS: Record<JobIds, number> = {
   [JobIds.SET_BUDGET_FOR_TRANSACTION]: 0,
   [JobIds.REMOVE_TRANSACTION_MESSAGES]: 15,
   [JobIds.INIT]: 0,
+  [JobIds.AUTO_IMPORT]: 0,
 }
 
 export const ASAP_JOB_DELAY = 2000 // 2 seconds
