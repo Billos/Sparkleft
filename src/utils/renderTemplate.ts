@@ -51,7 +51,7 @@ njkEnv.addFilter("UrlFireflyTransactionShow", (transactionId: string) => `${env.
 
 njkEnv.addFilter("UrlFireflyBudgets", () => `${env.fireflyUrl}/budgets`)
 
-njkEnv.addFilter("UrlFireflyTransactions", () => `${env.fireflyUrl}/transactions`)
+njkEnv.addFilter("UrlFireflyTransactions", () => `${env.fireflyUrl}/transactions/withdrawal`)
 
 njkEnv.addFilter(
   "UrlSparkleftCategorySet",
