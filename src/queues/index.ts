@@ -122,12 +122,11 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
 
 async function setupAutoImportScheduler(): Promise<void> {
   const queue = await getQueue()
-  const tz = process.env.TZ || "UTC"
-  logger.info("Setting up auto-import scheduler with cron '0 3 * * *' in timezone: %s", tz)
+  logger.info("Setting up auto-import scheduler with cron '0 10 * * *'")
   try {
-    await queue.upsertJobScheduler("auto-import-repeat", { pattern: "0 3 * * *", tz }, { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT } })
+    await queue.upsertJobScheduler("auto-import-repeat", { pattern: "0 10 * * *" }, { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT } })
   } catch (err) {
-    logger.error({ err }, "Failed to set up auto-import scheduler; nightly auto-import will not run automatically")
+    logger.error({ err }, "Failed to set up auto-import scheduler; auto-import will not run automatically")
   }
 }
 
