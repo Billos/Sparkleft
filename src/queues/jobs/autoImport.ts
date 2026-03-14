@@ -23,7 +23,7 @@ async function job() {
   }
 
   const url = `${env.importerUrl}/autoimport?${params.toString()}`
-  logger.info("Triggering auto-import at %s with directory: %s", `${env.importerUrl}/autoimport`, env.importDirectory ?? "(none)")
+  logger.info("Triggering auto-import at %s/autoimport with directory: %s", env.importerUrl, env.importDirectory ?? "(none)")
   await axios.post(url)
   logger.info("Auto-import triggered successfully")
 }

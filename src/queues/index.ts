@@ -44,7 +44,6 @@ const jobDefinitions: JobDefinition[] = [
   UpdateLeftoversBudgetLimit,
   UpdateBillsBudgetLimit,
   LinkPaypalTransactions,
-  AutoImport,
 ]
 
 const transactionJobDefinitions: TransactionJobDefinition[] = [
@@ -56,6 +55,7 @@ const transactionJobDefinitions: TransactionJobDefinition[] = [
 const endpointJobDefinitions: EndpointJobDefinition[] = [
   SetCategoryForTransaction,
   SetBudgetForTransaction,
+  AutoImport,
 ]
 
 const budgetJobDefinitions: BudgetJobDefinition[] = [
