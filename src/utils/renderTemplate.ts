@@ -14,6 +14,7 @@ export type TemplateContext = {
   spent?: number
   limit?: number
   currencySymbol?: string
+  importDirectory?: string
 }
 
 // Resolve the templates/notifications directory relative to this source file.
@@ -49,6 +50,8 @@ njkEnv.addFilter("toFixed", (value: number | string, decimals: number) => {
 njkEnv.addFilter("UrlFireflyTransactionShow", (transactionId: string) => `${env.fireflyUrl}/transactions/show/${transactionId}`)
 
 njkEnv.addFilter("UrlFireflyBudgets", () => `${env.fireflyUrl}/budgets`)
+
+njkEnv.addFilter("UrlFireflyTransactions", () => `${env.fireflyUrl}/transactions/withdrawal`)
 
 njkEnv.addFilter(
   "UrlSparkleftCategorySet",
