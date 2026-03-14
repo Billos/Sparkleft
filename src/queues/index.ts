@@ -127,7 +127,7 @@ async function setupAutoImportScheduler(): Promise<void> {
     await queue.upsertJobScheduler(
       "auto-import-repeat",
       { pattern: "0 10 * * *" },
-      { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT }, opts: { deduplication: { id: JobIds.AUTO_IMPORT } } },
+      { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT } },
     )
   } catch (err) {
     logger.error({ err }, "Failed to set up auto-import scheduler; auto-import will not run automatically")
