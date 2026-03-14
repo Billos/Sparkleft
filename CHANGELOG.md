@@ -1,3 +1,10 @@
+# [2.18.0](https://github.com/Billos/Sparkleft/compare/2.17.0...2.18.0) (2026-03-14)
+
+
+### Features
+
+* Auto Import with UI ([#50](https://github.com/Billos/Sparkleft/issues/50)) ([957fb6f](https://github.com/Billos/Sparkleft/commit/957fb6f0051b6c2f0ee1c947ce72918f99b2767c))
+
 # [2.17.0](https://github.com/Billos/Sparkleft/compare/2.16.0...2.17.0) (2026-03-12)
 
 
