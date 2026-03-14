@@ -1,3 +1,10 @@
+# [2.19.0](https://github.com/Billos/Sparkleft/compare/2.18.0...2.19.0) (2026-03-14)
+
+
+### Features
+
+* Send a notification on AutoImport complete ([#51](https://github.com/Billos/Sparkleft/issues/51)) ([fcfa1c4](https://github.com/Billos/Sparkleft/commit/fcfa1c4d228912f817ca702b486370eb47e83525))
+
 # [2.18.0](https://github.com/Billos/Sparkleft/compare/2.17.0...2.18.0) (2026-03-14)
 
 
