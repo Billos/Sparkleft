@@ -10,7 +10,7 @@ const logger = pino()
 
 async function job() {
   if (!env.importerUrl || !env.importDirectory || !env.autoImportSecret) {
-    logger.info("Missing required configuration for auto-import job (importerUrl, importDirectory, autoImportSecret), skipping")
+    logger.warn("Missing required configuration for auto-import job (importerUrl, importDirectory, autoImportSecret), skipping")
     return
   }
 

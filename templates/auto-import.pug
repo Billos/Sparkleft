@@ -1,0 +1,33 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Auto Import – Sparkleft
+    link(rel="stylesheet" href="/public/style.css")
+  body
+    .container
+      h1 Auto Import
+      .subtitle Trigger the auto-import job to import transactions
+      .items
+        button#import-btn(type="button", data-token=token, onclick="triggerImport()") Trigger Auto Import
+      p#status.info-value
+      script.
+        async function triggerImport() {
+          const btn = document.getElementById('import-btn')
+          const status = document.getElementById('status')
+          const token = btn.getAttribute('data-token')
+          btn.disabled = true
+          btn.textContent = 'Running…'
+          status.textContent = ''
+          try {
+            const res = await fetch('/autoimport?api_token=' + token, { method: 'POST' })
+            const data = await res.json()
+            status.textContent = data.message
+          } catch (e) {
+            status.textContent = 'An error occurred'
+          } finally {
+            btn.disabled = false
+            btn.textContent = 'Trigger Auto Import'
+          }
+        }
