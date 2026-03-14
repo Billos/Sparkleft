@@ -9,7 +9,7 @@
   "license": "GPL-3.0-only",
   "author": "billos",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc --build tsconfig.json",
     "dev:server": "yarn dev:server:raw | pino-pretty -c",
     "dev:server:raw": "tsx watch --clear-screen=false src/server.ts",
     "dev:worker": "yarn dev:worker:raw | pino-pretty -c",
@@ -23,11 +23,11 @@
     "start:worker": "node build/worker.js | pino-pretty -c",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "type-check": "tsc --noEmit",
-    "types:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.4.17-v1.yaml --output ./src/types",
-    "types:paypal:api:generate": "openapi --input https://api-docs.firefly-iii.org/firefly-iii-6.4.17-v1.yaml --output ./src/paypalTypes"
+    "type-check": "tsc --build --dry",
+    "types:api:generate": "openapi-ts"
   },
   "dependencies": {
+    "@hey-api/client-axios": "0.9.1",
     "axios": "^1.7.9",
     "bullmq": "^5.56.0",
     "express": "^5.1.0",
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^5.0.3",
+    "@hey-api/openapi-ts": "^0.94.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
@@ -52,7 +53,6 @@
     "@typescript-eslint/parser": "^8.16.0",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.15.0",
-    "openapi-typescript-codegen": "^0.29.0",
     "prettier": "^3.6.0",
     "prettier-plugin-multiline-arrays": "^4.0.3",
     "prettier-plugin-organize-imports": "^4.1.0",
