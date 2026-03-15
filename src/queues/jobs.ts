@@ -1,4 +1,4 @@
-import { DeduplicationOptions, Job, JobsOptions } from "bullmq"
+import { Job, JobsOptions } from "bullmq"
 import { pino } from "pino"
 
 import { getQueue } from "."
@@ -7,21 +7,11 @@ import { getJobDelay } from "./delay"
 
 const logger = pino()
 
-function getDebounce(jobId: JobIds, itemId?: string): DeduplicationOptions {
-  return {
-    id: itemId ? `${jobId}-${itemId}` : jobId,
-    ttl: getJobDelay(jobId, false),
-    extend: true,
-    replace: true,
-  }
-}
-
-function queueConfig(job: JobIds, transactionId?: string): JobsOptions {
+function queueConfig(job: JobIds): JobsOptions {
   return {
     removeOnComplete: false,
     removeOnFail: true,
     delay: getJobDelay(job, false),
-    deduplication: getDebounce(job, transactionId),
   }
 }
 
@@ -29,21 +19,21 @@ export async function addTransactionJobToQueue(job: JobIds, transactionId: strin
   const queue = await getQueue()
   const delay = getJobDelay(job, false)
   logger.info("Adding job to queue: %s for transactionId: %s with delay: %d seconds", job, transactionId, delay / 1000)
-  return queue.add(job, { job, transactionId }, queueConfig(job, transactionId))
+  return queue.add(job, { job, transactionId }, queueConfig(job))
 }
 
 export async function addEndpointJobToQueue(job: JobIds, transactionId: string, data: unknown): Promise<Job> {
   const queue = await getQueue()
   const delay = getJobDelay(job, false)
   logger.info("Adding endpoint job to queue: %s for transactionId: %s with delay: %d seconds", job, transactionId, delay / 1000)
-  return queue.add(job, { job, transactionId, data }, queueConfig(job, transactionId))
+  return queue.add(job, { job, transactionId, data }, queueConfig(job))
 }
 
 export async function addBudgetJobToQueue(job: JobIds, budgetId: string): Promise<Job> {
   const queue = await getQueue()
   const delay = getJobDelay(job, false)
   logger.info("Adding job to queue: %s for budgetId: %s with delay: %d seconds", job, budgetId, delay / 1000)
-  return queue.add(job, { job, budgetId }, queueConfig(job, budgetId))
+  return queue.add(job, { job, budgetId }, queueConfig(job))
 }
 
 export async function addJobToQueue(job: JobIds, asap?: boolean): Promise<Job> {

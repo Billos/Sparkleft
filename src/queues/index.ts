@@ -120,12 +120,27 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
   throw new DelayedError("Job delayed due to error")
 }
 
+async function setupAutoImportScheduler(): Promise<void> {
+  const queue = await getQueue()
+  logger.info("Setting up auto-import scheduler with cron '0 10 * * *'")
+  try {
+    await queue.upsertJobScheduler(
+      "auto-import-repeat",
+      { pattern: "0 10 * * *" },
+      { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT } },
+    )
+  } catch (err) {
+    logger.error({ err }, "Failed to set up auto-import scheduler; auto-import will not run automatically")
+  }
+}
+
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
   if (worker) {
     return worker
   }
 
   const queue = await getQueue()
+  await setupAutoImportScheduler()
 
   // Clean up any stale jobs from previous runs
   queue.setGlobalConcurrency(1)
