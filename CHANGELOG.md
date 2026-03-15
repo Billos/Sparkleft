@@ -1,3 +1,10 @@
+## [2.20.1](https://github.com/Billos/Sparkleft/compare/2.20.0...2.20.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* Make auto-import scheduling optional and configurable via env var ([#53](https://github.com/Billos/Sparkleft/issues/53)) ([58fb40e](https://github.com/Billos/Sparkleft/commit/58fb40eecc9d63912a402222f433bdca1b212fd1))
+
 # [2.20.0](https://github.com/Billos/Sparkleft/compare/2.19.0...2.20.0) (2026-03-15)
 
 
