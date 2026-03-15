@@ -1,3 +1,10 @@
+# [2.20.0](https://github.com/Billos/Sparkleft/compare/2.19.0...2.20.0) (2026-03-15)
+
+
+### Features
+
+* Repeatable job AutoImport  ([#52](https://github.com/Billos/Sparkleft/issues/52)) ([f28c431](https://github.com/Billos/Sparkleft/commit/f28c431a42e856cf841c6cad0a0b272817c90c07))
+
 # [2.19.0](https://github.com/Billos/Sparkleft/compare/2.18.0...2.19.0) (2026-03-14)
 
 
