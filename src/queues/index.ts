@@ -121,12 +121,16 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
 }
 
 async function setupAutoImportScheduler(): Promise<void> {
+  if (!env.autoImportCron) {
+    logger.info("AUTO_IMPORT_CRON is not set, skipping auto-import scheduler setup")
+    return
+  }
   const queue = await getQueue()
-  logger.info("Setting up auto-import scheduler with cron '0 10 * * *'")
+  logger.info("Setting up auto-import scheduler with cron '%s'", env.autoImportCron)
   try {
     await queue.upsertJobScheduler(
       "auto-import-repeat",
-      { pattern: "0 10 * * *" },
+      { pattern: env.autoImportCron },
       { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT } },
     )
   } catch (err) {

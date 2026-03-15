@@ -18,6 +18,7 @@ const env = {
   importerUrl: process.env.IMPORTER_URL,
   importDirectory: process.env.IMPORT_DIRECTORY,
   autoImportSecret: process.env.AUTO_IMPORT_SECRET,
+  autoImportCron: process.env.AUTO_IMPORT_CRON,
   redisConnection: {
     host: process.env.REDIS_HOST || "localhost",
     port: parseInt(process.env.REDIS_PORT || "6379", 10),
