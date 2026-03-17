@@ -1,3 +1,10 @@
+# [2.21.0](https://github.com/Billos/Sparkleft/compare/2.20.1...2.21.0) (2026-03-17)
+
+
+### Features
+
+* Add USE_API_TOKEN env var to optionally disable token protection ([#54](https://github.com/Billos/Sparkleft/issues/54)) ([0b3e236](https://github.com/Billos/Sparkleft/commit/0b3e2363a198c50ce1fafb1054959dca754157df))
+
 ## [2.20.1](https://github.com/Billos/Sparkleft/compare/2.20.0...2.20.1) (2026-03-15)
 
 
