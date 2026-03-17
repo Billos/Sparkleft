@@ -5,6 +5,7 @@ const env = {
   fireflyPaypalAccountToken: process.env.FIREFLY_III_PAYPAL_ACCOUNT_TOKEN,
   fireflyWebhookSecret: process.env.FIREFLY_III_WEBHOOK_SECRET,
   apiToken: process.env.API_TOKEN,
+  useApiToken: process.env.USE_API_TOKEN !== "false",
   assetAccountId: process.env.ASSET_ACCOUNT_ID,
   billsBudgetId: process.env.BILLS_BUDGET_ID,
   leftoversBudgetId: process.env.LEFTOVERS_BUDGET_ID,
