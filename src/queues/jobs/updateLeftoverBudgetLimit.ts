@@ -13,8 +13,7 @@ import {
 import { getDateNow } from "../../utils/date"
 import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"
-
-const id = JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT
+import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
 
@@ -65,65 +64,66 @@ async function getSumWithoutLeftovers(
   return leftoverAmount
 }
 
-async function job() {
-  const startDate = getDateNow().startOf("month").toISODate()
-  const endDate = getDateNow().endOf("month").toISODate()
+class UpdateLeftoverBudgetLimitJob extends SimpleJob {
+  readonly id = JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT
 
-  const [
-    allBudgets,
-    allLimits,
-  ] = await Promise.all([
-    BudgetsService.listBudget(null, 50, 1, startDate, endDate),
-    BudgetsService.listBudgetLimit(startDate, endDate),
-  ])
-  const leftoversBudget = allBudgets.data.find(({ id }) => id === env.leftoversBudgetId)
-  const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
+  async run(): Promise<void> {
+    const startDate = getDateNow().startOf("month").toISODate()
+    const endDate = getDateNow().endOf("month").toISODate()
 
-  let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data, leftoversBudget, allLimits, startDate, endDate)
-  if (leftoverAmount < 0) {
-    logger.info("Leftover amount is negative, setting to 0.1")
-    leftoverAmount = 0.1
+    const [allBudgets, allLimits] = await Promise.all([
+      BudgetsService.listBudget(null, 50, 1, startDate, endDate),
+      BudgetsService.listBudgetLimit(startDate, endDate),
+    ])
+    const leftoversBudget = allBudgets.data.find(({ id }) => id === env.leftoversBudgetId)
+    const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
+
+    let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data, leftoversBudget, allLimits, startDate, endDate)
+    if (leftoverAmount < 0) {
+      logger.info("Leftover amount is negative, setting to 0.1")
+      leftoverAmount = 0.1
+    }
+
+    const currentLeftOverBudget = allBudgets.data.find(({ id }) => id === leftoversBudget.id)!
+    const [spent] = currentLeftOverBudget.attributes.spent
+    if (!spent) {
+      logger.info("No spent amount found, setting it to 0")
+    }
+    const sum = spent?.sum || "0"
+
+    const amount = String(-parseFloat(sum) + leftoverAmount)
+
+    logger.info("Leftover amount %d", leftoverAmount)
+    logger.info("Leftover spent %s", sum)
+    logger.info("Budget limit should be %s", amount)
+
+    if (parseFloat(amount) < 0) {
+      logger.info("Amount is negative, stopping")
+      return
+    }
+
+    if (amount === leftOverLimit?.attributes.amount) {
+      logger.info("Amount is the same as the current limit, stopping")
+      return
+    }
+
+    const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate, fire_webhooks: false }
+
+    if (!leftOverLimit) {
+      logger.info("No leftovers budget limit found, creating budget limit")
+      await BudgetsService.storeBudgetLimit(leftoversBudget.id, params)
+      return
+    }
+
+    await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
+    logger.info("Leftovers budget limit updated")
   }
 
-  const currentLeftOverBudget = allBudgets.data.find(({ id }) => id === leftoversBudget.id)!
-  const [spent] = currentLeftOverBudget.attributes.spent
-  if (!spent) {
-    logger.info("No spent amount found, setting it to 0")
+  override async init(): Promise<void> {
+    logger.info("Initializing UpdateLeftoverBudgetLimit job")
+    await addJobToQueue(this.id)
+    logger.info("UpdateLeftoverBudgetLimit job initialized")
   }
-  const sum = spent?.sum || "0"
-
-  const amount = String(-parseFloat(sum) + leftoverAmount)
-
-  logger.info("Leftover amount %d", leftoverAmount)
-  logger.info("Leftover spent %s", sum)
-  logger.info("Budget limit should be %s", amount)
-
-  if (parseFloat(amount) < 0) {
-    logger.info("Amount is negative, stopping")
-    return
-  }
-
-  if (amount === leftOverLimit?.attributes.amount) {
-    logger.info("Amount is the same as the current limit, stopping")
-    return
-  }
-
-  const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate, fire_webhooks: false }
-
-  if (!leftOverLimit) {
-    logger.info("No leftovers budget limit found, creating budget limit")
-    await BudgetsService.storeBudgetLimit(leftoversBudget.id, params)
-    return
-  }
-
-  await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
-  logger.info("Leftovers budget limit updated")
 }
 
-async function init() {
-  logger.info("Initializing UpdateLeftoverBudgetLimit job")
-  await addJobToQueue(id)
-  logger.info("UpdateLeftoverBudgetLimit job initialized")
-}
-
-export { job, init, id }
+export const updateLeftoversBudgetLimit = new UpdateLeftoverBudgetLimitJob()

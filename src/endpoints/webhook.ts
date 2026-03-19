@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import pino from "pino"
 
 import { BudgetProperties } from "../paypalTypes"
-import { budgetJobDefinitions, jobDefinitions, transactionJobDefinitions } from "../queues"
+import { budgetJobs, simpleJobs, transactionJobs } from "../queues"
 import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/jobs"
 import { Transaction, WebhookTrigger } from "../types"
 
@@ -46,7 +46,7 @@ export async function webhook(req: Request, res: Response) {
   if (isTransactionTrigger) {
     const transactionId = String(body.content.id)
 
-    for (const { id } of transactionJobDefinitions) {
+    for (const { id } of transactionJobs) {
       await addTransactionJobToQueue(id, transactionId)
     }
   }
@@ -54,12 +54,12 @@ export async function webhook(req: Request, res: Response) {
   if (isBudgetTrigger) {
     const budgetId = String(body.content.id)
     logger.info("Processing budget trigger for budget id: %o", body.content)
-    for (const { id } of budgetJobDefinitions) {
+    for (const { id } of budgetJobs) {
       await addBudgetJobToQueue(id, budgetId)
     }
   }
 
-  for (const { id: job } of jobDefinitions) {
+  for (const { id: job } of simpleJobs) {
     await addJobToQueue(job, false)
   }
   res.send("<script>window.close()</script>")

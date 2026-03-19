@@ -1,23 +1,20 @@
 import pino from "pino"
 
-import { budgetJobDefinitions, jobDefinitions, transactionJobDefinitions } from ".."
+import { budgetJobs, simpleJobs, transactionJobs } from ".."
 import { JobIds } from "../constants"
-
-const id = JobIds.INIT
+import { BudgetJob } from "./BaseJob"
 
 const logger = pino()
-const jobs: Record<string, (parameter?: string) => Promise<void>> = {}
 
-async function job() {
-  logger.info("Initializing job definitions")
-  for (const { job, id, init } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions]) {
-    jobs[id] = job
-    if (init) {
-      await init()
+class InitJob extends BudgetJob {
+  readonly id = JobIds.INIT
+
+  async run(_budgetId: string): Promise<void> {
+    logger.info("Initializing job definitions")
+    for (const instance of [...simpleJobs, ...budgetJobs, ...transactionJobs]) {
+      await instance.init()
     }
   }
 }
 
-async function init() {}
-
-export { job, init, id }
+export const init = new InitJob()
