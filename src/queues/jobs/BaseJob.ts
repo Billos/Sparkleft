@@ -7,6 +7,8 @@ export abstract class BaseJob {
 
   readonly startDelay: number = 0
 
+  readonly retryDelay: number = 60
+
   getStartDelay(asap: boolean = false): number {
     if (asap) {
       return ASAP_JOB_DELAY
@@ -15,7 +17,7 @@ export abstract class BaseJob {
   }
 
   getRetryDelay(retryCount: number): number {
-    return retryCount * 60 * 1000
+    return retryCount * this.retryDelay * 1000
   }
 
   async init(): Promise<void> {}

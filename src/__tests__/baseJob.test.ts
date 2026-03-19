@@ -23,9 +23,7 @@ class TestSimpleJob extends SimpleJob {
 class TestSimpleJobWithCustomRetryDelay extends SimpleJob {
   readonly id = JobIds.UPDATE_BILLS_BUDGET_LIMIT
   readonly startDelay = 15
-  override getRetryDelay(retryCount: number): number {
-    return retryCount * 2 * 60 * 1000 // 2 minutes per retry
-  }
+  override readonly retryDelay = 120 // 2 minutes per retry
   async run(): Promise<void> {}
 }
 
@@ -65,7 +63,11 @@ describe("BaseJob", () => {
     expect(job.getStartDelay(true)).toBe(ASAP_JOB_DELAY)
   })
 
-  it("getRetryDelay returns retryCount * 60 * 1000 ms", () => {
+  it("retryDelay defaults to 60 seconds", () => {
+    expect(job.retryDelay).toBe(60)
+  })
+
+  it("getRetryDelay returns retryCount * retryDelay * 1000 ms", () => {
     expect(job.getRetryDelay(1)).toBe(60 * 1000) // 1 minute
     expect(job.getRetryDelay(3)).toBe(3 * 60 * 1000) // 3 minutes
     expect(job.getRetryDelay(5)).toBe(5 * 60 * 1000) // 5 minutes
@@ -103,7 +105,11 @@ describe("BaseJob - non-retryable job", () => {
 describe("BaseJob - custom retry delay", () => {
   const job = new TestSimpleJobWithCustomRetryDelay()
 
-  it("uses overridden getRetryDelay", () => {
+  it("uses overridden retryDelay", () => {
+    expect(job.retryDelay).toBe(120) // 2 minutes per retry
+  })
+
+  it("getRetryDelay uses overridden retryDelay", () => {
     expect(job.getRetryDelay(1)).toBe(2 * 60 * 1000) // 2 minutes
     expect(job.getRetryDelay(3)).toBe(6 * 60 * 1000) // 6 minutes
   })
