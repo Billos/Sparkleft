@@ -11,7 +11,7 @@ import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
 
-class LinkPaypalTransactionsJob extends SimpleJob {
+export class LinkPaypalTransactionsJob extends SimpleJob {
   readonly id = JobIds.LINK_PAYPAL_TRANSACTIONS
 
   async run(): Promise<void> {
@@ -101,5 +101,3 @@ class LinkPaypalTransactionsJob extends SimpleJob {
     logger.info("LinkPaypalTransactions job initialized")
   }
 }
-
-export const linkPaypalTransactions = new LinkPaypalTransactionsJob()

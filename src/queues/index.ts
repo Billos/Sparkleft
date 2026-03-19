@@ -8,48 +8,34 @@ import { AboutService } from "../types"
 import { JobIds } from "./constants"
 import { addJobToQueue } from "./jobs"
 import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "./jobs/BaseJob"
-import { autoImport } from "./jobs/autoImport"
-import { checkBudgetLimit } from "./jobs/checkBudgetLimit"
-import { init } from "./jobs/init"
-import { linkPaypalTransactions } from "./jobs/linkPaypalTransactions"
-import { removeTransactionMessages } from "./jobs/removeTransactionMessages"
-import { setBudgetForTransaction } from "./jobs/setBudgetForTransaction"
-import { setCategoryForTransaction } from "./jobs/setCategoryForTransaction"
-import { unbudgetedTransactions } from "./jobs/unbudgetedTransactions"
-import { uncategorizedTransactions } from "./jobs/uncategorizedTransactions"
-import { updateBillsBudgetLimit } from "./jobs/updateBillsBudgetLimit"
-import { updateLeftoversBudgetLimit } from "./jobs/updateLeftoverBudgetLimit"
+import { AutoImportJob } from "./jobs/autoImport"
+import { CheckBudgetLimitJob } from "./jobs/checkBudgetLimit"
+import { InitJob } from "./jobs/init"
+import { LinkPaypalTransactionsJob } from "./jobs/linkPaypalTransactions"
+import { RemoveTransactionMessagesJob } from "./jobs/removeTransactionMessages"
+import { SetBudgetForTransactionJob } from "./jobs/setBudgetForTransaction"
+import { SetCategoryForTransactionJob } from "./jobs/setCategoryForTransaction"
+import { UnbudgetedTransactionsJob } from "./jobs/unbudgetedTransactions"
+import { UncategorizedTransactionsJob } from "./jobs/uncategorizedTransactions"
+import { UpdateBillsBudgetLimitJob } from "./jobs/updateBillsBudgetLimit"
+import { UpdateLeftoverBudgetLimitJob } from "./jobs/updateLeftoverBudgetLimit"
 import { isBudgetJobArgs, isEndpointJobArgs, isTransactionJobArgs, QueueArgs } from "./queueArgs"
 
 const logger = pino()
 
 const startedAt = new Map<string, DateTime>()
 
-const simpleJobs: SimpleJob[] = [
-  updateLeftoversBudgetLimit,
-  updateBillsBudgetLimit,
-  linkPaypalTransactions,
-]
+// Exported arrays populated lazily on first initJobInstances() call so that
+// module-level code never calls `new XxxJob()` (which would fail under
+// circular-dependency loading order).
+export const simpleJobs: SimpleJob[] = []
 
-const transactionJobs: TransactionJob[] = [
-  unbudgetedTransactions,
-  uncategorizedTransactions,
-  removeTransactionMessages,
-]
+export const transactionJobs: TransactionJob[] = []
 
-const endpointJobs: EndpointJob[] = [
-  setCategoryForTransaction,
-  setBudgetForTransaction,
-]
+export const budgetJobs: BudgetJob[] = []
 
-const budgetJobs: BudgetJob[] = [
-  checkBudgetLimit,
-  init,
-]
-
-const jobMap = new Map<string, BaseJob>(
-  [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs, autoImport].map((j) => [j.id, j]),
-)
+const endpointJobs: EndpointJob[] = []
+const jobMap = new Map<string, BaseJob>()
 
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
@@ -127,10 +113,32 @@ async function setupAutoImportScheduler(): Promise<void> {
   }
 }
 
+function initJobInstances() {
+  if (simpleJobs.length > 0) {
+    return
+  }
+
+  simpleJobs.push(new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob())
+
+  transactionJobs.push(new UnbudgetedTransactionsJob(), new UncategorizedTransactionsJob(), new RemoveTransactionMessagesJob())
+
+  endpointJobs.push(new SetCategoryForTransactionJob(), new SetBudgetForTransactionJob())
+
+  budgetJobs.push(new CheckBudgetLimitJob(), new InitJob())
+
+  const autoImport = new AutoImportJob()
+
+  for (const j of [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs, autoImport]) {
+    jobMap.set(j.id, j)
+  }
+}
+
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
   if (worker) {
     return worker
   }
+
+  initJobInstances()
 
   const queue = await getQueue()
   await setupAutoImportScheduler()
@@ -204,7 +212,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker.on("ready", async () => {
     logger.info("Worker is ready and connected to Redis")
-    await addJobToQueue(init.id, true)
+    await addJobToQueue(JobIds.INIT, true)
   })
 
   return worker
@@ -219,4 +227,4 @@ async function processExit() {
 process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
-export { getQueue, initializeWorker, simpleJobs, transactionJobs, budgetJobs }
+export { getQueue, initializeWorker }

@@ -6,7 +6,7 @@ import { BudgetJob } from "./BaseJob"
 
 const logger = pino()
 
-class InitJob extends BudgetJob {
+export class InitJob extends BudgetJob {
   readonly id = JobIds.INIT
 
   async run(_budgetId: string): Promise<void> {
@@ -16,5 +16,3 @@ class InitJob extends BudgetJob {
     }
   }
 }
-
-export const init = new InitJob()

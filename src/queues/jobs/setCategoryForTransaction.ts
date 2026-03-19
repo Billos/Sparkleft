@@ -11,7 +11,7 @@ interface JobData {
   category_id: string
 }
 
-class SetCategoryForTransactionJob extends EndpointJob {
+export class SetCategoryForTransactionJob extends EndpointJob {
   readonly id = JobIds.SET_CATEGORY_FOR_TRANSACTION
 
   async run(transactionId: string, data: unknown): Promise<void> {
@@ -34,5 +34,3 @@ class SetCategoryForTransactionJob extends EndpointJob {
     })
   }
 }
-
-export const setCategoryForTransaction = new SetCategoryForTransactionJob()

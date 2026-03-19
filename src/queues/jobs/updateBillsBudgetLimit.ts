@@ -35,7 +35,7 @@ async function getTotalAmountOfBills(startDate: string, endDate: string): Promis
   return total
 }
 
-class UpdateBillsBudgetLimitJob extends SimpleJob {
+export class UpdateBillsBudgetLimitJob extends SimpleJob {
   readonly id = JobIds.UPDATE_BILLS_BUDGET_LIMIT
 
   async run(): Promise<void> {
@@ -90,5 +90,3 @@ class UpdateBillsBudgetLimitJob extends SimpleJob {
     logger.info("UpdateBillsBudgetLimit job initialized")
   }
 }
-
-export const updateBillsBudgetLimit = new UpdateBillsBudgetLimitJob()

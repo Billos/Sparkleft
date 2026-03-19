@@ -9,10 +9,10 @@ import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
 
-class AutoImportJob extends SimpleJob {
+export class AutoImportJob extends SimpleJob {
   readonly id = JobIds.AUTO_IMPORT
 
-  override readonly retryable = false
+  override readonly retryable = false // auto-import is triggered externally and should not be retried on failure
 
   async run(): Promise<void> {
     if (!env.importerUrl || !env.importDirectory || !env.autoImportSecret) {
@@ -32,5 +32,3 @@ class AutoImportJob extends SimpleJob {
     await notifier.notify("Auto Import", msg)
   }
 }
-
-export const autoImport = new AutoImportJob()

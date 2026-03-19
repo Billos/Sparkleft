@@ -8,11 +8,10 @@ import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../jobs"
 import { TransactionJob } from "./BaseJob"
-import { checkBudgetLimit } from "./checkBudgetLimit"
 
 const logger = pino()
 
-class UnbudgetedTransactionsJob extends TransactionJob {
+export class UnbudgetedTransactionsJob extends TransactionJob {
   readonly id = JobIds.UNBUDGETED_TRANSACTIONS
 
   async run(transactionId: string): Promise<void> {
@@ -38,7 +37,7 @@ class UnbudgetedTransactionsJob extends TransactionJob {
 
     if (transaction.budget_id) {
       // We can assume that if a budget_id is set, the budget limit might need to be checked
-      await addBudgetJobToQueue(checkBudgetLimit.id, transaction.budget_id)
+      await addBudgetJobToQueue(JobIds.CHECK_BUDGET_LIMIT, transaction.budget_id)
       logger.info("Transaction %s already budgeted", transactionId)
       return
     }
@@ -75,5 +74,3 @@ class UnbudgetedTransactionsJob extends TransactionJob {
     logger.info("Initialized UnbudgetedTransactions jobs for %d transactions", 0)
   }
 }
-
-export const unbudgetedTransactions = new UnbudgetedTransactionsJob()

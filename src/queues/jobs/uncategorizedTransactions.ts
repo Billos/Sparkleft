@@ -32,7 +32,7 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
   return transactions
 }
 
-class UncategorizedTransactionsJob extends TransactionJob {
+export class UncategorizedTransactionsJob extends TransactionJob {
   readonly id = JobIds.UNCATEGORIZED_TRANSACTIONS
 
   async run(transactionId: string): Promise<void> {
@@ -96,5 +96,3 @@ class UncategorizedTransactionsJob extends TransactionJob {
     logger.info("Initialized UnbudgetedTransactions jobs for %d transactions", 0)
   }
 }
-
-export const uncategorizedTransactions = new UncategorizedTransactionsJob()

@@ -64,7 +64,7 @@ async function getSumWithoutLeftovers(
   return leftoverAmount
 }
 
-class UpdateLeftoverBudgetLimitJob extends SimpleJob {
+export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
   readonly id = JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT
 
   async run(): Promise<void> {
@@ -125,5 +125,3 @@ class UpdateLeftoverBudgetLimitJob extends SimpleJob {
     logger.info("UpdateLeftoverBudgetLimit job initialized")
   }
 }
-
-export const updateLeftoversBudgetLimit = new UpdateLeftoverBudgetLimitJob()

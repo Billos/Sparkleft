@@ -11,7 +11,7 @@ interface JobData {
   budget_id: string
 }
 
-class SetBudgetForTransactionJob extends EndpointJob {
+export class SetBudgetForTransactionJob extends EndpointJob {
   readonly id = JobIds.SET_BUDGET_FOR_TRANSACTION
 
   async run(transactionId: string, data: unknown): Promise<void> {
@@ -34,5 +34,3 @@ class SetBudgetForTransactionJob extends EndpointJob {
     })
   }
 }
-
-export const setBudgetForTransaction = new SetBudgetForTransactionJob()

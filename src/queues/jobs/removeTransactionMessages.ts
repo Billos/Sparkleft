@@ -7,7 +7,7 @@ import { TransactionJob } from "./BaseJob"
 
 const logger = pino()
 
-class RemoveTransactionMessagesJob extends TransactionJob {
+export class RemoveTransactionMessagesJob extends TransactionJob {
   readonly id = JobIds.REMOVE_TRANSACTION_MESSAGES
 
   async run(transactionId: string): Promise<void> {
@@ -37,5 +37,3 @@ class RemoveTransactionMessagesJob extends TransactionJob {
     }
   }
 }
-
-export const removeTransactionMessages = new RemoveTransactionMessagesJob()

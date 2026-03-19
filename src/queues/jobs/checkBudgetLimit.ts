@@ -11,7 +11,7 @@ import { BudgetJob } from "./BaseJob"
 
 const logger = pino()
 
-class CheckBudgetLimitJob extends BudgetJob {
+export class CheckBudgetLimitJob extends BudgetJob {
   readonly id = JobIds.CHECK_BUDGET_LIMIT
 
   async run(budgetId: string): Promise<void> {
@@ -82,5 +82,3 @@ class CheckBudgetLimitJob extends BudgetJob {
     logger.info("Initialized CheckBudgetLimit jobs for %d budgets", budgets.length)
   }
 }
-
-export const checkBudgetLimit = new CheckBudgetLimitJob()
