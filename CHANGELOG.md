@@ -1,3 +1,10 @@
+## [2.21.1](https://github.com/Billos/Sparkleft/compare/2.21.0...2.21.1) (2026-03-19)
+
+
+### Bug Fixes
+
+* Disable retries for auto-import jobs ([#55](https://github.com/Billos/Sparkleft/issues/55)) ([938e68d](https://github.com/Billos/Sparkleft/commit/938e68dc4aa899b413f2814e19325aea5a477923))
+
 # [2.21.0](https://github.com/Billos/Sparkleft/compare/2.20.1...2.21.0) (2026-03-17)
 
 
