@@ -169,6 +169,9 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
           await jobs[data.job]()
         }
       } catch (err) {
+        if (job.data.job === JobIds.AUTO_IMPORT) {
+          throw err
+        }
         await delayJob(job, err as Error)
       }
     },
