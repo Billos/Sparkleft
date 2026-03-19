@@ -4,8 +4,8 @@ import pino from "pino"
 
 import { env } from "../config"
 import { getQueue } from "../queues"
-import { JobIds } from "../queues/constants"
 import { addJobToQueue } from "../queues/jobs"
+import { AutoImportJob } from "../queues/jobs/autoImport"
 
 const logger = pino()
 
@@ -20,7 +20,7 @@ export async function triggerAutoImport(_req: Request, res: Response) {
   const queue = await getQueue()
   const queueEvents = new QueueEvents(queue.name, { connection: env.redisConnection })
   try {
-    const job = await addJobToQueue(JobIds.AUTO_IMPORT)
+    const job = await addJobToQueue(new AutoImportJob())
     await job.waitUntilFinished(queueEvents)
     res.status(200).json({ message: "Auto-import completed" })
   } catch (err) {

@@ -14,6 +14,8 @@ const logger = pino()
 export class CheckBudgetLimitJob extends BudgetJob {
   readonly id = JobIds.CHECK_BUDGET_LIMIT
 
+  override readonly startDelay = 5
+
   async run(budgetId: string): Promise<void> {
     if (!budgetId) {
       logger.error("No budgetId provided for CheckBudgetLimit job")
@@ -76,7 +78,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
     for (const budget of budgets) {
       if (budget.id !== env.billsBudgetId && budget.id !== env.leftoversBudgetId) {
-        await addBudgetJobToQueue(this.id, budget.id)
+        await addBudgetJobToQueue(this, budget.id)
       }
     }
     logger.info("Initialized CheckBudgetLimit jobs for %d budgets", budgets.length)

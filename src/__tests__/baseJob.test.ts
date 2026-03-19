@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { ASAP_JOB_DELAY, JOB_DELAYS, JobIds } from "../queues/constants"
+import { ASAP_JOB_DELAY, JobIds } from "../queues/constants"
 import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "../queues/jobs/BaseJob"
 import { AutoImportJob } from "../queues/jobs/autoImport"
 import { CheckBudgetLimitJob } from "../queues/jobs/checkBudgetLimit"
@@ -15,12 +15,14 @@ import { UpdateBillsBudgetLimitJob } from "../queues/jobs/updateBillsBudgetLimit
 import { UpdateLeftoverBudgetLimitJob } from "../queues/jobs/updateLeftoverBudgetLimit"
 
 class TestSimpleJob extends SimpleJob {
-  readonly id = JobIds.CHECK_BUDGET_LIMIT // delay = 5 seconds in JOB_DELAYS
+  readonly id = JobIds.CHECK_BUDGET_LIMIT
+  readonly startDelay = 5 // 5 seconds, as owned by this class
   async run(): Promise<void> {}
 }
 
 class TestSimpleJobWithCustomRetryDelay extends SimpleJob {
-  readonly id = JobIds.UPDATE_BILLS_BUDGET_LIMIT // delay = 15 seconds in JOB_DELAYS
+  readonly id = JobIds.UPDATE_BILLS_BUDGET_LIMIT
+  readonly startDelay = 15
   override getRetryDelay(retryCount: number): number {
     return retryCount * 2 * 60 * 1000 // 2 minutes per retry
   }
@@ -55,8 +57,8 @@ describe("BaseJob", () => {
     expect(job.retryable).toBe(true)
   })
 
-  it("getStartDelay returns delay from JOB_DELAYS in milliseconds", () => {
-    expect(job.getStartDelay()).toBe(JOB_DELAYS[JobIds.CHECK_BUDGET_LIMIT] * 1000)
+  it("getStartDelay returns startDelay in milliseconds", () => {
+    expect(job.getStartDelay()).toBe(5 * 1000) // startDelay = 5 seconds
   })
 
   it("getStartDelay returns ASAP_JOB_DELAY when asap = true", () => {
@@ -78,6 +80,14 @@ describe("BaseJob", () => {
   })
 })
 
+describe("BaseJob - default startDelay", () => {
+  it("startDelay defaults to 0 when not overridden", () => {
+    const job = new TestNonRetryableJob()
+    expect(job.startDelay).toBe(0)
+    expect(job.getStartDelay()).toBe(0)
+  })
+})
+
 describe("BaseJob - non-retryable job", () => {
   const job = new TestNonRetryableJob()
 
@@ -86,7 +96,7 @@ describe("BaseJob - non-retryable job", () => {
   })
 
   it("still computes start delay correctly", () => {
-    expect(job.getStartDelay()).toBe(JOB_DELAYS[JobIds.AUTO_IMPORT] * 1000)
+    expect(job.getStartDelay()).toBe(0) // AUTO_IMPORT has startDelay = 0
   })
 })
 
@@ -98,8 +108,8 @@ describe("BaseJob - custom retry delay", () => {
     expect(job.getRetryDelay(3)).toBe(6 * 60 * 1000) // 6 minutes
   })
 
-  it("still uses default getStartDelay from constants", () => {
-    expect(job.getStartDelay()).toBe(JOB_DELAYS[JobIds.UPDATE_BILLS_BUDGET_LIMIT] * 1000)
+  it("getStartDelay uses startDelay from the class", () => {
+    expect(job.getStartDelay()).toBe(15 * 1000) // startDelay = 15 seconds
   })
 })
 
@@ -135,6 +145,8 @@ describe("exported job classes can be imported and instantiated", () => {
     expect(j).toBeInstanceOf(SimpleJob)
     expect(j.id).toBe(JobIds.AUTO_IMPORT)
     expect(j.retryable).toBe(false)
+    expect(j.startDelay).toBe(0)
+    expect(j.getStartDelay()).toBe(0)
   })
 
   it("CheckBudgetLimitJob is exported and extends BudgetJob", () => {
@@ -142,59 +154,76 @@ describe("exported job classes can be imported and instantiated", () => {
     expect(j).toBeInstanceOf(BudgetJob)
     expect(j.id).toBe(JobIds.CHECK_BUDGET_LIMIT)
     expect(j.retryable).toBe(true)
+    expect(j.startDelay).toBe(5)
+    expect(j.getStartDelay()).toBe(5000)
   })
 
   it("InitJob is exported and extends BudgetJob", () => {
     const j = new InitJob()
     expect(j).toBeInstanceOf(BudgetJob)
     expect(j.id).toBe(JobIds.INIT)
+    expect(j.startDelay).toBe(0)
   })
 
   it("LinkPaypalTransactionsJob is exported and extends SimpleJob", () => {
     const j = new LinkPaypalTransactionsJob()
     expect(j).toBeInstanceOf(SimpleJob)
     expect(j.id).toBe(JobIds.LINK_PAYPAL_TRANSACTIONS)
+    expect(j.startDelay).toBe(35)
+    expect(j.getStartDelay()).toBe(35000)
   })
 
   it("RemoveTransactionMessagesJob is exported and extends TransactionJob", () => {
     const j = new RemoveTransactionMessagesJob()
     expect(j).toBeInstanceOf(TransactionJob)
     expect(j.id).toBe(JobIds.REMOVE_TRANSACTION_MESSAGES)
+    expect(j.startDelay).toBe(15)
+    expect(j.getStartDelay()).toBe(15000)
   })
 
   it("SetBudgetForTransactionJob is exported and extends EndpointJob", () => {
     const j = new SetBudgetForTransactionJob()
     expect(j).toBeInstanceOf(EndpointJob)
     expect(j.id).toBe(JobIds.SET_BUDGET_FOR_TRANSACTION)
+    expect(j.startDelay).toBe(0)
   })
 
   it("SetCategoryForTransactionJob is exported and extends EndpointJob", () => {
     const j = new SetCategoryForTransactionJob()
     expect(j).toBeInstanceOf(EndpointJob)
     expect(j.id).toBe(JobIds.SET_CATEGORY_FOR_TRANSACTION)
+    expect(j.startDelay).toBe(0)
   })
 
   it("UnbudgetedTransactionsJob is exported and extends TransactionJob", () => {
     const j = new UnbudgetedTransactionsJob()
     expect(j).toBeInstanceOf(TransactionJob)
     expect(j.id).toBe(JobIds.UNBUDGETED_TRANSACTIONS)
+    expect(j.startDelay).toBe(5)
+    expect(j.getStartDelay()).toBe(5000)
   })
 
   it("UncategorizedTransactionsJob is exported and extends TransactionJob", () => {
     const j = new UncategorizedTransactionsJob()
     expect(j).toBeInstanceOf(TransactionJob)
     expect(j.id).toBe(JobIds.UNCATEGORIZED_TRANSACTIONS)
+    expect(j.startDelay).toBe(10)
+    expect(j.getStartDelay()).toBe(10000)
   })
 
   it("UpdateBillsBudgetLimitJob is exported and extends SimpleJob", () => {
     const j = new UpdateBillsBudgetLimitJob()
     expect(j).toBeInstanceOf(SimpleJob)
     expect(j.id).toBe(JobIds.UPDATE_BILLS_BUDGET_LIMIT)
+    expect(j.startDelay).toBe(15)
+    expect(j.getStartDelay()).toBe(15000)
   })
 
   it("UpdateLeftoverBudgetLimitJob is exported and extends SimpleJob", () => {
     const j = new UpdateLeftoverBudgetLimitJob()
     expect(j).toBeInstanceOf(SimpleJob)
     expect(j.id).toBe(JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT)
+    expect(j.startDelay).toBe(25)
+    expect(j.getStartDelay()).toBe(25000)
   })
 })

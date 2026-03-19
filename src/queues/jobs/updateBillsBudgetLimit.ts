@@ -38,6 +38,8 @@ async function getTotalAmountOfBills(startDate: string, endDate: string): Promis
 export class UpdateBillsBudgetLimitJob extends SimpleJob {
   readonly id = JobIds.UPDATE_BILLS_BUDGET_LIMIT
 
+  override readonly startDelay = 15
+
   async run(): Promise<void> {
     if (!env.billsBudgetId) {
       logger.warn("Bills budget name is not set in environment variables, skipping updateBillsBudgetLimit job")
@@ -86,7 +88,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
   override async init(): Promise<void> {
     logger.info("Initializing UpdateBillsBudgetLimit job")
-    await addJobToQueue(this.id)
+    await addJobToQueue(this)
     logger.info("UpdateBillsBudgetLimit job initialized")
   }
 }

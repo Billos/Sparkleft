@@ -14,6 +14,8 @@ const logger = pino()
 export class LinkPaypalTransactionsJob extends SimpleJob {
   readonly id = JobIds.LINK_PAYPAL_TRANSACTIONS
 
+  override readonly startDelay = 35
+
   async run(): Promise<void> {
     if (!env.fireflyPaypalAccountToken) {
       logger.info("No PayPal account token found, skipping job")
@@ -96,7 +98,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
   override async init(): Promise<void> {
     logger.info("Initializing LinkPaypalTransactions job")
     if (env.fireflyPaypalAccountToken) {
-      await addJobToQueue(this.id)
+      await addJobToQueue(this)
     }
     logger.info("LinkPaypalTransactions job initialized")
   }

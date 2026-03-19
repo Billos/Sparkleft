@@ -10,6 +10,8 @@ const logger = pino()
 export class RemoveTransactionMessagesJob extends TransactionJob {
   readonly id = JobIds.REMOVE_TRANSACTION_MESSAGES
 
+  override readonly startDelay = 15
+
   async run(transactionId: string): Promise<void> {
     logger.info("Checking and removing messages for updated transaction %s", transactionId)
     const {

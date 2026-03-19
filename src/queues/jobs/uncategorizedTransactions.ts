@@ -35,6 +35,8 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
 export class UncategorizedTransactionsJob extends TransactionJob {
   readonly id = JobIds.UNCATEGORIZED_TRANSACTIONS
 
+  override readonly startDelay = 10
+
   async run(transactionId: string): Promise<void> {
     logger.info("Creating a new message for uncategorized transaction with key %s", transactionId)
     const {
@@ -90,7 +92,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       const endDate = getDateNow().toISODate()
       const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
       for (const { id: transactionId } of uncategorizedTransactionsList) {
-        await addTransactionJobToQueue(this.id, transactionId)
+        await addTransactionJobToQueue(this, transactionId)
       }
     }
     logger.info("Initialized UnbudgetedTransactions jobs for %d transactions", 0)

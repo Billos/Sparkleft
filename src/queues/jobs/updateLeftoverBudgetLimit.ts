@@ -67,6 +67,8 @@ async function getSumWithoutLeftovers(
 export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
   readonly id = JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT
 
+  override readonly startDelay = 25
+
   async run(): Promise<void> {
     const startDate = getDateNow().startOf("month").toISODate()
     const endDate = getDateNow().endOf("month").toISODate()
@@ -121,7 +123,7 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
 
   override async init(): Promise<void> {
     logger.info("Initializing UpdateLeftoverBudgetLimit job")
-    await addJobToQueue(this.id)
+    await addJobToQueue(this)
     logger.info("UpdateLeftoverBudgetLimit job initialized")
   }
 }

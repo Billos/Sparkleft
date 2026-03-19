@@ -1,15 +1,17 @@
-import { ASAP_JOB_DELAY, JOB_DELAYS, JobIds } from "../constants"
+import { ASAP_JOB_DELAY, JobIds } from "../constants"
 
 export abstract class BaseJob {
   abstract readonly id: JobIds
 
   readonly retryable: boolean = true
 
+  readonly startDelay: number = 0
+
   getStartDelay(asap: boolean = false): number {
     if (asap) {
       return ASAP_JOB_DELAY
     }
-    return JOB_DELAYS[this.id] * 1000
+    return this.startDelay * 1000
   }
 
   getRetryDelay(retryCount: number): number {

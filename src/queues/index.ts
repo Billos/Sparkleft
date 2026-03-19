@@ -37,6 +37,8 @@ export const budgetJobs: BudgetJob[] = []
 const endpointJobs: EndpointJob[] = []
 const jobMap = new Map<string, BaseJob>()
 
+let initJob: InitJob | null = null
+
 let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
 
@@ -124,7 +126,7 @@ function initJobInstances() {
 
   endpointJobs.push(new SetCategoryForTransactionJob(), new SetBudgetForTransactionJob())
 
-  budgetJobs.push(new CheckBudgetLimitJob(), new InitJob())
+  budgetJobs.push(new CheckBudgetLimitJob(), (initJob = new InitJob()))
 
   const autoImport = new AutoImportJob()
 
@@ -212,7 +214,9 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker.on("ready", async () => {
     logger.info("Worker is ready and connected to Redis")
-    await addJobToQueue(JobIds.INIT, true)
+    if (initJob) {
+      await addJobToQueue(initJob, true)
+    }
   })
 
   return worker

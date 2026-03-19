@@ -8,11 +8,14 @@ import { renderTemplate } from "../../utils/renderTemplate"
 import { JobIds } from "../constants"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../jobs"
 import { TransactionJob } from "./BaseJob"
+import { CheckBudgetLimitJob } from "./checkBudgetLimit"
 
 const logger = pino()
 
 export class UnbudgetedTransactionsJob extends TransactionJob {
   readonly id = JobIds.UNBUDGETED_TRANSACTIONS
+
+  override readonly startDelay = 5
 
   async run(transactionId: string): Promise<void> {
     logger.info("Creating a new message for unbudgeted transaction with key %s", transactionId)
@@ -37,7 +40,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
 
     if (transaction.budget_id) {
       // We can assume that if a budget_id is set, the budget limit might need to be checked
-      await addBudgetJobToQueue(JobIds.CHECK_BUDGET_LIMIT, transaction.budget_id)
+      await addBudgetJobToQueue(new CheckBudgetLimitJob(), transaction.budget_id)
       logger.info("Transaction %s already budgeted", transactionId)
       return
     }
@@ -68,7 +71,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
     if (notifier) {
       const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
       for (const { id: transactionId } of data) {
-        await addTransactionJobToQueue(this.id, transactionId)
+        await addTransactionJobToQueue(this, transactionId)
       }
     }
     logger.info("Initialized UnbudgetedTransactions jobs for %d transactions", 0)

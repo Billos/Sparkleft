@@ -46,20 +46,20 @@ export async function webhook(req: Request, res: Response) {
   if (isTransactionTrigger) {
     const transactionId = String(body.content.id)
 
-    for (const { id } of transactionJobs) {
-      await addTransactionJobToQueue(id, transactionId)
+    for (const job of transactionJobs) {
+      await addTransactionJobToQueue(job, transactionId)
     }
   }
 
   if (isBudgetTrigger) {
     const budgetId = String(body.content.id)
     logger.info("Processing budget trigger for budget id: %o", body.content)
-    for (const { id } of budgetJobs) {
-      await addBudgetJobToQueue(id, budgetId)
+    for (const job of budgetJobs) {
+      await addBudgetJobToQueue(job, budgetId)
     }
   }
 
-  for (const { id: job } of simpleJobs) {
+  for (const job of simpleJobs) {
     await addJobToQueue(job, false)
   }
   res.send("<script>window.close()</script>")

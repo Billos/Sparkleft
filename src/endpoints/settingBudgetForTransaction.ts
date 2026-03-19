@@ -4,8 +4,8 @@ import pino from "pino"
 
 import { env } from "../config"
 import { getQueue } from "../queues"
-import { JobIds } from "../queues/constants"
 import { addEndpointJobToQueue } from "../queues/jobs"
+import { SetBudgetForTransactionJob } from "../queues/jobs/setBudgetForTransaction"
 
 const logger = pino()
 
@@ -19,7 +19,7 @@ export async function settingBudgetForTransaction(
   const queueEvents = new QueueEvents(queue.name, { connection: env.redisConnection })
   const { transactionId, budget_id } = req.params
 
-  const job = await addEndpointJobToQueue(JobIds.SET_BUDGET_FOR_TRANSACTION, transactionId, { budget_id })
+  const job = await addEndpointJobToQueue(new SetBudgetForTransactionJob(), transactionId, { budget_id })
   await job.waitUntilFinished(queueEvents)
   next()
 }
