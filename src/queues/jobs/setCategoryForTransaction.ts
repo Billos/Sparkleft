@@ -2,7 +2,6 @@ import pino from "pino"
 
 import { notifier } from "../../modules/notifiers"
 import { TransactionsService } from "../../types"
-import { JobIds } from "../constants"
 import { EndpointJob } from "./BaseJob"
 
 const logger = pino()
@@ -12,7 +11,7 @@ interface JobData {
 }
 
 export class SetCategoryForTransactionJob extends EndpointJob {
-  readonly id = JobIds.SET_CATEGORY_FOR_TRANSACTION
+  readonly id = "set-category-for-transaction"
 
   async run(transactionId: string, data: unknown): Promise<void> {
     const { category_id } = data as JobData

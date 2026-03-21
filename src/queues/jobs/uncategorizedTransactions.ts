@@ -6,7 +6,6 @@ import { CategoriesService, TransactionRead, TransactionsService, TransactionTyp
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
-import { JobIds } from "../constants"
 import { addTransactionJobToQueue } from "../jobs"
 import { TransactionJob } from "./BaseJob"
 
@@ -33,7 +32,7 @@ async function getUncategorizedTransactions(startDate?: string, endDate?: string
 }
 
 export class UncategorizedTransactionsJob extends TransactionJob {
-  readonly id = JobIds.UNCATEGORIZED_TRANSACTIONS
+  readonly id = "uncategorized-transactions"
 
   override readonly startDelay = 10
 

@@ -4,13 +4,12 @@ import pino from "pino"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
 import { renderTemplate } from "../../utils/renderTemplate"
-import { JobIds } from "../constants"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
 
 export class AutoImportJob extends SimpleJob {
-  readonly id = JobIds.AUTO_IMPORT
+  readonly id = "auto-import"
 
   override readonly retryable = false // auto-import is triggered externally and should not be retried on failure
 

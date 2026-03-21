@@ -5,14 +5,13 @@ import { notifier } from "../../modules/notifiers"
 import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../types"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
-import { JobIds } from "../constants"
 import { addBudgetJobToQueue } from "../jobs"
 import { BudgetJob } from "./BaseJob"
 
 const logger = pino()
 
 export class CheckBudgetLimitJob extends BudgetJob {
-  readonly id = JobIds.CHECK_BUDGET_LIMIT
+  readonly id = "check-budget-limit"
 
   override readonly startDelay = 5
 

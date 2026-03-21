@@ -1,7 +1,7 @@
-import { ASAP_JOB_DELAY, JobIds } from "../constants"
+import { ASAP_JOB_DELAY } from "../constants"
 
 export abstract class BaseJob {
-  abstract readonly id: JobIds
+  abstract readonly id: string
 
   readonly retryable: boolean = true
 

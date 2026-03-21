@@ -2,13 +2,12 @@ import pino from "pino"
 
 import { notifier } from "../../modules/notifiers"
 import { TransactionsService } from "../../types"
-import { JobIds } from "../constants"
 import { TransactionJob } from "./BaseJob"
 
 const logger = pino()
 
 export class RemoveTransactionMessagesJob extends TransactionJob {
-  readonly id = JobIds.REMOVE_TRANSACTION_MESSAGES
+  readonly id = "remove-transaction-messages"
 
   override readonly startDelay = 15
 

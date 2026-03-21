@@ -11,7 +11,6 @@ import {
   InsightService,
 } from "../../types"
 import { getDateNow } from "../../utils/date"
-import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"
 import { SimpleJob } from "./BaseJob"
 
@@ -65,7 +64,7 @@ async function getSumWithoutLeftovers(
 }
 
 export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
-  readonly id = JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT
+  readonly id = "update-leftovers-budget-limit"
 
   override readonly startDelay = 25
 

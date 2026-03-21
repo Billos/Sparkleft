@@ -3,7 +3,6 @@ import pino from "pino"
 import { env } from "../../config"
 import { BillsService, BudgetLimitStore, BudgetsService } from "../../types"
 import { getDateNow } from "../../utils/date"
-import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"
 import { SimpleJob } from "./BaseJob"
 
@@ -36,7 +35,7 @@ async function getTotalAmountOfBills(startDate: string, endDate: string): Promis
 }
 
 export class UpdateBillsBudgetLimitJob extends SimpleJob {
-  readonly id = JobIds.UPDATE_BILLS_BUDGET_LIMIT
+  readonly id = "update-bills-budget-limit"
 
   override readonly startDelay = 15
 

@@ -2,7 +2,6 @@ import pino from "pino"
 
 import { notifier } from "../../modules/notifiers"
 import { TransactionsService } from "../../types"
-import { JobIds } from "../constants"
 import { EndpointJob } from "./BaseJob"
 
 const logger = pino()
@@ -12,7 +11,7 @@ interface JobData {
 }
 
 export class SetBudgetForTransactionJob extends EndpointJob {
-  readonly id = JobIds.SET_BUDGET_FOR_TRANSACTION
+  readonly id = "set-budget-for-transaction"
 
   async run(transactionId: string, data: unknown): Promise<void> {
     const { budget_id } = data as JobData

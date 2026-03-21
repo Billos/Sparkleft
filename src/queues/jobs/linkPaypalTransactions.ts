@@ -5,14 +5,13 @@ import { env } from "../../config"
 import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../../paypalTypes"
 import { TransactionsService } from "../../types"
 import { getDateNow } from "../../utils/date"
-import { JobIds } from "../constants"
 import { addJobToQueue } from "../jobs"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
 
 export class LinkPaypalTransactionsJob extends SimpleJob {
-  readonly id = JobIds.LINK_PAYPAL_TRANSACTIONS
+  readonly id = "link-paypal-transactions"
 
   override readonly startDelay = 35
 

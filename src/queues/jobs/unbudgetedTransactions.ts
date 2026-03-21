@@ -5,7 +5,6 @@ import { notifier } from "../../modules/notifiers"
 import { BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { renderTemplate } from "../../utils/renderTemplate"
-import { JobIds } from "../constants"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../jobs"
 import { TransactionJob } from "./BaseJob"
 import { CheckBudgetLimitJob } from "./checkBudgetLimit"
@@ -13,7 +12,7 @@ import { CheckBudgetLimitJob } from "./checkBudgetLimit"
 const logger = pino()
 
 export class UnbudgetedTransactionsJob extends TransactionJob {
-  readonly id = JobIds.UNBUDGETED_TRANSACTIONS
+  readonly id = "unbudgeted-transactions"
 
   override readonly startDelay = 5
 

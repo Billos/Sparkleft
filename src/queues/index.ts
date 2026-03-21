@@ -5,7 +5,6 @@ import pino from "pino"
 import { env } from "../config"
 import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
-import { JobIds } from "./constants"
 import { addJobToQueue } from "./jobs"
 import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "./jobs/BaseJob"
 import { AutoImportJob } from "./jobs/autoImport"
@@ -108,7 +107,7 @@ async function setupAutoImportScheduler(): Promise<void> {
     await queue.upsertJobScheduler(
       "auto-import-repeat",
       { pattern: env.autoImportCron },
-      { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT } },
+      { name: "auto-import", data: { job: "auto-import" } },
     )
   } catch (err) {
     logger.error({ err }, "Failed to set up auto-import scheduler; auto-import will not run automatically")

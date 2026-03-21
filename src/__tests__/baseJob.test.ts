@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { ASAP_JOB_DELAY, JobIds } from "../queues/constants"
+import { ASAP_JOB_DELAY } from "../queues/constants"
 import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "../queues/jobs/BaseJob"
 import { AutoImportJob } from "../queues/jobs/autoImport"
 import { CheckBudgetLimitJob } from "../queues/jobs/checkBudgetLimit"
@@ -15,36 +15,36 @@ import { UpdateBillsBudgetLimitJob } from "../queues/jobs/updateBillsBudgetLimit
 import { UpdateLeftoverBudgetLimitJob } from "../queues/jobs/updateLeftoverBudgetLimit"
 
 class TestSimpleJob extends SimpleJob {
-  readonly id = JobIds.CHECK_BUDGET_LIMIT
+  readonly id = "check-budget-limit"
   readonly startDelay = 5 // 5 seconds, as owned by this class
   async run(): Promise<void> {}
 }
 
 class TestSimpleJobWithCustomRetryDelay extends SimpleJob {
-  readonly id = JobIds.UPDATE_BILLS_BUDGET_LIMIT
+  readonly id = "update-bills-budget-limit"
   readonly startDelay = 15
   override readonly retryDelay = 120 // 2 minutes per retry
   async run(): Promise<void> {}
 }
 
 class TestNonRetryableJob extends SimpleJob {
-  readonly id = JobIds.AUTO_IMPORT
+  readonly id = "auto-import"
   override readonly retryable = false
   async run(): Promise<void> {}
 }
 
 class TestTransactionJob extends TransactionJob {
-  readonly id = JobIds.UNBUDGETED_TRANSACTIONS
+  readonly id = "unbudgeted-transactions"
   async run(_transactionId: string): Promise<void> {}
 }
 
 class TestBudgetJob extends BudgetJob {
-  readonly id = JobIds.CHECK_BUDGET_LIMIT
+  readonly id = "check-budget-limit"
   async run(_budgetId: string): Promise<void> {}
 }
 
 class TestEndpointJob extends EndpointJob {
-  readonly id = JobIds.SET_CATEGORY_FOR_TRANSACTION
+  readonly id = "set-category-for-transaction"
   async run(_transactionId: string, _data: unknown): Promise<void> {}
 }
 
@@ -78,7 +78,7 @@ describe("BaseJob", () => {
   })
 
   it("id is set correctly", () => {
-    expect(job.id).toBe(JobIds.CHECK_BUDGET_LIMIT)
+    expect(job.id).toBe("check-budget-limit")
   })
 })
 
@@ -149,7 +149,7 @@ describe("exported job classes can be imported and instantiated", () => {
   it("AutoImportJob is exported and extends SimpleJob", () => {
     const j = new AutoImportJob()
     expect(j).toBeInstanceOf(SimpleJob)
-    expect(j.id).toBe(JobIds.AUTO_IMPORT)
+    expect(j.id).toBe("auto-import")
     expect(j.retryable).toBe(false)
     expect(j.startDelay).toBe(0)
     expect(j.getStartDelay()).toBe(0)
@@ -158,7 +158,7 @@ describe("exported job classes can be imported and instantiated", () => {
   it("CheckBudgetLimitJob is exported and extends BudgetJob", () => {
     const j = new CheckBudgetLimitJob()
     expect(j).toBeInstanceOf(BudgetJob)
-    expect(j.id).toBe(JobIds.CHECK_BUDGET_LIMIT)
+    expect(j.id).toBe("check-budget-limit")
     expect(j.retryable).toBe(true)
     expect(j.startDelay).toBe(5)
     expect(j.getStartDelay()).toBe(5000)
@@ -167,14 +167,14 @@ describe("exported job classes can be imported and instantiated", () => {
   it("InitJob is exported and extends BudgetJob", () => {
     const j = new InitJob()
     expect(j).toBeInstanceOf(BudgetJob)
-    expect(j.id).toBe(JobIds.INIT)
+    expect(j.id).toBe("init")
     expect(j.startDelay).toBe(0)
   })
 
   it("LinkPaypalTransactionsJob is exported and extends SimpleJob", () => {
     const j = new LinkPaypalTransactionsJob()
     expect(j).toBeInstanceOf(SimpleJob)
-    expect(j.id).toBe(JobIds.LINK_PAYPAL_TRANSACTIONS)
+    expect(j.id).toBe("link-paypal-transactions")
     expect(j.startDelay).toBe(35)
     expect(j.getStartDelay()).toBe(35000)
   })
@@ -182,7 +182,7 @@ describe("exported job classes can be imported and instantiated", () => {
   it("RemoveTransactionMessagesJob is exported and extends TransactionJob", () => {
     const j = new RemoveTransactionMessagesJob()
     expect(j).toBeInstanceOf(TransactionJob)
-    expect(j.id).toBe(JobIds.REMOVE_TRANSACTION_MESSAGES)
+    expect(j.id).toBe("remove-transaction-messages")
     expect(j.startDelay).toBe(15)
     expect(j.getStartDelay()).toBe(15000)
   })
@@ -190,21 +190,21 @@ describe("exported job classes can be imported and instantiated", () => {
   it("SetBudgetForTransactionJob is exported and extends EndpointJob", () => {
     const j = new SetBudgetForTransactionJob()
     expect(j).toBeInstanceOf(EndpointJob)
-    expect(j.id).toBe(JobIds.SET_BUDGET_FOR_TRANSACTION)
+    expect(j.id).toBe("set-budget-for-transaction")
     expect(j.startDelay).toBe(0)
   })
 
   it("SetCategoryForTransactionJob is exported and extends EndpointJob", () => {
     const j = new SetCategoryForTransactionJob()
     expect(j).toBeInstanceOf(EndpointJob)
-    expect(j.id).toBe(JobIds.SET_CATEGORY_FOR_TRANSACTION)
+    expect(j.id).toBe("set-category-for-transaction")
     expect(j.startDelay).toBe(0)
   })
 
   it("UnbudgetedTransactionsJob is exported and extends TransactionJob", () => {
     const j = new UnbudgetedTransactionsJob()
     expect(j).toBeInstanceOf(TransactionJob)
-    expect(j.id).toBe(JobIds.UNBUDGETED_TRANSACTIONS)
+    expect(j.id).toBe("unbudgeted-transactions")
     expect(j.startDelay).toBe(5)
     expect(j.getStartDelay()).toBe(5000)
   })
@@ -212,7 +212,7 @@ describe("exported job classes can be imported and instantiated", () => {
   it("UncategorizedTransactionsJob is exported and extends TransactionJob", () => {
     const j = new UncategorizedTransactionsJob()
     expect(j).toBeInstanceOf(TransactionJob)
-    expect(j.id).toBe(JobIds.UNCATEGORIZED_TRANSACTIONS)
+    expect(j.id).toBe("uncategorized-transactions")
     expect(j.startDelay).toBe(10)
     expect(j.getStartDelay()).toBe(10000)
   })
@@ -220,7 +220,7 @@ describe("exported job classes can be imported and instantiated", () => {
   it("UpdateBillsBudgetLimitJob is exported and extends SimpleJob", () => {
     const j = new UpdateBillsBudgetLimitJob()
     expect(j).toBeInstanceOf(SimpleJob)
-    expect(j.id).toBe(JobIds.UPDATE_BILLS_BUDGET_LIMIT)
+    expect(j.id).toBe("update-bills-budget-limit")
     expect(j.startDelay).toBe(15)
     expect(j.getStartDelay()).toBe(15000)
   })
@@ -228,7 +228,7 @@ describe("exported job classes can be imported and instantiated", () => {
   it("UpdateLeftoverBudgetLimitJob is exported and extends SimpleJob", () => {
     const j = new UpdateLeftoverBudgetLimitJob()
     expect(j).toBeInstanceOf(SimpleJob)
-    expect(j.id).toBe(JobIds.UPDATE_LEFTOVERS_BUDGET_LIMIT)
+    expect(j.id).toBe("update-leftovers-budget-limit")
     expect(j.startDelay).toBe(25)
     expect(j.getStartDelay()).toBe(25000)
   })
