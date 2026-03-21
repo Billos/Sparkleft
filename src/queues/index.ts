@@ -19,7 +19,7 @@ import { UnbudgetedTransactionsJob } from "./jobs/unbudgetedTransactions"
 import { UncategorizedTransactionsJob } from "./jobs/uncategorizedTransactions"
 import { UpdateBillsBudgetLimitJob } from "./jobs/updateBillsBudgetLimit"
 import { UpdateLeftoverBudgetLimitJob } from "./jobs/updateLeftoverBudgetLimit"
-import { isBudgetJobArgs, isEndpointJobArgs, isTransactionJobArgs, QueueArgs } from "./queueArgs"
+import { isBudgetJob, isEndpointJob, isTransactionJob, BudgetJobArgs, EndpointJobArgs, TransactionJobArgs, QueueArgs } from "./queueArgs"
 
 const logger = pino()
 
@@ -160,12 +160,12 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
         if (!jobInstance) {
           throw new Error(`Unknown job: ${data.job}`)
         }
-        if (isTransactionJobArgs(data)) {
-          await (jobInstance as TransactionJob).run(data.transactionId)
-        } else if (isBudgetJobArgs(data)) {
-          await (jobInstance as BudgetJob).run(data.budgetId)
-        } else if (isEndpointJobArgs(data)) {
-          await (jobInstance as EndpointJob).run(data.transactionId, data.data)
+        if (isTransactionJob(jobInstance)) {
+          await jobInstance.run((data as TransactionJobArgs).transactionId)
+        } else if (isBudgetJob(jobInstance)) {
+          await jobInstance.run((data as BudgetJobArgs).budgetId)
+        } else if (isEndpointJob(jobInstance)) {
+          await jobInstance.run((data as EndpointJobArgs).transactionId, (data as EndpointJobArgs).data)
         } else {
           await (jobInstance as SimpleJob).run()
         }
