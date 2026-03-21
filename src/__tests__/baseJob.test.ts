@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest"
 
-import { ASAP_JOB_DELAY } from "../queues/constants"
 import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "../queues/jobs/BaseJob"
 import { AutoImportJob } from "../queues/jobs/autoImport"
 import { CheckBudgetLimitJob } from "../queues/jobs/checkBudgetLimit"
@@ -59,8 +58,8 @@ describe("BaseJob", () => {
     expect(job.getStartDelay()).toBe(5 * 1000) // startDelay = 5 seconds
   })
 
-  it("getStartDelay returns ASAP_JOB_DELAY when asap = true", () => {
-    expect(job.getStartDelay(true)).toBe(ASAP_JOB_DELAY)
+  it("getStartDelay returns 2000ms (ASAP delay) when asap = true", () => {
+    expect(job.getStartDelay(true)).toBe(2000)
   })
 
   it("retryDelay defaults to 60 seconds", () => {

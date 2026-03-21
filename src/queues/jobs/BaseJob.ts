@@ -1,5 +1,3 @@
-import { ASAP_JOB_DELAY } from "../constants"
-
 export abstract class BaseJob {
   abstract readonly id: string
 
@@ -11,7 +9,7 @@ export abstract class BaseJob {
 
   getStartDelay(asap: boolean = false): number {
     if (asap) {
-      return ASAP_JOB_DELAY
+      return 2000 // 2 seconds
     }
     return this.startDelay * 1000
   }
