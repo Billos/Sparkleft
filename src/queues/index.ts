@@ -1,4 +1,4 @@
-import { DelayedError, Job, Queue, Worker } from "bullmq"
+import { DelayedError, Job, Worker } from "bullmq"
 import { DateTime } from "luxon"
 import pino from "pino"
 
@@ -19,36 +19,27 @@ import { UncategorizedTransactionsJob } from "./jobs/uncategorizedTransactions"
 import { UpdateBillsBudgetLimitJob } from "./jobs/updateBillsBudgetLimit"
 import { UpdateLeftoverBudgetLimitJob } from "./jobs/updateLeftoverBudgetLimit"
 import { isBudgetJob, isEndpointJob, isTransactionJob, BudgetJobArgs, EndpointJobArgs, TransactionJobArgs, QueueArgs } from "./queueArgs"
+import { getQueue } from "./queue"
 
 const logger = pino()
 
 const startedAt = new Map<string, DateTime>()
 
-// Exported arrays populated lazily on first initJobInstances() call so that
-// module-level code never calls `new XxxJob()` (which would fail under
-// circular-dependency loading order).
-export const simpleJobs: SimpleJob[] = []
+export const simpleJobs: SimpleJob[] = [new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob()]
 
-export const transactionJobs: TransactionJob[] = []
+export const transactionJobs: TransactionJob[] = [new UnbudgetedTransactionsJob(), new UncategorizedTransactionsJob(), new RemoveTransactionMessagesJob()]
 
-export const budgetJobs: BudgetJob[] = []
+const initJob = new InitJob()
 
-const endpointJobs: EndpointJob[] = []
-const jobMap = new Map<string, BaseJob>()
+export const budgetJobs: BudgetJob[] = [new CheckBudgetLimitJob(), initJob]
 
-let initJob: InitJob | null = null
+const endpointJobs: EndpointJob[] = [new SetCategoryForTransactionJob(), new SetBudgetForTransactionJob()]
 
-let queue: Queue<QueueArgs> | null = null
+const autoImport = new AutoImportJob()
+
+const jobMap = new Map<string, BaseJob>([...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs, autoImport].map((j) => [j.id, j]))
+
 let worker: Worker<QueueArgs> | null = null
-
-async function getQueue(): Promise<Queue<QueueArgs>> {
-  if (queue) {
-    return queue
-  }
-
-  queue = new Queue("manager", { connection: env.redisConnection })
-  return queue
-}
 
 function logJobDuration(success: boolean, jobId: string, name: string) {
   const startTime = startedAt.get(jobId)
@@ -114,32 +105,10 @@ async function setupAutoImportScheduler(): Promise<void> {
   }
 }
 
-function initJobInstances() {
-  if (simpleJobs.length > 0) {
-    return
-  }
-
-  simpleJobs.push(new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob())
-
-  transactionJobs.push(new UnbudgetedTransactionsJob(), new UncategorizedTransactionsJob(), new RemoveTransactionMessagesJob())
-
-  endpointJobs.push(new SetCategoryForTransactionJob(), new SetBudgetForTransactionJob())
-
-  budgetJobs.push(new CheckBudgetLimitJob(), (initJob = new InitJob()))
-
-  const autoImport = new AutoImportJob()
-
-  for (const j of [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs, autoImport]) {
-    jobMap.set(j.id, j)
-  }
-}
-
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
   if (worker) {
     return worker
   }
-
-  initJobInstances()
 
   const queue = await getQueue()
   await setupAutoImportScheduler()
@@ -213,9 +182,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker.on("ready", async () => {
     logger.info("Worker is ready and connected to Redis")
-    if (initJob) {
-      await addJobToQueue(initJob, true)
-    }
+    await addJobToQueue(initJob, true)
   })
 
   return worker
@@ -230,4 +197,6 @@ async function processExit() {
 process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
-export { getQueue, initializeWorker }
+export { initializeWorker }
+
+export { getQueue } from "./queue"
