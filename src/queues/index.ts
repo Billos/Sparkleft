@@ -5,10 +5,8 @@ import pino from "pino"
 import { env } from "../config"
 import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
-import { addJobToQueue } from "./utils"
 import { BaseJob, SimpleJob } from "./jobs/BaseJob"
 import { autoImport, budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
-import { InitJob } from "./jobs/init"
 import { isBudgetJob, isEndpointJob, isTransactionJob, BudgetJobArgs, EndpointJobArgs, TransactionJobArgs, QueueArgs } from "./queueArgs"
 import { getQueue } from "./queue"
 
@@ -161,7 +159,10 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker.on("ready", async () => {
     logger.info("Worker is ready and connected to Redis")
-    await addJobToQueue(new InitJob(), true)
+    logger.info("Initializing job definitions")
+    for (const instance of [...simpleJobs, ...transactionJobs, ...budgetJobs, ...endpointJobs, autoImport]) {
+      await instance.init()
+    }
   })
 
   return worker

@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest"
 import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "../queues/jobs/BaseJob"
 import { AutoImportJob } from "../queues/jobs/autoImport"
 import { CheckBudgetLimitJob } from "../queues/jobs/checkBudgetLimit"
-import { InitJob } from "../queues/jobs/init"
 import { LinkPaypalTransactionsJob } from "../queues/jobs/linkPaypalTransactions"
 import { RemoveTransactionMessagesJob } from "../queues/jobs/removeTransactionMessages"
 import { SetBudgetForTransactionJob } from "../queues/jobs/setBudgetForTransaction"
@@ -161,13 +160,6 @@ describe("exported job classes can be imported and instantiated", () => {
     expect(j.retryable).toBe(true)
     expect(j.startDelay).toBe(5)
     expect(j.getStartDelay()).toBe(5000)
-  })
-
-  it("InitJob is exported and extends SimpleJob", () => {
-    const j = new InitJob()
-    expect(j).toBeInstanceOf(SimpleJob)
-    expect(j.id).toBe("init")
-    expect(j.startDelay).toBe(0)
   })
 
   it("LinkPaypalTransactionsJob is exported and extends SimpleJob", () => {
