@@ -3,7 +3,7 @@ import pino from "pino"
 import { env } from "../../config"
 import { BillsService, BudgetLimitStore, BudgetsService } from "../../types"
 import { getDateNow } from "../../utils/date"
-import { addJobToQueue } from "../jobs"
+import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()

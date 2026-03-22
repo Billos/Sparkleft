@@ -5,7 +5,7 @@ import { env } from "../../config"
 import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../../paypalTypes"
 import { TransactionsService } from "../../types"
 import { getDateNow } from "../../utils/date"
-import { addJobToQueue } from "../jobs"
+import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()

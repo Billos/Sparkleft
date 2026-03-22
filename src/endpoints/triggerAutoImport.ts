@@ -4,7 +4,7 @@ import pino from "pino"
 
 import { env } from "../config"
 import { getQueue } from "../queues"
-import { addJobToQueue } from "../queues/jobs"
+import { addJobToQueue } from "../queues/utils"
 import { AutoImportJob } from "../queues/jobs/autoImport"
 
 const logger = pino()

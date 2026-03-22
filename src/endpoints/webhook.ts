@@ -3,7 +3,7 @@ import pino from "pino"
 
 import { BudgetProperties } from "../paypalTypes"
 import { budgetJobs, simpleJobs, transactionJobs } from "../queues"
-import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/jobs"
+import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/utils"
 import { Transaction, WebhookTrigger } from "../types"
 
 // type BudgetTriggers = WebhookTrigger.STORE_BUDGET | WebhookTrigger.UPDATE_BUDGET | WebhookTrigger.DESTROY_BUDGET | WebhookTrigger.STORE_UPDATE_BUDGET_LIMIT

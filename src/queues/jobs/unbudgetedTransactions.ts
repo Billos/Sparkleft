@@ -5,7 +5,7 @@ import { notifier } from "../../modules/notifiers"
 import { BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { renderTemplate } from "../../utils/renderTemplate"
-import { addBudgetJobToQueue, addTransactionJobToQueue } from "../jobs"
+import { addBudgetJobToQueue, addTransactionJobToQueue } from "../utils"
 import { TransactionJob } from "./BaseJob"
 import { CheckBudgetLimitJob } from "./checkBudgetLimit"
 

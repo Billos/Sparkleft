@@ -5,7 +5,7 @@ import { notifier } from "../../modules/notifiers"
 import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../types"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
-import { addBudgetJobToQueue } from "../jobs"
+import { addBudgetJobToQueue } from "../utils"
 import { BudgetJob } from "./BaseJob"
 
 const logger = pino()

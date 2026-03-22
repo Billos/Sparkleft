@@ -6,7 +6,7 @@ import { CategoriesService, TransactionRead, TransactionsService, TransactionTyp
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
-import { addTransactionJobToQueue } from "../jobs"
+import { addTransactionJobToQueue } from "../utils"
 import { TransactionJob } from "./BaseJob"
 
 const logger = pino()

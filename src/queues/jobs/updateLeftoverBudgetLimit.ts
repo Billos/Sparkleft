@@ -11,7 +11,7 @@ import {
   InsightService,
 } from "../../types"
 import { getDateNow } from "../../utils/date"
-import { addJobToQueue } from "../jobs"
+import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()

@@ -4,7 +4,7 @@ import pino from "pino"
 
 import { env } from "../config"
 import { getQueue } from "../queues"
-import { addEndpointJobToQueue } from "../queues/jobs"
+import { addEndpointJobToQueue } from "../queues/utils"
 import { SetBudgetForTransactionJob } from "../queues/jobs/setBudgetForTransaction"
 
 const logger = pino()
