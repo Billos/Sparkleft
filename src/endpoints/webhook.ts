@@ -2,7 +2,10 @@ import { Request, Response } from "express"
 import pino from "pino"
 
 import { BudgetProperties } from "../paypalTypes"
-import { budgetJobs, simpleJobs, transactionJobs } from "../queues"
+import { budgetJobs, transactionJobs } from "../queues"
+import { LinkPaypalTransactionsJob } from "../queues/jobs/linkPaypalTransactions"
+import { UpdateBillsBudgetLimitJob } from "../queues/jobs/updateBillsBudgetLimit"
+import { UpdateLeftoverBudgetLimitJob } from "../queues/jobs/updateLeftoverBudgetLimit"
 import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/utils"
 import { Transaction, WebhookTrigger } from "../types"
 
@@ -59,8 +62,8 @@ export async function webhook(req: Request, res: Response) {
     }
   }
 
-  for (const job of simpleJobs) {
-    await addJobToQueue(job, false)
-  }
+  await addJobToQueue(new UpdateLeftoverBudgetLimitJob(), false)
+  await addJobToQueue(new UpdateBillsBudgetLimitJob(), false)
+  await addJobToQueue(new LinkPaypalTransactionsJob(), false)
   res.send("<script>window.close()</script>")
 }
