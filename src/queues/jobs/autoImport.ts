@@ -22,11 +22,7 @@ export class AutoImportJob extends SimpleJob {
     const queue = await getQueue()
     logger.info("Setting up auto-import scheduler with cron '%s'", env.autoImportCron)
     try {
-      await queue.upsertJobScheduler(
-        "auto-import-repeat",
-        { pattern: env.autoImportCron },
-        { name: this.id, data: { job: this.id } },
-      )
+      await queue.upsertJobScheduler("auto-import-repeat", { pattern: env.autoImportCron }, { name: this.id, data: { job: this.id } })
     } catch (err) {
       logger.error({ err }, "Failed to set up auto-import scheduler; auto-import will not run automatically")
     }
