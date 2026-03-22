@@ -82,6 +82,13 @@ async function setupAutoImportScheduler(): Promise<void> {
   }
 }
 
+async function initializeJobs(): Promise<void> {
+  logger.info("Initializing job definitions")
+  for (const instance of [...simpleJobs, ...transactionJobs, ...budgetJobs, ...endpointJobs, autoImport]) {
+    await instance.init()
+  }
+}
+
 async function initializeWorker(): Promise<Worker<QueueArgs>> {
   if (worker) {
     return worker
@@ -157,12 +164,8 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     logJobDuration(false, job.id, job.name)
   })
 
-  worker.on("ready", async () => {
+  worker.on("ready", () => {
     logger.info("Worker is ready and connected to Redis")
-    logger.info("Initializing job definitions")
-    for (const instance of [...simpleJobs, ...transactionJobs, ...budgetJobs, ...endpointJobs, autoImport]) {
-      await instance.init()
-    }
   })
 
   return worker
@@ -177,7 +180,7 @@ async function processExit() {
 process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
-export { initializeWorker }
+export { initializeWorker, initializeJobs }
 
 export { simpleJobs, transactionJobs, budgetJobs }
 

@@ -10,6 +10,7 @@ import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransac
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { triggerAutoImport } from "./endpoints/triggerAutoImport"
 import { webhook } from "./endpoints/webhook"
+import { initializeJobs } from "./queues"
 import { AssertTransactionExistsMiddleware } from "./utils/assertTransactionExistsMiddleware"
 import { ParseBodyMiddleware } from "./utils/middleware"
 import { TokenMiddleware } from "./utils/tokenMiddleware"
@@ -54,9 +55,13 @@ app.get("/about", about)
 
 async function startServer() {
   try {
-    app.listen(env.port, () => {
-      logger.info("Server is running on http://localhost:%s", env.port)
+    await new Promise<void>((resolve) => {
+      app.listen(env.port, () => {
+        logger.info("Server is running on http://localhost:%s", env.port)
+        resolve()
+      })
     })
+    await initializeJobs()
   } catch (err) {
     logger.error({ err }, "Failed to start server:")
     process.exit(1)
