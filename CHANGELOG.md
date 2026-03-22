@@ -1,3 +1,10 @@
+# [2.22.0](https://github.com/Billos/Sparkleft/compare/2.21.1...2.22.0) (2026-03-22)
+
+
+### Features
+
+* implement jobs as classes ([#56](https://github.com/Billos/Sparkleft/issues/56)) ([b0ee027](https://github.com/Billos/Sparkleft/commit/b0ee027145db049ca5ffe5b6519cc45e7731f571))
+
 ## [2.21.1](https://github.com/Billos/Sparkleft/compare/2.21.0...2.21.1) (2026-03-19)
 
 
