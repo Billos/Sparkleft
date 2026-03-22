@@ -6,34 +6,15 @@ import { env } from "../config"
 import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
 import { addJobToQueue } from "./jobs"
-import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "./jobs/BaseJob"
-import { AutoImportJob } from "./jobs/autoImport"
-import { CheckBudgetLimitJob } from "./jobs/checkBudgetLimit"
+import { BaseJob, SimpleJob } from "./jobs/BaseJob"
+import { autoImport, budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
 import { InitJob } from "./jobs/init"
-import { LinkPaypalTransactionsJob } from "./jobs/linkPaypalTransactions"
-import { RemoveTransactionMessagesJob } from "./jobs/removeTransactionMessages"
-import { SetBudgetForTransactionJob } from "./jobs/setBudgetForTransaction"
-import { SetCategoryForTransactionJob } from "./jobs/setCategoryForTransaction"
-import { UnbudgetedTransactionsJob } from "./jobs/unbudgetedTransactions"
-import { UncategorizedTransactionsJob } from "./jobs/uncategorizedTransactions"
-import { UpdateBillsBudgetLimitJob } from "./jobs/updateBillsBudgetLimit"
-import { UpdateLeftoverBudgetLimitJob } from "./jobs/updateLeftoverBudgetLimit"
 import { isBudgetJob, isEndpointJob, isTransactionJob, BudgetJobArgs, EndpointJobArgs, TransactionJobArgs, QueueArgs } from "./queueArgs"
 import { getQueue } from "./queue"
 
 const logger = pino()
 
 const startedAt = new Map<string, DateTime>()
-
-export const simpleJobs: SimpleJob[] = [new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob(), new InitJob()]
-
-export const transactionJobs: TransactionJob[] = [new UnbudgetedTransactionsJob(), new UncategorizedTransactionsJob(), new RemoveTransactionMessagesJob()]
-
-export const budgetJobs: BudgetJob[] = [new CheckBudgetLimitJob()]
-
-const endpointJobs: EndpointJob[] = [new SetCategoryForTransactionJob(), new SetBudgetForTransactionJob()]
-
-const autoImport = new AutoImportJob()
 
 const jobMap = new Map<string, BaseJob>([...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs, autoImport].map((j) => [j.id, j]))
 
@@ -196,5 +177,7 @@ process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
 export { initializeWorker }
+
+export { simpleJobs, transactionJobs, budgetJobs }
 
 export { getQueue } from "./queue"

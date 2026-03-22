@@ -9,7 +9,7 @@ export class InitJob extends SimpleJob {
 
   async run(): Promise<void> {
     logger.info("Initializing job definitions")
-    const { budgetJobs, simpleJobs, transactionJobs } = await import("../index.js")
+    const { budgetJobs, simpleJobs, transactionJobs } = await import("./index.js")
     for (const instance of [...simpleJobs, ...budgetJobs, ...transactionJobs]) {
       await instance.init()
     }
