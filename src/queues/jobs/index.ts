@@ -10,12 +10,15 @@ import { UncategorizedTransactionsJob } from "./uncategorizedTransactions"
 import { UpdateBillsBudgetLimitJob } from "./updateBillsBudgetLimit"
 import { UpdateLeftoverBudgetLimitJob } from "./updateLeftoverBudgetLimit"
 
-export const simpleJobs: SimpleJob[] = [
-  new UpdateLeftoverBudgetLimitJob(),
-  new UpdateBillsBudgetLimitJob(),
-  new LinkPaypalTransactionsJob(),
-  new AutoImportJob(),
-]
+export const updateLeftoverBudgetLimitJob = new UpdateLeftoverBudgetLimitJob()
+
+export const updateBillsBudgetLimitJob = new UpdateBillsBudgetLimitJob()
+
+export const linkPaypalTransactionsJob = new LinkPaypalTransactionsJob()
+
+export const autoImportJob = new AutoImportJob()
+
+export const simpleJobs: SimpleJob[] = [updateLeftoverBudgetLimitJob, updateBillsBudgetLimitJob, linkPaypalTransactionsJob, autoImportJob]
 
 export const transactionJobs: TransactionJob[] = [
   new UnbudgetedTransactionsJob(),
