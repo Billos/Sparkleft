@@ -25,13 +25,13 @@ const logger = pino()
 
 const startedAt = new Map<string, DateTime>()
 
-export const simpleJobs: SimpleJob[] = [new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob()]
+const initJob = new InitJob()
+
+export const simpleJobs: SimpleJob[] = [new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob(), initJob]
 
 export const transactionJobs: TransactionJob[] = [new UnbudgetedTransactionsJob(), new UncategorizedTransactionsJob(), new RemoveTransactionMessagesJob()]
 
-const initJob = new InitJob()
-
-export const budgetJobs: BudgetJob[] = [new CheckBudgetLimitJob(), initJob]
+export const budgetJobs: BudgetJob[] = [new CheckBudgetLimitJob()]
 
 const endpointJobs: EndpointJob[] = [new SetCategoryForTransactionJob(), new SetBudgetForTransactionJob()]
 

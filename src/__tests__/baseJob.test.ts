@@ -163,9 +163,9 @@ describe("exported job classes can be imported and instantiated", () => {
     expect(j.getStartDelay()).toBe(5000)
   })
 
-  it("InitJob is exported and extends BudgetJob", () => {
+  it("InitJob is exported and extends SimpleJob", () => {
     const j = new InitJob()
-    expect(j).toBeInstanceOf(BudgetJob)
+    expect(j).toBeInstanceOf(SimpleJob)
     expect(j.id).toBe("init")
     expect(j.startDelay).toBe(0)
   })
