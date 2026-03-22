@@ -1,8 +1,8 @@
 import { Job, JobsOptions } from "bullmq"
 import { pino } from "pino"
 
-import { getQueue } from "./queue"
 import { BaseJob, BudgetJob, EndpointJob, TransactionJob } from "./jobs/BaseJob"
+import { getQueue } from "./queue"
 
 const logger = pino()
 

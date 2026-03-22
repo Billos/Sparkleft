@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "../queues/jobs/BaseJob"
 import { AutoImportJob } from "../queues/jobs/autoImport"
+import { BaseJob, BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "../queues/jobs/BaseJob"
 import { CheckBudgetLimitJob } from "../queues/jobs/checkBudgetLimit"
 import { LinkPaypalTransactionsJob } from "../queues/jobs/linkPaypalTransactions"
 import { RemoveTransactionMessagesJob } from "../queues/jobs/removeTransactionMessages"

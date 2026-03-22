@@ -7,14 +7,22 @@ import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
 import { BaseJob, SimpleJob } from "./jobs/BaseJob"
 import { autoImport, budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
-import { isBudgetJob, isEndpointJob, isTransactionJob, BudgetJobArgs, EndpointJobArgs, TransactionJobArgs, QueueArgs } from "./queueArgs"
 import { getQueue } from "./queue"
+import { BudgetJobArgs, EndpointJobArgs, isBudgetJob, isEndpointJob, isTransactionJob, QueueArgs, TransactionJobArgs } from "./queueArgs"
 
 const logger = pino()
 
 const startedAt = new Map<string, DateTime>()
 
-const jobMap = new Map<string, BaseJob>([...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs, autoImport].map((j) => [j.id, j]))
+const jobMap = new Map<string, BaseJob>(
+  [
+    ...simpleJobs,
+    ...transactionJobs,
+    ...endpointJobs,
+    ...budgetJobs,
+    autoImport,
+  ].map((j) => [j.id, j]),
+)
 
 let worker: Worker<QueueArgs> | null = null
 
@@ -84,7 +92,13 @@ async function setupAutoImportScheduler(): Promise<void> {
 
 async function initializeJobs(): Promise<void> {
   logger.info("Initializing job definitions")
-  for (const instance of [...simpleJobs, ...transactionJobs, ...budgetJobs, ...endpointJobs, autoImport]) {
+  for (const instance of [
+    ...simpleJobs,
+    ...transactionJobs,
+    ...budgetJobs,
+    ...endpointJobs,
+    autoImport,
+  ]) {
     await instance.init()
   }
 }

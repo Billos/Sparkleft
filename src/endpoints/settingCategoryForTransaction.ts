@@ -4,8 +4,8 @@ import pino from "pino"
 
 import { env } from "../config"
 import { getQueue } from "../queues"
-import { addEndpointJobToQueue } from "../queues/utils"
 import { SetCategoryForTransactionJob } from "../queues/jobs/setCategoryForTransaction"
+import { addEndpointJobToQueue } from "../queues/utils"
 
 const logger = pino()
 
