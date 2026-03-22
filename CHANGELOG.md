@@ -1,3 +1,10 @@
+## [2.22.2](https://github.com/Billos/Sparkleft/compare/2.22.1...2.22.2) (2026-03-22)
+
+
+### Bug Fixes
+
+* Move auto-import scheduler setup into AutoImportJob.init() ([#59](https://github.com/Billos/Sparkleft/issues/59)) ([6417a0b](https://github.com/Billos/Sparkleft/commit/6417a0bc7d4eb76a517b5a866c6e0feb027bc0af))
+
 ## [2.22.1](https://github.com/Billos/Sparkleft/compare/2.22.0...2.22.1) (2026-03-22)
 
 
