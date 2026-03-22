@@ -1,17 +1,23 @@
+import { BaseJob, BudgetJob, EndpointJob, TransactionJob } from "./jobs/BaseJob"
+
 type JobArgs = { job: string; delayedMessageId?: string; retryCount?: number }
-type EndpointJobArgs = { transactionId: string; data: unknown } & JobArgs
-type TransactionJobArgs = { transactionId: string } & JobArgs
-type BudgetJobArgs = { budgetId: string } & JobArgs
-export function isTransactionJobArgs(args: QueueArgs): args is TransactionJobArgs {
-  return (args as TransactionJobArgs).transactionId !== undefined && (args as EndpointJobArgs).data === undefined
+
+export type EndpointJobArgs = { transactionId: string; data: unknown } & JobArgs
+
+export type TransactionJobArgs = { transactionId: string } & JobArgs
+
+export type BudgetJobArgs = { budgetId: string } & JobArgs
+
+export function isTransactionJob(job: BaseJob): job is TransactionJob {
+  return job instanceof TransactionJob
 }
 
-export function isBudgetJobArgs(args: QueueArgs): args is BudgetJobArgs {
-  return (args as BudgetJobArgs).budgetId !== undefined
+export function isBudgetJob(job: BaseJob): job is BudgetJob {
+  return job instanceof BudgetJob
 }
 
-export function isEndpointJobArgs(args: QueueArgs): args is EndpointJobArgs {
-  return (args as EndpointJobArgs).data !== undefined
+export function isEndpointJob(job: BaseJob): job is EndpointJob {
+  return job instanceof EndpointJob
 }
 
 export type QueueArgs = TransactionJobArgs | BudgetJobArgs | EndpointJobArgs | JobArgs

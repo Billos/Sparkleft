@@ -1,79 +1,22 @@
-import { DelayedError, Job, Queue, Worker } from "bullmq"
+import { DelayedError, Job, Worker } from "bullmq"
 import { DateTime } from "luxon"
 import pino from "pino"
 
 import { env } from "../config"
 import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
-import { JobIds } from "./constants"
-import { addJobToQueue } from "./jobs"
-import * as AutoImport from "./jobs/autoImport"
-import * as CheckBudgetLimit from "./jobs/checkBudgetLimit"
-import * as Init from "./jobs/init"
-import * as LinkPaypalTransactions from "./jobs/linkPaypalTransactions"
-import * as RemoveTransactionMessages from "./jobs/removeTransactionMessages"
-import * as SetBudgetForTransaction from "./jobs/setBudgetForTransaction"
-import * as SetCategoryForTransaction from "./jobs/setCategoryForTransaction"
-import * as UnbudgetedTransactions from "./jobs/unbudgetedTransactions"
-import * as UncategorizedTransactions from "./jobs/uncategorizedTransactions"
-import * as UpdateBillsBudgetLimit from "./jobs/updateBillsBudgetLimit"
-import * as UpdateLeftoversBudgetLimit from "./jobs/updateLeftoverBudgetLimit"
-import { isBudgetJobArgs, isEndpointJobArgs, isTransactionJobArgs, QueueArgs } from "./queueArgs"
+import { BaseJob, SimpleJob } from "./jobs/BaseJob"
+import { budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
+import { getQueue } from "./queue"
+import { BudgetJobArgs, EndpointJobArgs, isBudgetJob, isEndpointJob, isTransactionJob, QueueArgs, TransactionJobArgs } from "./queueArgs"
 
 const logger = pino()
-type AbstractJobDefinition = {
-  id: JobIds
-  init?: () => Promise<void>
-}
-type TransactionJobDefinition = AbstractJobDefinition & {
-  job: (transactionId: string) => Promise<void>
-}
-type EndpointJobDefinition = AbstractJobDefinition & {
-  job: (transactionId: string, data: unknown) => Promise<void>
-}
-type JobDefinition = AbstractJobDefinition & {
-  job: () => Promise<void>
-}
-type BudgetJobDefinition = AbstractJobDefinition & {
-  job: (budgetId: string) => Promise<void>
-}
 
 const startedAt = new Map<string, DateTime>()
 
-const jobDefinitions: JobDefinition[] = [
-  UpdateLeftoversBudgetLimit,
-  UpdateBillsBudgetLimit,
-  LinkPaypalTransactions,
-]
+const jobMap = new Map<string, BaseJob>([...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => [j.id, j]))
 
-const transactionJobDefinitions: TransactionJobDefinition[] = [
-  UnbudgetedTransactions,
-  UncategorizedTransactions,
-  RemoveTransactionMessages,
-]
-
-const endpointJobDefinitions: EndpointJobDefinition[] = [
-  SetCategoryForTransaction,
-  SetBudgetForTransaction,
-  AutoImport,
-]
-
-const budgetJobDefinitions: BudgetJobDefinition[] = [
-  CheckBudgetLimit,
-  Init,
-]
-
-let queue: Queue<QueueArgs> | null = null
 let worker: Worker<QueueArgs> | null = null
-
-async function getQueue(): Promise<Queue<QueueArgs>> {
-  if (queue) {
-    return queue
-  }
-
-  queue = new Queue("manager", { connection: env.redisConnection })
-  return queue
-}
 
 function logJobDuration(success: boolean, jobId: string, name: string) {
   const startTime = startedAt.get(jobId)
@@ -96,8 +39,9 @@ function logJobDuration(success: boolean, jobId: string, name: string) {
 
 async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
   const retryCount = (job.data.retryCount || 0) + 1
-  const minutes = retryCount * 1
-  const delayed = DateTime.now().plus({ minutes })
+  const jobInstance = jobMap.get(job.data.job)
+  const delayMs = jobInstance ? jobInstance.getRetryDelay(retryCount) : retryCount * 60 * 1000
+  const delayed = DateTime.now().plus({ milliseconds: delayMs })
   const timestamp = delayed.toMillis()
   const title = err.message
   const message = [
@@ -126,15 +70,27 @@ async function setupAutoImportScheduler(): Promise<void> {
     return
   }
   const queue = await getQueue()
+  const autoImport = simpleJobs.find((j) => j.id === "auto-import")
+  if (!autoImport) {
+    logger.warn("AutoImportJob not found in simpleJobs, skipping auto-import scheduler setup")
+    return
+  }
   logger.info("Setting up auto-import scheduler with cron '%s'", env.autoImportCron)
   try {
     await queue.upsertJobScheduler(
       "auto-import-repeat",
       { pattern: env.autoImportCron },
-      { name: JobIds.AUTO_IMPORT, data: { job: JobIds.AUTO_IMPORT } },
+      { name: autoImport.id, data: { job: autoImport.id } },
     )
   } catch (err) {
     logger.error({ err }, "Failed to set up auto-import scheduler; auto-import will not run automatically")
+  }
+}
+
+async function initializeJobs(): Promise<void> {
+  logger.info("Initializing job definitions")
+  for (const instance of [...simpleJobs, ...transactionJobs, ...budgetJobs, ...endpointJobs]) {
+    await instance.init()
   }
 }
 
@@ -151,25 +107,28 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   await queue.pause()
   await queue.resume()
 
-  const jobs: Record<string, (parameter?: string, data?: unknown) => Promise<void>> = {}
-
   worker = new Worker<QueueArgs>(
     "manager",
     async (job) => {
       try {
         const { data } = job
         await AboutService.getAbout()
-        if (isTransactionJobArgs(data)) {
-          await jobs[data.job](data.transactionId)
-        } else if (isBudgetJobArgs(data)) {
-          await jobs[data.job](data.budgetId)
-        } else if (isEndpointJobArgs(data)) {
-          await jobs[data.job](data.transactionId, data.data)
+        const jobInstance = jobMap.get(data.job)
+        if (!jobInstance) {
+          throw new Error(`Unknown job: ${data.job}`)
+        }
+        if (isTransactionJob(jobInstance)) {
+          await jobInstance.run((data as TransactionJobArgs).transactionId)
+        } else if (isBudgetJob(jobInstance)) {
+          await jobInstance.run((data as BudgetJobArgs).budgetId)
+        } else if (isEndpointJob(jobInstance)) {
+          await jobInstance.run((data as EndpointJobArgs).transactionId, (data as EndpointJobArgs).data)
         } else {
-          await jobs[data.job]()
+          await (jobInstance as SimpleJob).run()
         }
       } catch (err) {
-        if (job.data.job === JobIds.AUTO_IMPORT) {
+        const jobInstance = jobMap.get(job.data.job)
+        if (!jobInstance?.retryable) {
           throw err
         }
         await delayJob(job, err as Error)
@@ -210,14 +169,9 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     logJobDuration(false, job.id, job.name)
   })
 
-  worker.on("ready", async () => {
+  worker.on("ready", () => {
     logger.info("Worker is ready and connected to Redis")
-    await addJobToQueue(Init.id, true)
   })
-
-  for (const { job, id } of [...jobDefinitions, ...budgetJobDefinitions, ...transactionJobDefinitions, ...endpointJobDefinitions]) {
-    jobs[id] = job
-  }
 
   return worker
 }
@@ -231,4 +185,8 @@ async function processExit() {
 process.on("SIGTERM", processExit)
 process.on("SIGINT", processExit)
 
-export { getQueue, initializeWorker, jobDefinitions, transactionJobDefinitions, budgetJobDefinitions }
+export { initializeWorker, initializeJobs }
+
+export { simpleJobs, transactionJobs, budgetJobs }
+
+export { getQueue } from "./queue"

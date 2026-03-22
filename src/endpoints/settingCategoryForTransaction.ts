@@ -4,8 +4,8 @@ import pino from "pino"
 
 import { env } from "../config"
 import { getQueue } from "../queues"
-import { JobIds } from "../queues/constants"
-import { addEndpointJobToQueue } from "../queues/jobs"
+import { SetCategoryForTransactionJob } from "../queues/jobs/setCategoryForTransaction"
+import { addEndpointJobToQueue } from "../queues/utils"
 
 const logger = pino()
 
@@ -19,7 +19,7 @@ export async function settingCategoryForTransaction(
   const queueEvents = new QueueEvents(queue.name, { connection: env.redisConnection })
   const { transactionId, category_id } = req.params
 
-  const job = await addEndpointJobToQueue(JobIds.SET_CATEGORY_FOR_TRANSACTION, transactionId, { category_id })
+  const job = await addEndpointJobToQueue(new SetCategoryForTransactionJob(), transactionId, { category_id })
   await job.waitUntilFinished(queueEvents)
   next()
 }
