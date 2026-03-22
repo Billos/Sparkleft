@@ -1,3 +1,10 @@
+## [2.22.1](https://github.com/Billos/Sparkleft/compare/2.22.0...2.22.1) (2026-03-22)
+
+
+### Bug Fixes
+
+*  Webhook calls manually the jobs and does not ask the AutoImport ([#58](https://github.com/Billos/Sparkleft/issues/58)) ([dbe4c6b](https://github.com/Billos/Sparkleft/commit/dbe4c6bff8c6fdfc9d6fffaa5d3689103df14d1c))
+
 # [2.22.0](https://github.com/Billos/Sparkleft/compare/2.21.1...2.22.0) (2026-03-22)
 
 
