@@ -14,6 +14,7 @@ export const simpleJobs: SimpleJob[] = [
   new UpdateLeftoverBudgetLimitJob(),
   new UpdateBillsBudgetLimitJob(),
   new LinkPaypalTransactionsJob(),
+  new AutoImportJob(),
 ]
 
 export const transactionJobs: TransactionJob[] = [
@@ -25,5 +26,3 @@ export const transactionJobs: TransactionJob[] = [
 export const budgetJobs: BudgetJob[] = [new CheckBudgetLimitJob()]
 
 export const endpointJobs: EndpointJob[] = [new SetCategoryForTransactionJob(), new SetBudgetForTransactionJob()]
-
-export const autoImport = new AutoImportJob()

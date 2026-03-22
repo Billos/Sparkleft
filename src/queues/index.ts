@@ -6,7 +6,7 @@ import { env } from "../config"
 import { notifier } from "../modules/notifiers"
 import { AboutService } from "../types"
 import { BaseJob, SimpleJob } from "./jobs/BaseJob"
-import { autoImport, budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
+import { budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
 import { getQueue } from "./queue"
 import { BudgetJobArgs, EndpointJobArgs, isBudgetJob, isEndpointJob, isTransactionJob, QueueArgs, TransactionJobArgs } from "./queueArgs"
 
@@ -14,15 +14,7 @@ const logger = pino()
 
 const startedAt = new Map<string, DateTime>()
 
-const jobMap = new Map<string, BaseJob>(
-  [
-    ...simpleJobs,
-    ...transactionJobs,
-    ...endpointJobs,
-    ...budgetJobs,
-    autoImport,
-  ].map((j) => [j.id, j]),
-)
+const jobMap = new Map<string, BaseJob>([...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => [j.id, j]))
 
 let worker: Worker<QueueArgs> | null = null
 
@@ -78,6 +70,11 @@ async function setupAutoImportScheduler(): Promise<void> {
     return
   }
   const queue = await getQueue()
+  const autoImport = simpleJobs.find((j) => j.id === "auto-import")
+  if (!autoImport) {
+    logger.warn("AutoImportJob not found in simpleJobs, skipping auto-import scheduler setup")
+    return
+  }
   logger.info("Setting up auto-import scheduler with cron '%s'", env.autoImportCron)
   try {
     await queue.upsertJobScheduler(
@@ -92,13 +89,7 @@ async function setupAutoImportScheduler(): Promise<void> {
 
 async function initializeJobs(): Promise<void> {
   logger.info("Initializing job definitions")
-  for (const instance of [
-    ...simpleJobs,
-    ...transactionJobs,
-    ...budgetJobs,
-    ...endpointJobs,
-    autoImport,
-  ]) {
+  for (const instance of [...simpleJobs, ...transactionJobs, ...budgetJobs, ...endpointJobs]) {
     await instance.init()
   }
 }
