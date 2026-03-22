@@ -25,9 +25,7 @@ const logger = pino()
 
 const startedAt = new Map<string, DateTime>()
 
-const initJob = new InitJob()
-
-export const simpleJobs: SimpleJob[] = [new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob(), initJob]
+export const simpleJobs: SimpleJob[] = [new UpdateLeftoverBudgetLimitJob(), new UpdateBillsBudgetLimitJob(), new LinkPaypalTransactionsJob(), new InitJob()]
 
 export const transactionJobs: TransactionJob[] = [new UnbudgetedTransactionsJob(), new UncategorizedTransactionsJob(), new RemoveTransactionMessagesJob()]
 
@@ -182,7 +180,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
 
   worker.on("ready", async () => {
     logger.info("Worker is ready and connected to Redis")
-    await addJobToQueue(initJob, true)
+    await addJobToQueue(new InitJob(), true)
   })
 
   return worker
