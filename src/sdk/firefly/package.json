@@ -1,0 +1,30 @@
+{
+  "name": "@firefly",
+  "version": "6.5.1",
+  "description": "Type-safe Firefly III API SDK generated from the official OpenAPI specification (v6.5.1). Provides typed service classes for all Firefly III endpoints.",
+  "keywords": [
+    "firefly-iii",
+    "firefly",
+    "budget",
+    "finance",
+    "sdk",
+    "openapi"
+  ],
+  "license": "GPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Billos/Sparkleft.git",
+    "directory": "src/sdk/firefly"
+  },
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "peerDependencies": {
+    "@hey-api/client-axios": "^0.9.1"
+  }
+}
