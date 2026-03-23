@@ -141,3 +141,42 @@ input[type="text"]:focus {
 .info-value a:hover {
   text-decoration: underline;
 }
+.status-message {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+}
+.status-message.visible {
+  display: flex;
+}
+.status-message.success {
+  background: #eafaf1;
+  border: 1px solid #6fcf97;
+  color: #1a7a3e;
+}
+.status-message.error {
+  background: #fdf3f3;
+  border: 1px solid #eb5757;
+  color: #b91c1c;
+}
+.status-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
