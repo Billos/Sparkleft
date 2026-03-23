@@ -1,3 +1,10 @@
+## [2.22.4](https://github.com/Billos/Sparkleft/compare/2.22.3...2.22.4) (2026-03-23)
+
+
+### Bug Fixes
+
+* trigger patch release on `style` commits ([#62](https://github.com/Billos/Sparkleft/issues/62)) ([e05456a](https://github.com/Billos/Sparkleft/commit/e05456a7ff7487f5f63ac357830c12e92f78775d))
+
 ## [2.22.3](https://github.com/Billos/Sparkleft/compare/2.22.2...2.22.3) (2026-03-23)
 
 
