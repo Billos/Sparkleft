@@ -6,7 +6,41 @@ Built on [`@hey-api/client-axios`](https://github.com/hey-api/openapi-ts), it pr
 
 ---
 
-## Installation
+## Using it from the root project
+
+Because this package lives inside the monorepo (`src/sdk/firefly`), it is already wired
+into the root project via a **TypeScript path alias** — no installation step required.
+
+The alias is defined in the root [`tsconfig.json`](../../../tsconfig.json):
+
+```jsonc
+// tsconfig.json (root)
+{
+  "compilerOptions": {
+    "paths": {
+      "@firefly": ["./src/sdk/firefly/index.ts"]
+    }
+  }
+}
+```
+
+You can import any exported service or type directly:
+
+```ts
+import { TransactionsService } from "@firefly";
+import { BudgetsService }      from "@firefly";
+```
+
+> **Dev** – `tsx` (used by `yarn dev:server` / `yarn dev:worker`) picks up the alias via
+> esbuild's tsconfig integration and resolves the TypeScript source directly.
+>
+> **Production** – `yarn build` (`tsc`) compiles the package to `build/sdk/firefly/`.
+> The Dockerfile then wires a `node_modules/@firefly` symlink pointing at that compiled
+> output so `node` can resolve the import at runtime.
+
+---
+
+## Installation (standalone / external use)
 
 ```bash
 npm install @firefly @hey-api/client-axios
