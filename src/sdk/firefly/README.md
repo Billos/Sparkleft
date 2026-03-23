@@ -1,4 +1,4 @@
-# @sparkleft/firefly-sdk
+# @firefly
 
 Type-safe SDK for the [Firefly III](https://www.firefly-iii.org/) API, generated from the official OpenAPI specification (v6.5.1).
 
@@ -9,9 +9,9 @@ Built on [`@hey-api/client-axios`](https://github.com/hey-api/openapi-ts), it pr
 ## Installation
 
 ```bash
-npm install @sparkleft/firefly-sdk @hey-api/client-axios
+npm install @firefly @hey-api/client-axios
 # or
-yarn add @sparkleft/firefly-sdk @hey-api/client-axios
+yarn add @firefly @hey-api/client-axios
 ```
 
 ---
@@ -23,7 +23,7 @@ yarn add @sparkleft/firefly-sdk @hey-api/client-axios
 The SDK ships with a pre-configured singleton `client`. Override it with your own instance URL and personal access token before making any calls.
 
 ```ts
-import { client } from "@sparkleft/firefly-sdk/client.gen.js";
+import { client } from "@firefly/client.gen.js";
 
 client.setConfig({
   auth: "YOUR_PERSONAL_ACCESS_TOKEN",
@@ -38,7 +38,7 @@ client.setConfig({
 ### 2. List asset accounts
 
 ```ts
-import { AccountsService } from "@sparkleft/firefly-sdk";
+import { AccountsService } from "@firefly";
 
 const response = await AccountsService.listAccount({
   query: { type: "asset" },
@@ -50,7 +50,7 @@ console.log(response.data?.data);
 ### 3. Search transactions
 
 ```ts
-import { SearchService } from "@sparkleft/firefly-sdk";
+import { SearchService } from "@firefly";
 
 const response = await SearchService.searchTransactions({
   query: { query: "grocery" },
@@ -62,7 +62,7 @@ console.log(response.data?.data);
 ### 4. Create a withdrawal
 
 ```ts
-import { TransactionsService } from "@sparkleft/firefly-sdk";
+import { TransactionsService } from "@firefly";
 
 const response = await TransactionsService.storeTransaction({
   body: {
@@ -87,7 +87,7 @@ console.log(response.data?.data);
 ### 5. Create a budget and set a monthly limit
 
 ```ts
-import { BudgetsService } from "@sparkleft/firefly-sdk";
+import { BudgetsService } from "@firefly";
 
 // Create the budget
 const budget = await BudgetsService.storeBudget({
@@ -114,7 +114,7 @@ When you need to talk to more than one Firefly III instance you can pass a dedic
 
 ```ts
 import { createClient } from "@hey-api/client-axios";
-import { AccountsService } from "@sparkleft/firefly-sdk";
+import { AccountsService } from "@firefly";
 
 const instanceA = createClient({
   auth: "TOKEN_A",

@@ -1,5 +1,5 @@
 {
-  "name": "@sparkleft/firefly-sdk",
+  "name": "@firefly",
   "version": "6.5.1",
   "description": "Type-safe Firefly III API SDK generated from the official OpenAPI specification (v6.5.1). Provides typed service classes for all Firefly III endpoints.",
   "keywords": [
