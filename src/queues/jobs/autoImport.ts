@@ -3,6 +3,7 @@ import pino from "pino"
 
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
+import { AboutService } from "../../types"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
 import { SimpleJob } from "./BaseJob"
@@ -32,6 +33,14 @@ export class AutoImportJob extends SimpleJob {
     if (!env.importerUrl || !env.importDirectory || !env.autoImportSecret) {
       logger.warn("Missing required configuration for auto-import job (importerUrl, importDirectory, autoImportSecret), skipping")
       return
+    }
+
+    if (env.fireflyCliToken) {
+      logger.info("Triggering Firefly III cron job before auto-import")
+      await AboutService.getCron(env.fireflyCliToken)
+      logger.info("Firefly III cron job triggered successfully")
+    } else {
+      logger.warn("FIREFLY_III_CLI_TOKEN is not set, skipping Firefly III cron job trigger")
     }
 
     const params = new URLSearchParams()
