@@ -2,6 +2,7 @@ const env = {
   port: process.env.PORT || 3000,
   fireflyUrl: process.env.FIREFLY_III_URL,
   fireflyToken: process.env.FIREFLY_III_TOKEN,
+  fireflyCliToken: process.env.FIREFLY_III_CLI_TOKEN,
   fireflyPaypalAccountToken: process.env.FIREFLY_III_PAYPAL_ACCOUNT_TOKEN,
   fireflyWebhookSecret: process.env.FIREFLY_III_WEBHOOK_SECRET,
   apiToken: process.env.API_TOKEN,
