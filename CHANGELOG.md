@@ -1,3 +1,10 @@
+## [2.22.3](https://github.com/Billos/Sparkleft/compare/2.22.2...2.22.3) (2026-03-23)
+
+
+### Bug Fixes
+
+* call Firefly III cron endpoint before triggering importer ([#60](https://github.com/Billos/Sparkleft/issues/60)) ([f99b92f](https://github.com/Billos/Sparkleft/commit/f99b92f4615fdcfa58d94f5eec56d41c6c09335e))
+
 ## [2.22.2](https://github.com/Billos/Sparkleft/compare/2.22.1...2.22.2) (2026-03-22)
 
 
