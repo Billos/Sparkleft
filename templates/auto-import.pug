@@ -11,21 +11,34 @@ html(lang="en")
       .subtitle Trigger the auto-import job to import transactions
       .items
         button#import-btn(type="button", data-token=token, onclick="triggerImport()") Trigger Auto Import
-      p#status.info-value
+      .status-message#status
+        span.status-icon#status-icon
+        span#status-text
       script.
         async function triggerImport() {
           const btn = document.getElementById('import-btn')
           const status = document.getElementById('status')
+          const statusIcon = document.getElementById('status-icon')
+          const statusText = document.getElementById('status-text')
           const token = btn.getAttribute('data-token')
           btn.disabled = true
           btn.textContent = 'Running…'
-          status.textContent = ''
+          statusText.textContent = ''
           try {
             const res = await fetch('/autoimport?api_token=' + token, { method: 'POST' })
             const data = await res.json()
-            status.textContent = data.message
+            if (res.ok) {
+              statusIcon.textContent = '✅'
+              status.className = 'status-message success visible'
+            } else {
+              statusIcon.textContent = '❌'
+              status.className = 'status-message error visible'
+            }
+            statusText.textContent = data.message
           } catch (e) {
-            status.textContent = 'An error occurred'
+            statusIcon.textContent = '❌'
+            statusText.textContent = 'An error occurred'
+            status.className = 'status-message error visible'
           } finally {
             btn.disabled = false
             btn.textContent = 'Trigger Auto Import'
