@@ -1,4 +1,4 @@
-import { AboutService, CronResult } from "@firefly"
+import { AboutService } from "@firefly"
 import axios from "axios"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -23,7 +23,6 @@ vi.mock("../queues/queue", () => ({
 describe("AutoImportJob", () => {
   beforeEach(() => {
     vi.mocked(axios.post).mockResolvedValue({})
-    vi.mocked(AboutService.getCron).mockResolvedValue({} as CronResult)
   })
 
   afterEach(() => {
@@ -38,7 +37,7 @@ describe("AutoImportJob", () => {
     vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
     vi.stubEnv("FIREFLY_III_CLI_TOKEN", "myclitoken")
 
-    const { AutoImportJob } = await import("../queues/jobs/autoImport")
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
     const job = new AutoImportJob()
     await job.run()
 
@@ -62,7 +61,7 @@ describe("AutoImportJob", () => {
     vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
     vi.stubEnv("FIREFLY_III_CLI_TOKEN", "")
 
-    const { AutoImportJob } = await import("../queues/jobs/autoImport")
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
     const job = new AutoImportJob()
     await job.run()
 
@@ -76,7 +75,7 @@ describe("AutoImportJob", () => {
     vi.stubEnv("AUTO_IMPORT_SECRET", "")
     vi.stubEnv("FIREFLY_III_CLI_TOKEN", "myclitoken")
 
-    const { AutoImportJob } = await import("../queues/jobs/autoImport")
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
     const job = new AutoImportJob()
     await job.run()
 

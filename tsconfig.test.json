@@ -1,11 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "paths": {
-      "@firefly": ["./src/sdk/firefly/index.ts"]
-    }
+    "noUnusedParameters": false
   },
   "include": ["src/__tests__/**/*"],
   "exclude": ["node_modules", "build"]
