@@ -43,7 +43,11 @@ describe("AutoImportJob", () => {
     await job.run()
 
     expect(AboutService.getCron).toHaveBeenCalledOnce()
-    expect(AboutService.getCron).toHaveBeenCalledWith("myclitoken")
+    expect(AboutService.getCron).toHaveBeenCalledWith(
+      expect.objectContaining({
+        path: { cliToken: "myclitoken" },
+      }),
+    )
     expect(axios.post).toHaveBeenCalledOnce()
 
     // Verify getCron was called before axios.post
