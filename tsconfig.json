@@ -29,7 +29,8 @@
     "node_modules",
     "build",
     "src/**/*.test.ts",
-    "src/**/*.gen.ts"
+    "src/**/*.gen.ts",
+    "vitest.config.ts"
   ],
   "references": [
     { "path": "./tsconfig.gen.json" }]

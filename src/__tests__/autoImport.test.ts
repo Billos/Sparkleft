@@ -37,7 +37,7 @@ describe("AutoImportJob", () => {
     vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
     vi.stubEnv("FIREFLY_III_CLI_TOKEN", "myclitoken")
 
-    const { AutoImportJob } = await import("../queues/jobs/autoImport")
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
     const job = new AutoImportJob()
     await job.run()
 
@@ -61,7 +61,7 @@ describe("AutoImportJob", () => {
     vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
     vi.stubEnv("FIREFLY_III_CLI_TOKEN", "")
 
-    const { AutoImportJob } = await import("../queues/jobs/autoImport")
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
     const job = new AutoImportJob()
     await job.run()
 
@@ -75,7 +75,7 @@ describe("AutoImportJob", () => {
     vi.stubEnv("AUTO_IMPORT_SECRET", "")
     vi.stubEnv("FIREFLY_III_CLI_TOKEN", "myclitoken")
 
-    const { AutoImportJob } = await import("../queues/jobs/autoImport")
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
     const job = new AutoImportJob()
     await job.run()
 

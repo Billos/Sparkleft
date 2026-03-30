@@ -14,13 +14,13 @@ import { UpdateLeftoverBudgetLimitJob } from "../queues/jobs/updateLeftoverBudge
 
 class TestSimpleJob extends SimpleJob {
   readonly id = "check-budget-limit"
-  readonly startDelay = 5 // 5 seconds, as owned by this class
+  override readonly startDelay = 5 // 5 seconds, as owned by this class
   async run(): Promise<void> {}
 }
 
 class TestSimpleJobWithCustomRetryDelay extends SimpleJob {
   readonly id = "update-bills-budget-limit"
-  readonly startDelay = 15
+  override readonly startDelay = 15
   override readonly retryDelay = 120 // 2 minutes per retry
   async run(): Promise<void> {}
 }
