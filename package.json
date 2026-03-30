@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@billos/firefly-iii-sdk": "6.5.1-sdk.5",
-    "@hey-api/client-axios": "0.9.1",
     "axios": "^1.7.9",
     "bullmq": "^5.56.0",
     "express": "^5.1.0",
@@ -40,7 +39,6 @@
   },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^5.0.3",
-    "@hey-api/openapi-ts": "^0.94.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
