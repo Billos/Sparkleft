@@ -1,4 +1,4 @@
-import { AboutService, CronResult } from "@firefly"
+import { AboutService } from "@firefly"
 import axios from "axios"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -23,7 +23,6 @@ vi.mock("../queues/queue", () => ({
 describe("AutoImportJob", () => {
   beforeEach(() => {
     vi.mocked(axios.post).mockResolvedValue({})
-    vi.mocked(AboutService.getCron).mockResolvedValue({} as CronResult)
   })
 
   afterEach(() => {
