@@ -1,7 +1,8 @@
+import { CategoriesService } from "@firefly"
 import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 
-import { CategoriesService } from "../types"
+import { client } from "../client"
 
 const logger = pino()
 
@@ -14,10 +15,10 @@ export async function createNewCategory(
   const { name } = req.query
 
   logger.info("Creating new category with name: %s", name)
-  const categories = await CategoriesService.listCategory(null, 50, 1)
+  const { data: categories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
   let category = categories.data.find(({ attributes }) => attributes.name === name)
   if (!category) {
-    category = (await CategoriesService.storeCategory({ name })).data
+    category = (await CategoriesService.storeCategory({ client, body: { name } })).data.data
     logger.info("Category with name %s created successfully", name)
   } else {
     logger.info("Category with name %s already exists, skipping creation", name)

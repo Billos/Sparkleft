@@ -1,8 +1,9 @@
+import { CategoriesService, TransactionsService } from "@firefly"
 import { Request, Response } from "express"
 import pino from "pino"
 
+import { client } from "../client"
 import { env } from "../config"
-import { CategoriesService, TransactionsService } from "../types"
 import { getBudgetName } from "../utils/budgetName"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
@@ -13,7 +14,9 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
   const { transactionId } = req.params
 
   // Get all categories
-  const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
+  const {
+    data: { data: allCategories },
+  } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
 
   // Filter out hidden categories
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
@@ -21,11 +24,13 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
 
   const {
     data: {
-      attributes: {
-        transactions: [{ description, amount, currency_symbol: currency }],
+      data: {
+        attributes: {
+          transactions: [{ description, amount, currency_symbol: currency }],
+        },
       },
     },
-  } = await TransactionsService.getTransaction(transactionId)
+  } = await TransactionsService.getTransaction({ client, path: { id: transactionId } })
 
   res.render("set-category", {
     categories,

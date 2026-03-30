@@ -1,8 +1,9 @@
+import { BudgetsService, TransactionsService, TransactionTypeProperty } from "@firefly"
 import pino from "pino"
 
+import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { BudgetsService, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../utils"
@@ -16,59 +17,65 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
 
   override readonly startDelay = 5
 
-  async run(transactionId: string): Promise<void> {
-    logger.info("Creating a new message for unbudgeted transaction with key %s", transactionId)
+  async run(id: string): Promise<void> {
+    logger.info("Creating a new message for unbudgeted transaction with key %s", id)
     const {
       data: {
-        attributes: {
-          transactions: [transaction],
+        data: {
+          attributes: {
+            transactions: [transaction],
+          },
         },
       },
-    } = await TransactionsService.getTransaction(transactionId)
+    } = await TransactionsService.getTransaction({ client, path: { id } })
 
     // Ensure the transaction is a withdrawal
     const { type } = transaction
     if (type !== TransactionTypeProperty.WITHDRAWAL) {
-      logger.info("Transaction %s is not a withdrawal", transactionId)
+      logger.info("Transaction %s is not a withdrawal", id)
       return
     }
     if (!transaction) {
-      logger.info("Transaction %s not found", transactionId)
+      logger.info("Transaction %s not found", id)
       return
     }
 
     if (transaction.budget_id) {
       // We can assume that if a budget_id is set, the budget limit might need to be checked
       await addBudgetJobToQueue(new CheckBudgetLimitJob(), transaction.budget_id)
-      logger.info("Transaction %s already budgeted", transactionId)
+      logger.info("Transaction %s already budgeted", id)
       return
     }
 
     const billsBudgetName = await getBudgetName(env.billsBudgetId)
-    const { data: allBudgets } = await BudgetsService.listBudget(null, 50, 1)
+    const {
+      data: { data: allBudgets },
+    } = await BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } })
     const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
     const msg = renderTemplate("unbudgeted-transaction.njk", {
       transaction,
-      transactionId,
+      transactionId: id,
       budgets,
     })
-    const messageId = await notifier.getMessageId("BudgetMessageId", transactionId)
+    const messageId = await notifier.getMessageId("BudgetMessageId", id)
     if (messageId) {
       const messageExists = await notifier.hasMessageId(messageId)
       if (messageExists) {
-        logger.info("Budget message already exists for transaction %s", transactionId)
+        logger.info("Budget message already exists for transaction %s", id)
         return
       }
-      logger.info("Budget message defined but not found in notifier for transaction %s", transactionId)
+      logger.info("Budget message defined but not found in notifier for transaction %s", id)
     }
-    await notifier.sendMessage("BudgetMessageId", msg, transactionId)
+    await notifier.sendMessage("BudgetMessageId", msg, id)
   }
 
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
     if (notifier) {
-      const { data } = await BudgetsService.listTransactionWithoutBudget(null, 50, 1)
+      const {
+        data: { data },
+      } = await BudgetsService.listTransactionWithoutBudget({ client, query: { page: 1, limit: 50 } })
       for (const { id: transactionId } of data) {
         await addTransactionJobToQueue(this, transactionId)
       }

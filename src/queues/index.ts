@@ -1,10 +1,11 @@
+import { AboutService } from "@firefly"
 import { DelayedError, Job, Worker } from "bullmq"
 import { DateTime } from "luxon"
 import pino from "pino"
 
+import { client } from "../client"
 import { env } from "../config"
 import { notifier } from "../modules/notifiers"
-import { AboutService } from "../types"
 import { BaseJob, SimpleJob } from "./jobs/BaseJob"
 import { budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
 import { getQueue } from "./queue"
@@ -88,7 +89,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     async (job) => {
       try {
         const { data } = job
-        await AboutService.getAbout()
+        await AboutService.getAbout({ client })
         const jobInstance = jobMap.get(data.job)
         if (!jobInstance) {
           throw new Error(`Unknown job: ${data.job}`)

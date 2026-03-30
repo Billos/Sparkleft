@@ -1,8 +1,9 @@
+import { BudgetLimitStoreWritable, BudgetsService } from "@firefly"
 import pino from "pino"
 
+import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { BudgetLimitStore, BudgetSingle, BudgetsService } from "../../types"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue } from "../utils"
@@ -20,7 +21,9 @@ export class CheckBudgetLimitJob extends BudgetJob {
       logger.error("No budgetId provided for CheckBudgetLimit job")
       return
     }
-    const { data: budget }: BudgetSingle = await BudgetsService.getBudget(budgetId)
+    const {
+      data: { data: budget },
+    } = await BudgetsService.getBudget({ client, path: { id: budgetId } })
     if (budget.id === env.billsBudgetId) {
       logger.debug("Budget is Bills budget, skipping review of budget limit")
       return
@@ -36,8 +39,10 @@ export class CheckBudgetLimitJob extends BudgetJob {
     const start = getDateNow().startOf("month").toISODate()
     const end = getDateNow().endOf("month").toISODate()
     const {
-      data: [existingLimits],
-    } = await BudgetsService.listBudgetLimitByBudget(budget.id, null, start, end)
+      data: {
+        data: [existingLimits],
+      },
+    } = await BudgetsService.listBudgetLimitByBudget({ client, path: { id: budget.id }, query: { start, end } })
 
     const currencySymbol = budget.attributes.currency_code === "EUR" ? "€" : "$"
     const spent = -parseFloat(existingLimits?.attributes.spent[0]?.sum || "0")
@@ -50,13 +55,13 @@ export class CheckBudgetLimitJob extends BudgetJob {
 
     logger.info("Budget is overspent! Spent: %d, Limit: %d", spent, limit)
     // Setting the limit to spent and sending a notification
-    const params: BudgetLimitStore = { amount: spent.toString(), budget_id: budget.id, start, end, fire_webhooks: true }
+    const body: BudgetLimitStoreWritable = { amount: spent.toString(), start, end, fire_webhooks: true }
 
     if (!existingLimits) {
       logger.info("No existing limits found, creating a new one")
-      await BudgetsService.storeBudgetLimit(budget.id, params)
+      await BudgetsService.storeBudgetLimit({ client, path: { id: budget.id }, body })
     } else {
-      await BudgetsService.updateBudgetLimit(budget.id, existingLimits.id, params)
+      await BudgetsService.updateBudgetLimit({ client, path: { id: budget.id, limitId: existingLimits.id }, body })
     }
 
     const title = "Warning"
@@ -74,7 +79,9 @@ export class CheckBudgetLimitJob extends BudgetJob {
     logger.info("Initializing CheckBudgetLimit jobs for all budgets")
     const startDate = getDateNow().startOf("month").toISODate()
     const endDate = getDateNow().endOf("month").toISODate()
-    const { data: budgets } = await BudgetsService.listBudget(null, 50, 1, startDate, endDate)
+    const {
+      data: { data: budgets },
+    } = await BudgetsService.listBudget({ client, query: { start: startDate, end: endDate, limit: 100 } })
     for (const budget of budgets) {
       if (budget.id !== env.billsBudgetId && budget.id !== env.leftoversBudgetId) {
         await addBudgetJobToQueue(this, budget.id)

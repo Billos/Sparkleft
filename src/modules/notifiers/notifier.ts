@@ -1,6 +1,7 @@
+import { TransactionSplit, TransactionsService } from "@firefly"
 import pino from "pino"
 
-import { TransactionSplit, TransactionsService } from "../../types"
+import { client } from "../../client"
 
 const logger = pino()
 export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"
@@ -34,14 +35,16 @@ export abstract class AbstractNotifier implements Notifier {
     }
   }
 
-  private async getTransaction(transactionId: string): Promise<TransactionSplit> {
+  private async getTransaction(id: string): Promise<TransactionSplit> {
     const {
       data: {
-        attributes: {
-          transactions: [transaction],
+        data: {
+          attributes: {
+            transactions: [transaction],
+          },
         },
       },
-    } = await TransactionsService.getTransaction(transactionId)
+    } = await TransactionsService.getTransaction({ client, path: { id } })
     return transaction
   }
 
@@ -60,7 +63,11 @@ export abstract class AbstractNotifier implements Notifier {
   }
 
   private async setNotes(transactionId: string, notes: string): Promise<void> {
-    await TransactionsService.updateTransaction(transactionId, { apply_rules: false, fire_webhooks: false, transactions: [{ notes }] })
+    await TransactionsService.updateTransaction({
+      client,
+      path: { id: transactionId },
+      body: { apply_rules: false, fire_webhooks: false, transactions: [{ notes }] },
+    })
   }
 
   private async setMessageId(type: MessageType, transactionId: string, messageId: string): Promise<void> {

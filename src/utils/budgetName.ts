@@ -1,8 +1,12 @@
-import { BudgetsService } from "../types"
+import { BudgetsService } from "@firefly"
 
-export async function getBudgetName(budgetId: string): Promise<string | null> {
+import { client } from "../client"
+
+export async function getBudgetName(id: string): Promise<string | null> {
   try {
-    const { data: budget } = await BudgetsService.getBudget(budgetId)
+    const {
+      data: { data: budget },
+    } = await BudgetsService.getBudget({ client, path: { id } })
     return budget.attributes.name
   } catch (error) {
     return null

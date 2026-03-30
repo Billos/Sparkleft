@@ -1,7 +1,8 @@
+import { TransactionsService } from "@firefly"
 import pino from "pino"
 
+import { client } from "../../client"
 import { notifier } from "../../modules/notifiers"
-import { TransactionsService } from "../../types"
 import { TransactionJob } from "./BaseJob"
 
 const logger = pino()
@@ -11,29 +12,31 @@ export class RemoveTransactionMessagesJob extends TransactionJob {
 
   override readonly startDelay = 15
 
-  async run(transactionId: string): Promise<void> {
-    logger.info("Checking and removing messages for updated transaction %s", transactionId)
+  async run(id: string): Promise<void> {
+    logger.info("Checking and removing messages for updated transaction %s", id)
     const {
       data: {
-        attributes: {
-          transactions: [transaction],
+        data: {
+          attributes: {
+            transactions: [transaction],
+          },
         },
       },
-    } = await TransactionsService.getTransaction(transactionId)
+    } = await TransactionsService.getTransaction({ client, path: { id } })
 
     if (transaction.category_id) {
-      const categoryMessageId = await notifier.getMessageId("CategoryMessageId", transactionId)
+      const categoryMessageId = await notifier.getMessageId("CategoryMessageId", id)
       if (categoryMessageId) {
-        logger.info("Removing category message %s for transaction %s", categoryMessageId, transactionId)
-        await notifier.deleteMessage("CategoryMessageId", categoryMessageId, transactionId)
+        logger.info("Removing category message %s for transaction %s", categoryMessageId, id)
+        await notifier.deleteMessage("CategoryMessageId", categoryMessageId, id)
       }
     }
 
     if (transaction.budget_id) {
-      const budgetMessageId = await notifier.getMessageId("BudgetMessageId", transactionId)
+      const budgetMessageId = await notifier.getMessageId("BudgetMessageId", id)
       if (budgetMessageId) {
-        logger.info("Removing budget message %s for transaction %s", budgetMessageId, transactionId)
-        await notifier.deleteMessage("BudgetMessageId", budgetMessageId, transactionId)
+        logger.info("Removing budget message %s for transaction %s", budgetMessageId, id)
+        await notifier.deleteMessage("BudgetMessageId", budgetMessageId, id)
       }
     }
   }
