@@ -8,7 +8,7 @@ async function startWorker() {
     logger.info("Starting worker...")
     await initializeWorker()
   } catch (err) {
-    logger.error({ err: err }, "Failed to start worker:")
+    logger.error({ err }, "Failed to start worker:")
     process.exit(1)
   }
 }

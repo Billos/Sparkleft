@@ -1,9 +1,9 @@
 import path from "path"
 
+import { BudgetRead, CategoryRead, TransactionSplit } from "@firefly"
 import nunjucks from "nunjucks"
 
 import { env } from "../config"
-import { BudgetRead, CategoryRead, TransactionSplit } from "../types"
 
 export type TemplateContext = {
   transaction?: TransactionSplit

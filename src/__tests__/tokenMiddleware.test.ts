@@ -24,7 +24,7 @@ describe("TokenMiddleware", () => {
   it("calls next() when the correct token is provided and USE_API_TOKEN is not set", async () => {
     vi.stubEnv("API_TOKEN", "secret123")
     vi.stubEnv("USE_API_TOKEN", "")
-    const { TokenMiddleware } = await import("../utils/tokenMiddleware")
+    const { TokenMiddleware } = await import("../utils/tokenMiddleware.js")
     mockReq.query = { api_token: "secret123" }
     await TokenMiddleware(mockReq as Request, mockRes as Response, mockNext)
     expect(mockNext).toHaveBeenCalledOnce()
@@ -34,7 +34,7 @@ describe("TokenMiddleware", () => {
   it("returns 401 when the token is wrong and USE_API_TOKEN is not set", async () => {
     vi.stubEnv("API_TOKEN", "secret123")
     vi.stubEnv("USE_API_TOKEN", "")
-    const { TokenMiddleware } = await import("../utils/tokenMiddleware")
+    const { TokenMiddleware } = await import("../utils/tokenMiddleware.js")
     mockReq.query = { api_token: "wrongtoken" }
     await TokenMiddleware(mockReq as Request, mockRes as Response, mockNext)
     expect(mockNext).not.toHaveBeenCalled()
@@ -44,7 +44,7 @@ describe("TokenMiddleware", () => {
   it("returns 401 when the token is missing and USE_API_TOKEN is not set", async () => {
     vi.stubEnv("API_TOKEN", "secret123")
     vi.stubEnv("USE_API_TOKEN", "")
-    const { TokenMiddleware } = await import("../utils/tokenMiddleware")
+    const { TokenMiddleware } = await import("../utils/tokenMiddleware.js")
     mockReq.query = {}
     await TokenMiddleware(mockReq as Request, mockRes as Response, mockNext)
     expect(mockNext).not.toHaveBeenCalled()
@@ -54,7 +54,7 @@ describe("TokenMiddleware", () => {
   it("calls next() without token check when USE_API_TOKEN=false", async () => {
     vi.stubEnv("API_TOKEN", "secret123")
     vi.stubEnv("USE_API_TOKEN", "false")
-    const { TokenMiddleware } = await import("../utils/tokenMiddleware")
+    const { TokenMiddleware } = await import("../utils/tokenMiddleware.js")
     mockReq.query = {}
     await TokenMiddleware(mockReq as Request, mockRes as Response, mockNext)
     expect(mockNext).toHaveBeenCalledOnce()
@@ -64,7 +64,7 @@ describe("TokenMiddleware", () => {
   it("enforces token check when USE_API_TOKEN=true", async () => {
     vi.stubEnv("API_TOKEN", "secret123")
     vi.stubEnv("USE_API_TOKEN", "true")
-    const { TokenMiddleware } = await import("../utils/tokenMiddleware")
+    const { TokenMiddleware } = await import("../utils/tokenMiddleware.js")
     mockReq.query = {}
     await TokenMiddleware(mockReq as Request, mockRes as Response, mockNext)
     expect(mockNext).not.toHaveBeenCalled()

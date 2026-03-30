@@ -1,13 +1,12 @@
+import { BudgetProperties, Transaction, WebhookTrigger } from "@firefly"
 import { Request, Response } from "express"
 import pino from "pino"
 
-import { BudgetProperties } from "../paypalTypes"
 import { budgetJobs, transactionJobs } from "../queues"
 import { LinkPaypalTransactionsJob } from "../queues/jobs/linkPaypalTransactions"
 import { UpdateBillsBudgetLimitJob } from "../queues/jobs/updateBillsBudgetLimit"
 import { UpdateLeftoverBudgetLimitJob } from "../queues/jobs/updateLeftoverBudgetLimit"
 import { addBudgetJobToQueue, addJobToQueue, addTransactionJobToQueue } from "../queues/utils"
-import { Transaction, WebhookTrigger } from "../types"
 
 // type BudgetTriggers = WebhookTrigger.STORE_BUDGET | WebhookTrigger.UPDATE_BUDGET | WebhookTrigger.DESTROY_BUDGET | WebhookTrigger.STORE_UPDATE_BUDGET_LIMIT
 // type TransactionTriggers = WebhookTrigger.STORE_TRANSACTION | WebhookTrigger.UPDATE_TRANSACTION | WebhookTrigger.DESTROY_TRANSACTION
@@ -22,14 +21,14 @@ type WebhookTransactionBody = {
   content: (Transaction | BudgetProperties) & { id: number }
 }
 
-const transactionTriggers = [
+const transactionTriggers: WebhookTrigger[] = [
   WebhookTrigger.ANY,
   WebhookTrigger.STORE_TRANSACTION,
   WebhookTrigger.UPDATE_TRANSACTION,
   WebhookTrigger.DESTROY_TRANSACTION,
 ]
 
-const budgetTriggers = [
+const budgetTriggers: WebhookTrigger[] = [
   WebhookTrigger.STORE_BUDGET,
   WebhookTrigger.UPDATE_BUDGET,
   WebhookTrigger.DESTROY_BUDGET,

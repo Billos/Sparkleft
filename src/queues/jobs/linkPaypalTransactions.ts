@@ -1,9 +1,9 @@
+import { TransactionsService, TransactionTypeProperty } from "@firefly"
 import { DateTime } from "luxon"
 import pino from "pino"
 
+import { client, paypalClient } from "../../client"
 import { env } from "../../config"
-import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../../paypalTypes"
-import { TransactionsService } from "../../types"
 import { getDateNow } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
@@ -21,11 +21,13 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
       return
     }
     // StartDate and EndDate are today - 20 days to today
-    const startDate = getDateNow().minus({ days: 20 }).toISODate()
-    const endDate = getDateNow().toISODate()
+    const start = getDateNow().minus({ days: 20 }).toISODate()
+    const end = getDateNow().toISODate()
 
     // This function will retrieve the Paypal transactions that do not have the tag "Linked"
-    const { data } = await PaypalTransactionsService.listTransaction(null, 50, 1, startDate, endDate)
+    const {
+      data: { data },
+    } = await TransactionsService.listTransaction({ client: paypalClient, query: { start, end, limit: 50, page: 1 } })
     const unlinkedPaypalTransactions = data.filter(
       ({ attributes: { transactions } }) =>
         !transactions[0].tags.includes("Linked") && transactions[0].type === TransactionTypeProperty.WITHDRAWAL,
@@ -37,7 +39,9 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
       return
     }
 
-    const { data: ffData } = await TransactionsService.listTransaction(null, 50, 1, startDate, endDate)
+    const {
+      data: { data: ffData },
+    } = await TransactionsService.listTransaction({ client, query: { start, end, limit: 50, page: 1 } })
     // Filtering Firefly III transactions to only include those that do not have the tag "Linked" and have "PayPal" in the description
     const unlinkedFFTransactions = ffData.filter(
       ({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked") && transactions[0].description.includes("PAYPAL"),
@@ -80,15 +84,23 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
         // Add Linked tag to both transactions
         // Add the destination_name of the Paypal transaction to the Firefly III transaction Notes
         logger.info("Linking paypal %s to Firefly III %s", transaction.destination_name, ffTransaction.description)
-        await PaypalTransactionsService.updateTransaction(paypalTransaction.id, {
-          apply_rules: false,
-          fire_webhooks: false,
-          transactions: [{ tags: [...transaction.tags, "Linked"] }],
+        await TransactionsService.updateTransaction({
+          client: paypalClient,
+          path: { id: paypalTransaction.id },
+          body: {
+            apply_rules: false,
+            fire_webhooks: false,
+            transactions: [{ tags: [...transaction.tags, "Linked"] }],
+          },
         })
-        await TransactionsService.updateTransaction(id, {
-          apply_rules: true,
-          fire_webhooks: false,
-          transactions: [{ tags: [...ffTransaction.tags, "Linked"], notes: transaction.destination_name }],
+        await TransactionsService.updateTransaction({
+          client,
+          path: { id },
+          body: {
+            apply_rules: true,
+            fire_webhooks: false,
+            transactions: [{ tags: [...ffTransaction.tags, "Linked"], notes: transaction.destination_name }],
+          },
         })
       }
     }

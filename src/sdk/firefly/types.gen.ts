@@ -563,18 +563,94 @@ export type ChartDataSet = {
 
 export type ChartLine = Array<ChartDataSet>;
 
-export type DataDestroyObject = 'not_assets_liabilities' | 'budgets' | 'bills' | 'piggy_banks' | 'rules' | 'recurring' | 'categories' | 'tags' | 'object_groups' | 'accounts' | 'asset_accounts' | 'expense_accounts' | 'revenue_accounts' | 'liabilities' | 'transactions' | 'withdrawals' | 'deposits' | 'transfers';
+export const DataDestroyObject = {
+    NOT_ASSETS_LIABILITIES: 'not_assets_liabilities',
+    BUDGETS: 'budgets',
+    BILLS: 'bills',
+    PIGGY_BANKS: 'piggy_banks',
+    RULES: 'rules',
+    RECURRING: 'recurring',
+    CATEGORIES: 'categories',
+    TAGS: 'tags',
+    OBJECT_GROUPS: 'object_groups',
+    ACCOUNTS: 'accounts',
+    ASSET_ACCOUNTS: 'asset_accounts',
+    EXPENSE_ACCOUNTS: 'expense_accounts',
+    REVENUE_ACCOUNTS: 'revenue_accounts',
+    LIABILITIES: 'liabilities',
+    TRANSACTIONS: 'transactions',
+    WITHDRAWALS: 'withdrawals',
+    DEPOSITS: 'deposits',
+    TRANSFERS: 'transfers'
+} as const;
 
-export type AccountSearchFieldFilter = 'all' | 'iban' | 'name' | 'number' | 'id';
+export type DataDestroyObject = typeof DataDestroyObject[keyof typeof DataDestroyObject];
+
+export const AccountSearchFieldFilter = {
+    ALL: 'all',
+    IBAN: 'iban',
+    NAME: 'name',
+    NUMBER: 'number',
+    ID: 'id'
+} as const;
+
+export type AccountSearchFieldFilter = typeof AccountSearchFieldFilter[keyof typeof AccountSearchFieldFilter];
 
 /**
  * Title of the configuration value.
  */
-export type ConfigValueFilter = 'configuration.is_demo_site' | 'configuration.permission_update_check' | 'configuration.last_update_check' | 'configuration.single_user_mode' | 'firefly.version' | 'firefly.default_location' | 'firefly.account_to_transaction' | 'firefly.allowed_opposing_types' | 'firefly.accountRoles' | 'firefly.valid_liabilities' | 'firefly.interest_periods' | 'firefly.enable_external_map' | 'firefly.expected_source_types' | 'app.timezone' | 'firefly.bill_periods' | 'firefly.credit_card_types' | 'firefly.languages' | 'firefly.valid_view_ranges' | 'cer.enabled' | 'firefly.preselected_accounts' | 'firefly.rule-actions' | 'firefly.context-rule-actions' | 'search.operators' | 'webhook.triggers' | 'webhook.responses' | 'webhook.deliveries';
+export const ConfigValueFilter = {
+    CONFIGURATION_IS_DEMO_SITE: 'configuration.is_demo_site',
+    CONFIGURATION_PERMISSION_UPDATE_CHECK: 'configuration.permission_update_check',
+    CONFIGURATION_LAST_UPDATE_CHECK: 'configuration.last_update_check',
+    CONFIGURATION_SINGLE_USER_MODE: 'configuration.single_user_mode',
+    FIREFLY_VERSION: 'firefly.version',
+    FIREFLY_DEFAULT_LOCATION: 'firefly.default_location',
+    FIREFLY_ACCOUNT_TO_TRANSACTION: 'firefly.account_to_transaction',
+    FIREFLY_ALLOWED_OPPOSING_TYPES: 'firefly.allowed_opposing_types',
+    FIREFLY_ACCOUNT_ROLES: 'firefly.accountRoles',
+    FIREFLY_VALID_LIABILITIES: 'firefly.valid_liabilities',
+    FIREFLY_INTEREST_PERIODS: 'firefly.interest_periods',
+    FIREFLY_ENABLE_EXTERNAL_MAP: 'firefly.enable_external_map',
+    FIREFLY_EXPECTED_SOURCE_TYPES: 'firefly.expected_source_types',
+    APP_TIMEZONE: 'app.timezone',
+    FIREFLY_BILL_PERIODS: 'firefly.bill_periods',
+    FIREFLY_CREDIT_CARD_TYPES: 'firefly.credit_card_types',
+    FIREFLY_LANGUAGES: 'firefly.languages',
+    FIREFLY_VALID_VIEW_RANGES: 'firefly.valid_view_ranges',
+    CER_ENABLED: 'cer.enabled',
+    FIREFLY_PRESELECTED_ACCOUNTS: 'firefly.preselected_accounts',
+    FIREFLY_RULE_ACTIONS: 'firefly.rule-actions',
+    FIREFLY_CONTEXT_RULE_ACTIONS: 'firefly.context-rule-actions',
+    SEARCH_OPERATORS: 'search.operators',
+    WEBHOOK_TRIGGERS: 'webhook.triggers',
+    WEBHOOK_RESPONSES: 'webhook.responses',
+    WEBHOOK_DELIVERIES: 'webhook.deliveries'
+} as const;
 
-export type ConfigValueUpdateFilter = 'configuration.is_demo_site' | 'configuration.permission_update_check' | 'configuration.last_update_check' | 'configuration.single_user_mode' | 'configuration.enable_exchange_rates' | 'configuration.use_running_balance' | 'configuration.enable_external_map' | 'configuration.enable_external_rates' | 'configuration.allow_webhooks' | 'configuration.valid_url_protocols';
+/**
+ * Title of the configuration value.
+ */
+export type ConfigValueFilter = typeof ConfigValueFilter[keyof typeof ConfigValueFilter];
 
-export type ExportFileFilter = 'csv';
+export const ConfigValueUpdateFilter = {
+    CONFIGURATION_IS_DEMO_SITE: 'configuration.is_demo_site',
+    CONFIGURATION_PERMISSION_UPDATE_CHECK: 'configuration.permission_update_check',
+    CONFIGURATION_LAST_UPDATE_CHECK: 'configuration.last_update_check',
+    CONFIGURATION_SINGLE_USER_MODE: 'configuration.single_user_mode',
+    CONFIGURATION_ENABLE_EXCHANGE_RATES: 'configuration.enable_exchange_rates',
+    CONFIGURATION_USE_RUNNING_BALANCE: 'configuration.use_running_balance',
+    CONFIGURATION_ENABLE_EXTERNAL_MAP: 'configuration.enable_external_map',
+    CONFIGURATION_ENABLE_EXTERNAL_RATES: 'configuration.enable_external_rates',
+    CONFIGURATION_ALLOW_WEBHOOKS: 'configuration.allow_webhooks',
+    CONFIGURATION_VALID_URL_PROTOCOLS: 'configuration.valid_url_protocols'
+} as const;
+
+export type ConfigValueUpdateFilter = typeof ConfigValueUpdateFilter[keyof typeof ConfigValueUpdateFilter];
+
+export const ExportFileFilter = { CSV: 'csv' } as const;
+
+export type ExportFileFilter = typeof ExportFileFilter[keyof typeof ExportFileFilter];
 
 export type InsightGroup = Array<InsightGroupEntry>;
 
@@ -3965,7 +4041,35 @@ export type UserGroupReadMembers = {
  * The possible roles of the user in this user group are documented here: https://docs.firefly-iii.org/references/firefly-iii/api/
  *
  */
-export type UserGroupReadRole = 'ro' | 'mng_trx' | 'mng_meta' | 'read_budgets' | 'read_piggies' | 'read_subscriptions' | 'read_rules' | 'read_recurring' | 'read_webhooks' | 'read_currencies' | 'mng_budgets' | 'mng_piggies' | 'mng_subscriptions' | 'mng_rules' | 'mng_recurring' | 'mng_webhooks' | 'mng_currencies' | 'view_reports' | 'view_memberships' | 'full' | 'owner';
+export const UserGroupReadRole = {
+    RO: 'ro',
+    MNG_TRX: 'mng_trx',
+    MNG_META: 'mng_meta',
+    READ_BUDGETS: 'read_budgets',
+    READ_PIGGIES: 'read_piggies',
+    READ_SUBSCRIPTIONS: 'read_subscriptions',
+    READ_RULES: 'read_rules',
+    READ_RECURRING: 'read_recurring',
+    READ_WEBHOOKS: 'read_webhooks',
+    READ_CURRENCIES: 'read_currencies',
+    MNG_BUDGETS: 'mng_budgets',
+    MNG_PIGGIES: 'mng_piggies',
+    MNG_SUBSCRIPTIONS: 'mng_subscriptions',
+    MNG_RULES: 'mng_rules',
+    MNG_RECURRING: 'mng_recurring',
+    MNG_WEBHOOKS: 'mng_webhooks',
+    MNG_CURRENCIES: 'mng_currencies',
+    VIEW_REPORTS: 'view_reports',
+    VIEW_MEMBERSHIPS: 'view_memberships',
+    FULL: 'full',
+    OWNER: 'owner'
+} as const;
+
+/**
+ * The possible roles of the user in this user group are documented here: https://docs.firefly-iii.org/references/firefly-iii/api/
+ *
+ */
+export type UserGroupReadRole = typeof UserGroupReadRole[keyof typeof UserGroupReadRole];
 
 export type UserGroupSingle = {
     data: UserGroupRead;
@@ -3989,7 +4093,12 @@ export type UserGroupUpdate = {
 /**
  * Format of the delivered response.
  */
-export type WebhookDelivery = 'JSON';
+export const WebhookDelivery = { JSON: 'JSON' } as const;
+
+/**
+ * Format of the delivered response.
+ */
+export type WebhookDelivery = typeof WebhookDelivery[keyof typeof WebhookDelivery];
 
 export type WebhookDeliveryArray = [
     WebhookDelivery
@@ -4025,7 +4134,18 @@ export type WebhookProperties = {
 /**
  * Indicator for what Firefly III will deliver to the webhook URL.
  */
-export type WebhookResponse = 'TRANSACTIONS' | 'ACCOUNTS' | 'BUDGET' | 'RELEVANT' | 'NONE';
+export const WebhookResponse = {
+    TRANSACTIONS: 'TRANSACTIONS',
+    ACCOUNTS: 'ACCOUNTS',
+    BUDGET: 'BUDGET',
+    RELEVANT: 'RELEVANT',
+    NONE: 'NONE'
+} as const;
+
+/**
+ * Indicator for what Firefly III will deliver to the webhook URL.
+ */
+export type WebhookResponse = typeof WebhookResponse[keyof typeof WebhookResponse];
 
 export type WebhookResponseArray = [
     WebhookResponse
@@ -4055,7 +4175,21 @@ export type WebhookStore = {
 /**
  * The trigger for the webhook.
  */
-export type WebhookTrigger = 'ANY' | 'STORE_TRANSACTION' | 'UPDATE_TRANSACTION' | 'DESTROY_TRANSACTION' | 'STORE_BUDGET' | 'UPDATE_BUDGET' | 'DESTROY_BUDGET' | 'STORE_UPDATE_BUDGET_LIMIT';
+export const WebhookTrigger = {
+    ANY: 'ANY',
+    STORE_TRANSACTION: 'STORE_TRANSACTION',
+    UPDATE_TRANSACTION: 'UPDATE_TRANSACTION',
+    DESTROY_TRANSACTION: 'DESTROY_TRANSACTION',
+    STORE_BUDGET: 'STORE_BUDGET',
+    UPDATE_BUDGET: 'UPDATE_BUDGET',
+    DESTROY_BUDGET: 'DESTROY_BUDGET',
+    STORE_UPDATE_BUDGET_LIMIT: 'STORE_UPDATE_BUDGET_LIMIT'
+} as const;
+
+/**
+ * The trigger for the webhook.
+ */
+export type WebhookTrigger = typeof WebhookTrigger[keyof typeof WebhookTrigger];
 
 export type WebhookTriggerArray = Array<WebhookTrigger>;
 
@@ -4133,46 +4267,188 @@ export type WebhookMessage = {
 /**
  * The object class to which the attachment must be linked.
  */
-export type AttachableType = 'Account' | 'Budget' | 'Bill' | 'TransactionJournal' | 'PiggyBank' | 'Tag';
+export const AttachableType = {
+    ACCOUNT: 'Account',
+    BUDGET: 'Budget',
+    BILL: 'Bill',
+    TRANSACTION_JOURNAL: 'TransactionJournal',
+    PIGGY_BANK: 'PiggyBank',
+    TAG: 'Tag'
+} as const;
+
+/**
+ * The object class to which the attachment must be linked.
+ */
+export type AttachableType = typeof AttachableType[keyof typeof AttachableType];
 
 /**
  * Period for the auto budget
  */
-export type AutoBudgetPeriod = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly' | null;
+export const AutoBudgetPeriod = {
+    DAILY: 'daily',
+    WEEKLY: 'weekly',
+    MONTHLY: 'monthly',
+    QUARTERLY: 'quarterly',
+    HALF_YEAR: 'half-year',
+    YEARLY: 'yearly',
+    NULL: null
+} as const;
+
+/**
+ * Period for the auto budget
+ */
+export type AutoBudgetPeriod = typeof AutoBudgetPeriod[keyof typeof AutoBudgetPeriod];
 
 /**
  * The type of auto-budget that Firefly III must create.
  */
-export type AutoBudgetType = 'reset' | 'rollover' | 'none' | null;
+export const AutoBudgetType = {
+    RESET: 'reset',
+    ROLLOVER: 'rollover',
+    NONE: 'none',
+    NULL: null
+} as const;
+
+/**
+ * The type of auto-budget that Firefly III must create.
+ */
+export type AutoBudgetType = typeof AutoBudgetType[keyof typeof AutoBudgetType];
 
 /**
  * How often the bill must be paid.
  */
-export type BillRepeatFrequency = 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly';
+export const BillRepeatFrequency = {
+    WEEKLY: 'weekly',
+    MONTHLY: 'monthly',
+    QUARTERLY: 'quarterly',
+    HALF_YEAR: 'half-year',
+    YEARLY: 'yearly'
+} as const;
+
+/**
+ * How often the bill must be paid.
+ */
+export type BillRepeatFrequency = typeof BillRepeatFrequency[keyof typeof BillRepeatFrequency];
 
 export type PolymorphicProperty = boolean | string | Array<StringArrayItem>;
 
 /**
  * The type of the repetition. ndom means: the n-th weekday of the month, where you can also specify which day of the week.
  */
-export type RecurrenceRepetitionType = 'daily' | 'weekly' | 'ndom' | 'monthly' | 'yearly';
+export const RecurrenceRepetitionType = {
+    DAILY: 'daily',
+    WEEKLY: 'weekly',
+    NDOM: 'ndom',
+    MONTHLY: 'monthly',
+    YEARLY: 'yearly'
+} as const;
 
-export type RecurrenceTransactionType = 'withdrawal' | 'transfer' | 'deposit';
+/**
+ * The type of the repetition. ndom means: the n-th weekday of the month, where you can also specify which day of the week.
+ */
+export type RecurrenceRepetitionType = typeof RecurrenceRepetitionType[keyof typeof RecurrenceRepetitionType];
+
+export const RecurrenceTransactionType = {
+    WITHDRAWAL: 'withdrawal',
+    TRANSFER: 'transfer',
+    DEPOSIT: 'deposit'
+} as const;
+
+export type RecurrenceTransactionType = typeof RecurrenceTransactionType[keyof typeof RecurrenceTransactionType];
 
 /**
  * The type of thing this action will do. A limited set is possible.
  */
-export type RuleActionKeyword = 'user_action' | 'set_category' | 'clear_category' | 'set_budget' | 'clear_budget' | 'add_tag' | 'remove_tag' | 'remove_all_tags' | 'set_description' | 'append_description' | 'prepend_description' | 'set_source_account' | 'set_destination_account' | 'set_notes' | 'append_notes' | 'prepend_notes' | 'clear_notes' | 'link_to_bill' | 'convert_withdrawal' | 'convert_deposit' | 'convert_transfer' | 'delete_transaction';
+export const RuleActionKeyword = {
+    USER_ACTION: 'user_action',
+    SET_CATEGORY: 'set_category',
+    CLEAR_CATEGORY: 'clear_category',
+    SET_BUDGET: 'set_budget',
+    CLEAR_BUDGET: 'clear_budget',
+    ADD_TAG: 'add_tag',
+    REMOVE_TAG: 'remove_tag',
+    REMOVE_ALL_TAGS: 'remove_all_tags',
+    SET_DESCRIPTION: 'set_description',
+    APPEND_DESCRIPTION: 'append_description',
+    PREPEND_DESCRIPTION: 'prepend_description',
+    SET_SOURCE_ACCOUNT: 'set_source_account',
+    SET_DESTINATION_ACCOUNT: 'set_destination_account',
+    SET_NOTES: 'set_notes',
+    APPEND_NOTES: 'append_notes',
+    PREPEND_NOTES: 'prepend_notes',
+    CLEAR_NOTES: 'clear_notes',
+    LINK_TO_BILL: 'link_to_bill',
+    CONVERT_WITHDRAWAL: 'convert_withdrawal',
+    CONVERT_DEPOSIT: 'convert_deposit',
+    CONVERT_TRANSFER: 'convert_transfer',
+    DELETE_TRANSACTION: 'delete_transaction'
+} as const;
+
+/**
+ * The type of thing this action will do. A limited set is possible.
+ */
+export type RuleActionKeyword = typeof RuleActionKeyword[keyof typeof RuleActionKeyword];
 
 /**
  * The type of thing this trigger responds to. A limited set is possible
  */
-export type RuleTriggerKeyword = 'from_account_starts' | 'from_account_ends' | 'from_account_is' | 'from_account_contains' | 'to_account_starts' | 'to_account_ends' | 'to_account_is' | 'to_account_contains' | 'amount_less' | 'amount_exactly' | 'amount_more' | 'description_starts' | 'description_ends' | 'description_contains' | 'description_is' | 'transaction_type' | 'category_is' | 'budget_is' | 'tag_is' | 'currency_is' | 'has_attachments' | 'has_no_category' | 'has_any_category' | 'has_no_budget' | 'has_any_budget' | 'has_no_tag' | 'has_any_tag' | 'notes_contains' | 'notes_starts' | 'notes_end' | 'notes_are' | 'no_notes' | 'any_notes' | 'source_account_is' | 'destination_account_is' | 'source_account_starts';
+export const RuleTriggerKeyword = {
+    FROM_ACCOUNT_STARTS: 'from_account_starts',
+    FROM_ACCOUNT_ENDS: 'from_account_ends',
+    FROM_ACCOUNT_IS: 'from_account_is',
+    FROM_ACCOUNT_CONTAINS: 'from_account_contains',
+    TO_ACCOUNT_STARTS: 'to_account_starts',
+    TO_ACCOUNT_ENDS: 'to_account_ends',
+    TO_ACCOUNT_IS: 'to_account_is',
+    TO_ACCOUNT_CONTAINS: 'to_account_contains',
+    AMOUNT_LESS: 'amount_less',
+    AMOUNT_EXACTLY: 'amount_exactly',
+    AMOUNT_MORE: 'amount_more',
+    DESCRIPTION_STARTS: 'description_starts',
+    DESCRIPTION_ENDS: 'description_ends',
+    DESCRIPTION_CONTAINS: 'description_contains',
+    DESCRIPTION_IS: 'description_is',
+    TRANSACTION_TYPE: 'transaction_type',
+    CATEGORY_IS: 'category_is',
+    BUDGET_IS: 'budget_is',
+    TAG_IS: 'tag_is',
+    CURRENCY_IS: 'currency_is',
+    HAS_ATTACHMENTS: 'has_attachments',
+    HAS_NO_CATEGORY: 'has_no_category',
+    HAS_ANY_CATEGORY: 'has_any_category',
+    HAS_NO_BUDGET: 'has_no_budget',
+    HAS_ANY_BUDGET: 'has_any_budget',
+    HAS_NO_TAG: 'has_no_tag',
+    HAS_ANY_TAG: 'has_any_tag',
+    NOTES_CONTAINS: 'notes_contains',
+    NOTES_STARTS: 'notes_starts',
+    NOTES_END: 'notes_end',
+    NOTES_ARE: 'notes_are',
+    NO_NOTES: 'no_notes',
+    ANY_NOTES: 'any_notes',
+    SOURCE_ACCOUNT_IS: 'source_account_is',
+    DESTINATION_ACCOUNT_IS: 'destination_account_is',
+    SOURCE_ACCOUNT_STARTS: 'source_account_starts'
+} as const;
+
+/**
+ * The type of thing this trigger responds to. A limited set is possible
+ */
+export type RuleTriggerKeyword = typeof RuleTriggerKeyword[keyof typeof RuleTriggerKeyword];
 
 /**
  * Which action is necessary for the rule to fire? Use either store-journal, update-journal or manual-activation.
  */
-export type RuleTriggerType = 'store-journal' | 'update-journal' | 'manual-activation';
+export const RuleTriggerType = {
+    STORE_JOURNAL: 'store-journal',
+    UPDATE_JOURNAL: 'update-journal',
+    MANUAL_ACTIVATION: 'manual-activation'
+} as const;
+
+/**
+ * Which action is necessary for the rule to fire? Use either store-journal, update-journal or manual-activation.
+ */
+export type RuleTriggerType = typeof RuleTriggerType[keyof typeof RuleTriggerType];
 
 /**
  * The actual preference content.
@@ -4182,12 +4458,26 @@ export type StringArrayItem = string;
 /**
  * If you say the user must be blocked, this will be the reason code.
  */
-export type UserBlockedCodeProperty = 'email_changed' | null;
+export const UserBlockedCodeProperty = { EMAIL_CHANGED: 'email_changed', NULL: null } as const;
+
+/**
+ * If you say the user must be blocked, this will be the reason code.
+ */
+export type UserBlockedCodeProperty = typeof UserBlockedCodeProperty[keyof typeof UserBlockedCodeProperty];
 
 /**
  * Role for the user. Can be empty or omitted.
  */
-export type UserRoleProperty = 'owner' | 'demo' | null;
+export const UserRoleProperty = {
+    OWNER: 'owner',
+    DEMO: 'demo',
+    NULL: null
+} as const;
+
+/**
+ * Role for the user. Can be empty or omitted.
+ */
+export type UserRoleProperty = typeof UserRoleProperty[keyof typeof UserRoleProperty];
 
 export type BasicSummary = {
     [key: string]: BasicSummaryEntry;
@@ -4295,9 +4585,50 @@ export type UserSingle = {
     data: UserRead;
 };
 
-export type AccountTypeFilter = 'all' | 'asset' | 'cash' | 'expense' | 'revenue' | 'special' | 'hidden' | 'liability' | 'liabilities' | 'Default account' | 'Cash account' | 'Asset account' | 'Expense account' | 'Revenue account' | 'Initial balance account' | 'Beneficiary account' | 'Import account' | 'Reconciliation account' | 'Loan' | 'Debt' | 'Mortgage';
+export const AccountTypeFilter = {
+    ALL: 'all',
+    ASSET: 'asset',
+    CASH: 'cash',
+    EXPENSE: 'expense',
+    REVENUE: 'revenue',
+    SPECIAL: 'special',
+    HIDDEN: 'hidden',
+    LIABILITY: 'liability',
+    LIABILITIES: 'liabilities',
+    DEFAULT_ACCOUNT: 'Default account',
+    CASH_ACCOUNT: 'Cash account',
+    ASSET_ACCOUNT: 'Asset account',
+    EXPENSE_ACCOUNT: 'Expense account',
+    REVENUE_ACCOUNT: 'Revenue account',
+    INITIAL_BALANCE_ACCOUNT: 'Initial balance account',
+    BENEFICIARY_ACCOUNT: 'Beneficiary account',
+    IMPORT_ACCOUNT: 'Import account',
+    RECONCILIATION_ACCOUNT: 'Reconciliation account',
+    LOAN: 'Loan',
+    DEBT: 'Debt',
+    MORTGAGE: 'Mortgage'
+} as const;
 
-export type TransactionTypeFilter = 'all' | 'withdrawal' | 'withdrawals' | 'expense' | 'deposit' | 'deposits' | 'income' | 'transfer' | 'transfers' | 'opening_balance' | 'reconciliation' | 'special' | 'specials' | 'default';
+export type AccountTypeFilter = typeof AccountTypeFilter[keyof typeof AccountTypeFilter];
+
+export const TransactionTypeFilter = {
+    ALL: 'all',
+    WITHDRAWAL: 'withdrawal',
+    WITHDRAWALS: 'withdrawals',
+    EXPENSE: 'expense',
+    DEPOSIT: 'deposit',
+    DEPOSITS: 'deposits',
+    INCOME: 'income',
+    TRANSFER: 'transfer',
+    TRANSFERS: 'transfers',
+    OPENING_BALANCE: 'opening_balance',
+    RECONCILIATION: 'reconciliation',
+    SPECIAL: 'special',
+    SPECIALS: 'specials',
+    DEFAULT: 'default'
+} as const;
+
+export type TransactionTypeFilter = typeof TransactionTypeFilter[keyof typeof TransactionTypeFilter];
 
 export type Meta = {
     pagination?: {
@@ -4312,41 +4643,140 @@ export type Meta = {
 /**
  * Is only mandatory when the type is asset.
  */
-export type AccountRoleProperty = 'defaultAsset' | 'sharedAsset' | 'savingAsset' | 'ccAsset' | 'cashWalletAsset' | null;
+export const AccountRoleProperty = {
+    DEFAULT_ASSET: 'defaultAsset',
+    SHARED_ASSET: 'sharedAsset',
+    SAVING_ASSET: 'savingAsset',
+    CC_ASSET: 'ccAsset',
+    CASH_WALLET_ASSET: 'cashWalletAsset',
+    NULL: null
+} as const;
 
-export type AccountTypeProperty = 'Default account' | 'Cash account' | 'Asset account' | 'Expense account' | 'Revenue account' | 'Initial balance account' | 'Beneficiary account' | 'Import account' | 'Reconciliation account' | 'Loan' | 'Debt' | 'Mortgage';
+/**
+ * Is only mandatory when the type is asset.
+ */
+export type AccountRoleProperty = typeof AccountRoleProperty[keyof typeof AccountRoleProperty];
+
+export const AccountTypeProperty = {
+    DEFAULT_ACCOUNT: 'Default account',
+    CASH_ACCOUNT: 'Cash account',
+    ASSET_ACCOUNT: 'Asset account',
+    EXPENSE_ACCOUNT: 'Expense account',
+    REVENUE_ACCOUNT: 'Revenue account',
+    INITIAL_BALANCE_ACCOUNT: 'Initial balance account',
+    BENEFICIARY_ACCOUNT: 'Beneficiary account',
+    IMPORT_ACCOUNT: 'Import account',
+    RECONCILIATION_ACCOUNT: 'Reconciliation account',
+    LOAN: 'Loan',
+    DEBT: 'Debt',
+    MORTGAGE: 'Mortgage'
+} as const;
+
+export type AccountTypeProperty = typeof AccountTypeProperty[keyof typeof AccountTypeProperty];
 
 /**
  * Period of the chart.
  */
-export type ChartDatasetPeriodProperty = '1D' | '1W' | '1M' | '3M' | '1Y' | 'custom';
+export const ChartDatasetPeriodProperty = {
+    '1D': '1D',
+    '1W': '1W',
+    '1M': '1M',
+    '3M': '3M',
+    '1Y': '1Y',
+    CUSTOM: 'custom'
+} as const;
+
+/**
+ * Period of the chart.
+ */
+export type ChartDatasetPeriodProperty = typeof ChartDatasetPeriodProperty[keyof typeof ChartDatasetPeriodProperty];
 
 /**
  * Mandatory when the account_role is ccAsset. Can only be monthlyFull or null.
  */
-export type CreditCardTypeProperty = 'monthlyFull' | null;
+export const CreditCardTypeProperty = { MONTHLY_FULL: 'monthlyFull', NULL: null } as const;
+
+/**
+ * Mandatory when the account_role is ccAsset. Can only be monthlyFull or null.
+ */
+export type CreditCardTypeProperty = typeof CreditCardTypeProperty[keyof typeof CreditCardTypeProperty];
 
 /**
  * Mandatory when type is liability. Period over which the interest is calculated.
  */
-export type InterestPeriodProperty = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'half-year' | 'yearly' | null;
+export const InterestPeriodProperty = {
+    DAILY: 'daily',
+    WEEKLY: 'weekly',
+    MONTHLY: 'monthly',
+    QUARTERLY: 'quarterly',
+    HALF_YEAR: 'half-year',
+    YEARLY: 'yearly',
+    NULL: null
+} as const;
+
+/**
+ * Mandatory when type is liability. Period over which the interest is calculated.
+ */
+export type InterestPeriodProperty = typeof InterestPeriodProperty[keyof typeof InterestPeriodProperty];
 
 /**
  * 'credit' indicates somebody owes you the liability. 'debit' Indicates you owe this debt yourself. Works only for liabilities.
  */
-export type LiabilityDirectionProperty = 'credit' | 'debit' | null;
+export const LiabilityDirectionProperty = {
+    CREDIT: 'credit',
+    DEBIT: 'debit',
+    NULL: null
+} as const;
+
+/**
+ * 'credit' indicates somebody owes you the liability. 'debit' Indicates you owe this debt yourself. Works only for liabilities.
+ */
+export type LiabilityDirectionProperty = typeof LiabilityDirectionProperty[keyof typeof LiabilityDirectionProperty];
 
 /**
  * Mandatory when type is liability. Specifies the exact type.
  */
-export type LiabilityTypeProperty = 'loan' | 'debt' | 'mortgage' | null;
+export const LiabilityTypeProperty = {
+    LOAN: 'loan',
+    DEBT: 'debt',
+    MORTGAGE: 'mortgage',
+    NULL: null
+} as const;
+
+/**
+ * Mandatory when type is liability. Specifies the exact type.
+ */
+export type LiabilityTypeProperty = typeof LiabilityTypeProperty[keyof typeof LiabilityTypeProperty];
 
 /**
  * Can only be one one these account types. import, initial-balance and reconciliation cannot be set manually.
  */
-export type ShortAccountTypeProperty = 'asset' | 'expense' | 'import' | 'revenue' | 'cash' | 'liability' | 'liabilities' | 'initial-balance' | 'reconciliation';
+export const ShortAccountTypeProperty = {
+    ASSET: 'asset',
+    EXPENSE: 'expense',
+    IMPORT: 'import',
+    REVENUE: 'revenue',
+    CASH: 'cash',
+    LIABILITY: 'liability',
+    LIABILITIES: 'liabilities',
+    INITIAL_BALANCE: 'initial-balance',
+    RECONCILIATION: 'reconciliation'
+} as const;
 
-export type TransactionTypeProperty = 'withdrawal' | 'deposit' | 'transfer' | 'reconciliation' | 'opening balance';
+/**
+ * Can only be one one these account types. import, initial-balance and reconciliation cannot be set manually.
+ */
+export type ShortAccountTypeProperty = typeof ShortAccountTypeProperty[keyof typeof ShortAccountTypeProperty];
+
+export const TransactionTypeProperty = {
+    WITHDRAWAL: 'withdrawal',
+    DEPOSIT: 'deposit',
+    TRANSFER: 'transfer',
+    RECONCILIATION: 'reconciliation',
+    OPENING_BALANCE: 'opening balance'
+} as const;
+
+export type TransactionTypeProperty = typeof TransactionTypeProperty[keyof typeof TransactionTypeProperty];
 
 export type BadRequestResponse = {
     message?: string;

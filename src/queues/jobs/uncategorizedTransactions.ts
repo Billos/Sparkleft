@@ -1,8 +1,9 @@
+import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "@firefly"
 import pino from "pino"
 
+import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "../../types"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
@@ -11,16 +12,20 @@ import { TransactionJob } from "./BaseJob"
 
 const logger = pino()
 
-async function getUncategorizedTransactions(startDate?: string, endDate?: string): Promise<TransactionRead[]> {
+async function getUncategorizedTransactions(start?: string, end?: string): Promise<TransactionRead[]> {
   const transactions: TransactionRead[] = []
   const {
-    meta: {
-      pagination: { total_pages },
+    data: {
+      meta: {
+        pagination: { total_pages },
+      },
     },
-  } = await TransactionsService.listTransaction(null, 200, 1, startDate, endDate)
+  } = await TransactionsService.listTransaction({ client, query: { page: 1, limit: 200, start, end } })
 
   for (let page = 1; page <= total_pages; page++) {
-    const { data } = await TransactionsService.listTransaction(null, 200, page, startDate, endDate)
+    const {
+      data: { data },
+    } = await TransactionsService.listTransaction({ client, query: { page, limit: 200, start, end } })
     const filteredData = data.filter(
       (transaction) =>
         !transaction.attributes.transactions[0].category_id &&
@@ -36,60 +41,64 @@ export class UncategorizedTransactionsJob extends TransactionJob {
 
   override readonly startDelay = 10
 
-  async run(transactionId: string): Promise<void> {
-    logger.info("Creating a new message for uncategorized transaction with key %s", transactionId)
+  async run(id: string): Promise<void> {
+    logger.info("Creating a new message for uncategorized transaction with key %s", id)
     const {
       data: {
-        attributes: {
-          transactions: [transaction],
+        data: {
+          attributes: {
+            transactions: [transaction],
+          },
         },
       },
-    } = await TransactionsService.getTransaction(transactionId)
+    } = await TransactionsService.getTransaction({ client, path: { id } })
 
     // Ensure the transaction is a withdrawal
     const { type } = transaction
     if (type !== TransactionTypeProperty.WITHDRAWAL) {
-      logger.info("Transaction %s is not a withdrawal", transactionId)
+      logger.info("Transaction %s is not a withdrawal", id)
       return
     }
     if (!transaction) {
-      logger.info("Transaction %s not found", transactionId)
+      logger.info("Transaction %s not found", id)
       return
     }
 
     if (transaction.category_id) {
-      logger.info("Transaction %s already categorized", transactionId)
+      logger.info("Transaction %s already categorized", id)
       return
     }
 
     const billsBudgetName = await getBudgetName(env.billsBudgetId)
-    const { data: allCategories } = await CategoriesService.listCategory(null, 50, 1)
+    const {
+      data: { data: allCategories },
+    } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
     const hiddenCategoriesSet = new Set(env.hiddenCategories)
     const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
 
     const msg = renderTemplate("uncategorized-transaction.njk", {
       transaction,
-      transactionId,
+      transactionId: id,
       categories,
     })
-    const messageId = await notifier.getMessageId("CategoryMessageId", transactionId)
+    const messageId = await notifier.getMessageId("CategoryMessageId", id)
     if (messageId) {
       const messageExists = await notifier.hasMessageId(messageId)
       if (messageExists) {
-        logger.info("Category message already exists for transaction %s", transactionId)
+        logger.info("Category message already exists for transaction %s", id)
         return
       }
-      logger.info("Category message defined but not found in notifier for transaction %s", transactionId)
+      logger.info("Category message defined but not found in notifier for transaction %s", id)
     }
-    await notifier.sendMessage("CategoryMessageId", msg, transactionId)
+    await notifier.sendMessage("CategoryMessageId", msg, id)
   }
 
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
     if (notifier) {
-      const startDate = getDateNow().startOf("month").toISODate()
-      const endDate = getDateNow().toISODate()
-      const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
+      const start = getDateNow().startOf("month").toISODate()
+      const end = getDateNow().toISODate()
+      const uncategorizedTransactionsList = await getUncategorizedTransactions(start, end)
       for (const { id: transactionId } of uncategorizedTransactionsList) {
         await addTransactionJobToQueue(this, transactionId)
       }

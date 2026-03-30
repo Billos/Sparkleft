@@ -1,6 +1,3 @@
-import pino from "pino"
-
-import { env } from "../../config"
 import {
   AccountsService,
   BudgetLimitArray,
@@ -9,7 +6,11 @@ import {
   BudgetsService,
   InsightGroupEntry,
   InsightService,
-} from "../../types"
+} from "@firefly"
+import pino from "pino"
+
+import { client } from "../../client"
+import { env } from "../../config"
 import { getDateNow } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
@@ -20,20 +21,20 @@ async function getSumWithoutLeftovers(
   allBudgets: BudgetRead[],
   leftoversBudget: BudgetRead,
   allLimits: BudgetLimitArray,
-  startDate: string,
-  endDate: string,
+  start: string,
+  end: string,
 ): Promise<number> {
-  const assetAccount = await AccountsService.getAccount(env.assetAccountId)
+  const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
   if (!assetAccount) {
     throw new Error("Asset account not found")
   }
-  let leftoverAmount = Number.parseFloat(assetAccount.data.attributes.current_balance)
+  let leftoverAmount = Number.parseFloat(assetAccount.data.data.attributes.current_balance)
   logger.info("Current balance %d", leftoverAmount)
 
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const budgetsIds = allLimits.data.map(({ attributes: { budget_id } }) => Number(budget_id))
 
-  const insightsRaw = await InsightService.insightExpenseBudget(startDate, endDate, null, budgetsIds)
+  const { data: insightsRaw } = await InsightService.insightExpenseBudget({ client, query: { start, end, "budgets[]": budgetsIds } })
   const insights: Record<string, InsightGroupEntry> = {}
   for (const insight of insightsRaw) {
     insights[insight.id] = insight
@@ -69,23 +70,23 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
   override readonly startDelay = 25
 
   async run(): Promise<void> {
-    const startDate = getDateNow().startOf("month").toISODate()
-    const endDate = getDateNow().endOf("month").toISODate()
+    const start = getDateNow().startOf("month").toISODate()
+    const end = getDateNow().endOf("month").toISODate()
 
     const [allBudgets, allLimits] = await Promise.all([
-      BudgetsService.listBudget(null, 50, 1, startDate, endDate),
-      BudgetsService.listBudgetLimit(startDate, endDate),
+      BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
+      BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
-    const leftoversBudget = allBudgets.data.find(({ id }) => id === env.leftoversBudgetId)
-    const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
+    const leftoversBudget = allBudgets.data.data.find(({ id }) => id === env.leftoversBudgetId)
+    const leftOverLimit = allLimits.data.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
 
-    let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data, leftoversBudget, allLimits, startDate, endDate)
+    let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data.data, leftoversBudget, allLimits.data, start, end)
     if (leftoverAmount < 0) {
       logger.info("Leftover amount is negative, setting to 0.1")
       leftoverAmount = 0.1
     }
 
-    const currentLeftOverBudget = allBudgets.data.find(({ id }) => id === leftoversBudget.id)!
+    const currentLeftOverBudget = allBudgets.data.data.find(({ id }) => id === leftoversBudget.id)!
     const [spent] = currentLeftOverBudget.attributes.spent
     if (!spent) {
       logger.info("No spent amount found, setting it to 0")
@@ -108,15 +109,15 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
       return
     }
 
-    const params: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate, fire_webhooks: false }
+    const body: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start, end, fire_webhooks: false }
 
     if (!leftOverLimit) {
       logger.info("No leftovers budget limit found, creating budget limit")
-      await BudgetsService.storeBudgetLimit(leftoversBudget.id, params)
+      await BudgetsService.storeBudgetLimit({ client, path: { id: leftoversBudget.id }, body })
       return
     }
 
-    await BudgetsService.updateBudgetLimit(leftoversBudget.id, leftOverLimit.id, params)
+    await BudgetsService.updateBudgetLimit({ client, path: { id: leftoversBudget.id, limitId: leftOverLimit.id }, body })
     logger.info("Leftovers budget limit updated")
   }
 

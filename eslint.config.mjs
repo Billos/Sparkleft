@@ -22,6 +22,7 @@ export default [
     },
     rules: {
       "arrow-body-style": ["error", "as-needed"],
+      "object-shorthand": ["error", "always"],
       "prefer-destructuring": [
         "error",
         { array: true, object: true },

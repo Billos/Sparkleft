@@ -17,7 +17,10 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitOverride": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@firefly": ["./src/sdk/firefly/index.ts"]
+    }
   },
   "include": [
     "src/**/*"
@@ -25,10 +28,9 @@
   "exclude": [
     "node_modules",
     "build",
-    "src/paypalTypes",
-    "src/types",
     "src/**/*.test.ts",
-    "src/**/*.gen.ts"
+    "src/**/*.gen.ts",
+    "vitest.config.ts"
   ],
   "references": [
     { "path": "./tsconfig.gen.json" }]
