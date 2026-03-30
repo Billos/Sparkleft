@@ -1,3 +1,10 @@
+# [2.23.0](https://github.com/Billos/Sparkleft/compare/2.22.4...2.23.0) (2026-03-30)
+
+
+### Features
+
+* Use the Heyapi instead of the legacy OpenAPI double folders ([#63](https://github.com/Billos/Sparkleft/issues/63)) ([d4bbf0a](https://github.com/Billos/Sparkleft/commit/d4bbf0ac2fbce49078c20824b62645a9a69a6b47)), closes [#64](https://github.com/Billos/Sparkleft/issues/64)
+
 ## [2.22.4](https://github.com/Billos/Sparkleft/compare/2.22.3...2.22.4) (2026-03-23)
 
 
