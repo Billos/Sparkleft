@@ -7,4 +7,10 @@ const client = createClient({
   throwOnError: true,
 })
 
-export { client }
+const paypalClient = createClient({
+  auth: env.fireflyPaypalAccountToken,
+  baseURL: `${env.fireflyUrl}/api/paypal`,
+  throwOnError: true,
+})
+
+export { client, paypalClient }

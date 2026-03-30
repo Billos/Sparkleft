@@ -1,10 +1,9 @@
-import { TransactionsService } from "@firefly"
+import { TransactionsService, TransactionTypeProperty } from "@firefly"
 import { DateTime } from "luxon"
 import pino from "pino"
 
-import { client } from "../../client"
+import { client, paypalClient } from "../../client"
 import { env } from "../../config"
-import { TransactionsService as PaypalTransactionsService, TransactionTypeProperty } from "../../paypalTypes"
 import { getDateNow } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
@@ -26,7 +25,9 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
     const end = getDateNow().toISODate()
 
     // This function will retrieve the Paypal transactions that do not have the tag "Linked"
-    const { data } = await PaypalTransactionsService.listTransaction(null, 50, 1, start, end)
+    const {
+      data: { data },
+    } = await TransactionsService.listTransaction({ client: paypalClient, query: { start, end, limit: 50, page: 1 } })
     const unlinkedPaypalTransactions = data.filter(
       ({ attributes: { transactions } }) =>
         !transactions[0].tags.includes("Linked") && transactions[0].type === TransactionTypeProperty.WITHDRAWAL,
@@ -83,10 +84,14 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
         // Add Linked tag to both transactions
         // Add the destination_name of the Paypal transaction to the Firefly III transaction Notes
         logger.info("Linking paypal %s to Firefly III %s", transaction.destination_name, ffTransaction.description)
-        await PaypalTransactionsService.updateTransaction(paypalTransaction.id, {
-          apply_rules: false,
-          fire_webhooks: false,
-          transactions: [{ tags: [...transaction.tags, "Linked"] }],
+        await TransactionsService.updateTransaction({
+          client: paypalClient,
+          path: { id: paypalTransaction.id },
+          body: {
+            apply_rules: false,
+            fire_webhooks: false,
+            transactions: [{ tags: [...transaction.tags, "Linked"] }],
+          },
         })
         await TransactionsService.updateTransaction({
           client,
