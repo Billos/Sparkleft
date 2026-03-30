@@ -77,11 +77,11 @@ export class CheckBudgetLimitJob extends BudgetJob {
 
   override async init(): Promise<void> {
     logger.info("Initializing CheckBudgetLimit jobs for all budgets")
-    const startDate = getDateNow().startOf("month").toISODate()
-    const endDate = getDateNow().endOf("month").toISODate()
+    const start = getDateNow().startOf("month").toISODate()
+    const end = getDateNow().endOf("month").toISODate()
     const {
       data: { data: budgets },
-    } = await BudgetsService.listBudget({ client, query: { start: startDate, end: endDate, limit: 100 } })
+    } = await BudgetsService.listBudget({ client, query: { start, end, limit: 100 } })
     for (const budget of budgets) {
       if (budget.id !== env.billsBudgetId && budget.id !== env.leftoversBudgetId) {
         await addBudgetJobToQueue(this, budget.id)

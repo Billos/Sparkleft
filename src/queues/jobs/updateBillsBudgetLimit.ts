@@ -9,8 +9,8 @@ import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
 
-async function getTotalAmountOfBills(startDate: string, endDate: string): Promise<number> {
-  const allBills = await BillsService.listBill({ client, query: { page: 1, limit: 50, start: startDate, end: endDate } })
+async function getTotalAmountOfBills(start: string, end: string): Promise<number> {
+  const allBills = await BillsService.listBill({ client, query: { page: 1, limit: 50, start, end } })
   // Filtering inactive bills
   const bills = allBills.data.data.filter(({ attributes }) => attributes.active)
   const paidBills = bills.filter(({ attributes: { paid_dates } }) => paid_dates.length > 0)
@@ -26,7 +26,7 @@ async function getTotalAmountOfBills(startDate: string, endDate: string): Promis
     } = await BillsService.listTransactionByBill({
       client,
       path: { id: bill.id },
-      query: { page: 1, limit: 50, start: startDate, end: endDate },
+      query: { page: 1, limit: 50, start, end },
     })
     for (const { attributes } of transactions) {
       for (const { amount } of attributes.transactions) {
@@ -53,15 +53,15 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
     }
 
     // Get all budgets
-    const startDate = getDateNow().startOf("month").toISODate()
-    const endDate = getDateNow().endOf("month").toISODate()
+    const start = getDateNow().startOf("month").toISODate()
+    const end = getDateNow().endOf("month").toISODate()
 
-    const total = await getTotalAmountOfBills(startDate, endDate)
+    const total = await getTotalAmountOfBills(start, end)
 
     const { data: existingLimits } = await BudgetsService.listBudgetLimitByBudget({
       client,
       path: { id: env.billsBudgetId },
-      query: { start: startDate, end: endDate },
+      query: { start, end },
     })
 
     if (existingLimits.data.length > 1) {
@@ -71,8 +71,8 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
     const body: BudgetLimitStore = {
       amount: total.toString(),
       budget_id: env.billsBudgetId,
-      start: startDate,
-      end: endDate,
+      start,
+      end,
       fire_webhooks: false,
     }
 

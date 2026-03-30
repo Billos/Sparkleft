@@ -96,9 +96,9 @@ export class UncategorizedTransactionsJob extends TransactionJob {
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
     if (notifier) {
-      const startDate = getDateNow().startOf("month").toISODate()
-      const endDate = getDateNow().toISODate()
-      const uncategorizedTransactionsList = await getUncategorizedTransactions(startDate, endDate)
+      const start = getDateNow().startOf("month").toISODate()
+      const end = getDateNow().toISODate()
+      const uncategorizedTransactionsList = await getUncategorizedTransactions(start, end)
       for (const { id: transactionId } of uncategorizedTransactionsList) {
         await addTransactionJobToQueue(this, transactionId)
       }

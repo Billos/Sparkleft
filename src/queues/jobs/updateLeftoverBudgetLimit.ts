@@ -21,8 +21,8 @@ async function getSumWithoutLeftovers(
   allBudgets: BudgetRead[],
   leftoversBudget: BudgetRead,
   allLimits: BudgetLimitArray,
-  startDate: string,
-  endDate: string,
+  start: string,
+  end: string,
 ): Promise<number> {
   const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
   if (!assetAccount) {
@@ -34,11 +34,7 @@ async function getSumWithoutLeftovers(
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const budgetsIds = allLimits.data.map(({ attributes: { budget_id } }) => Number(budget_id))
 
-  // const insightsRaw = await InsightService.insightExpenseBudget(startDate, endDate, null, budgetsIds)
-  const { data: insightsRaw } = await InsightService.insightExpenseBudget({
-    client,
-    query: { start: startDate, end: endDate, "budgets[]": budgetsIds },
-  })
+  const { data: insightsRaw } = await InsightService.insightExpenseBudget({ client, query: { start, end, "budgets[]": budgetsIds } })
   const insights: Record<string, InsightGroupEntry> = {}
   for (const insight of insightsRaw) {
     insights[insight.id] = insight
@@ -74,17 +70,17 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
   override readonly startDelay = 25
 
   async run(): Promise<void> {
-    const startDate = getDateNow().startOf("month").toISODate()
-    const endDate = getDateNow().endOf("month").toISODate()
+    const start = getDateNow().startOf("month").toISODate()
+    const end = getDateNow().endOf("month").toISODate()
 
     const [allBudgets, allLimits] = await Promise.all([
-      BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start: startDate, end: endDate } }),
-      BudgetsService.listBudgetLimit({ client, query: { start: startDate, end: endDate } }),
+      BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
+      BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
     const leftoversBudget = allBudgets.data.data.find(({ id }) => id === env.leftoversBudgetId)
     const leftOverLimit = allLimits.data.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
 
-    let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data.data, leftoversBudget, allLimits.data, startDate, endDate)
+    let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data.data, leftoversBudget, allLimits.data, start, end)
     if (leftoverAmount < 0) {
       logger.info("Leftover amount is negative, setting to 0.1")
       leftoverAmount = 0.1
@@ -113,7 +109,7 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
       return
     }
 
-    const body: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start: startDate, end: endDate, fire_webhooks: false }
+    const body: BudgetLimitStore = { amount, budget_id: leftoversBudget.id, start, end, fire_webhooks: false }
 
     if (!leftOverLimit) {
       logger.info("No leftovers budget limit found, creating budget limit")
