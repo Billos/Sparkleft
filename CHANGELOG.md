@@ -1,3 +1,15 @@
+# [2.24.0](https://github.com/Billos/Sparkleft/compare/2.23.0...2.24.0) (2026-03-30)
+
+
+### Bug Fixes
+
+* update dependencies ([#67](https://github.com/Billos/Sparkleft/issues/67)) ([6353b42](https://github.com/Billos/Sparkleft/commit/6353b424c1b3ce7e69e59ac16aa34eb8bdc49f55))
+
+
+### Features
+
+* use the dependency instead of the generated sdk ([efd4657](https://github.com/Billos/Sparkleft/commit/efd4657bb54a90f5e5f35abcb1e0667773303fe4))
+
 # [2.23.0](https://github.com/Billos/Sparkleft/compare/2.22.4...2.23.0) (2026-03-30)
 
 
