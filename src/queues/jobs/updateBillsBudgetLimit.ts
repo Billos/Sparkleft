@@ -1,4 +1,4 @@
-import { BillsService, BudgetLimitStore, BudgetsService } from "@firefly"
+import { BillsService, BudgetLimitStore, BudgetsService } from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"

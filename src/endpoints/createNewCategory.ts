@@ -1,4 +1,4 @@
-import { CategoriesService } from "@firefly"
+import { CategoriesService } from "@billos/firefly-iii-sdk"
 import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 

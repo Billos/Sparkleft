@@ -1,4 +1,4 @@
-import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "@firefly"
+import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"

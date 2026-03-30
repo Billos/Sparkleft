@@ -29,7 +29,6 @@
     "node_modules",
     "build",
     "src/**/*.test.ts",
-    "src/**/*.gen.ts",
     "vitest.config.ts"
   ],
   "references": [

@@ -1,4 +1,4 @@
-import { TransactionsService, TransactionTypeProperty } from "@firefly"
+import { TransactionsService, TransactionTypeProperty } from "@billos/firefly-iii-sdk"
 import { DateTime } from "luxon"
 import pino from "pino"
 

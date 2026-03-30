@@ -6,7 +6,7 @@ import {
   BudgetsService,
   InsightGroupEntry,
   InsightService,
-} from "@firefly"
+} from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"

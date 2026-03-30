@@ -1,4 +1,4 @@
-import { BudgetsService, TransactionsService, TransactionTypeProperty } from "@firefly"
+import { BudgetsService, TransactionsService, TransactionTypeProperty } from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"

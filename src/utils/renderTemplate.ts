@@ -1,6 +1,6 @@
 import path from "path"
 
-import { BudgetRead, CategoryRead, TransactionSplit } from "@firefly"
+import { BudgetRead, CategoryRead, TransactionSplit } from "@billos/firefly-iii-sdk"
 import nunjucks from "nunjucks"
 
 import { env } from "../config"

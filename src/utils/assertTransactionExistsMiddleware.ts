@@ -1,4 +1,4 @@
-import { TransactionsService } from "@firefly"
+import { TransactionsService } from "@billos/firefly-iii-sdk"
 import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 

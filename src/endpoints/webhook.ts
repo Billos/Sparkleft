@@ -1,4 +1,4 @@
-import { BudgetProperties, Transaction, WebhookTrigger } from "@firefly"
+import { BudgetProperties, Transaction, WebhookTrigger } from "@billos/firefly-iii-sdk"
 import { Request, Response } from "express"
 import pino from "pino"
 

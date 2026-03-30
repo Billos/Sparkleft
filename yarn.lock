@@ -143,6 +143,13 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-1.0.2.tgz"
   integrity sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==
 
+"@billos/firefly-iii-sdk@6.5.1-sdk.5":
+  version "6.5.1-sdk.5"
+  resolved "https://registry.yarnpkg.com/@billos/firefly-iii-sdk/-/firefly-iii-sdk-6.5.1-sdk.5.tgz#1d38c7552a2224108d2e6ef20ac7abc571076897"
+  integrity sha512-zoSgwglPQk8VXDFwMf5GTi82O5OQmmCjLAt/9JdKDNwtK67Pwf82J7XuUximT2j9COmB0h0r3UAEDeo4FOxwJA==
+  dependencies:
+    "@hey-api/client-axios" "^0.9.1"
+
 "@codedependant/semantic-release-docker@^5.0.3":
   version "5.1.1"
   resolved "https://registry.npmjs.org/@codedependant/semantic-release-docker/-/semantic-release-docker-5.1.1.tgz"
@@ -373,9 +380,9 @@
   resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-2.1.1.tgz"
   integrity sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==
 
-"@hey-api/client-axios@0.9.1":
+"@hey-api/client-axios@0.9.1", "@hey-api/client-axios@^0.9.1":
   version "0.9.1"
-  resolved "https://registry.npmjs.org/@hey-api/client-axios/-/client-axios-0.9.1.tgz"
+  resolved "https://registry.yarnpkg.com/@hey-api/client-axios/-/client-axios-0.9.1.tgz#69c0438de334eaacff1930c2d56afad29fe53101"
   integrity sha512-fvpOdnEz6tu5T2+IMNZW3g9mAZwaXavqpsvtapEZNtYxyYtQ+lQs9wJn/VPhZEvdXAXu8HPTCRpmfa0t1aRATA==
 
 "@hey-api/codegen-core@0.7.2":

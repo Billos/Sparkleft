@@ -1,4 +1,4 @@
-import { AboutService } from "@firefly"
+import { AboutService } from "@billos/firefly-iii-sdk"
 import axios from "axios"
 import pino from "pino"
 

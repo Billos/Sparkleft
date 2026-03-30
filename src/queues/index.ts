@@ -1,4 +1,4 @@
-import { AboutService } from "@firefly"
+import { AboutService } from "@billos/firefly-iii-sdk"
 import { DelayedError, Job, Worker } from "bullmq"
 import { DateTime } from "luxon"
 import pino from "pino"

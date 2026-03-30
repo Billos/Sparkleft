@@ -1,4 +1,4 @@
-import { TransactionSplit, TransactionsService } from "@firefly"
+import { TransactionSplit, TransactionsService } from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"

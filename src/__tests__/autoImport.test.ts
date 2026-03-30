@@ -1,9 +1,9 @@
-import { AboutService } from "@firefly"
+import { AboutService } from "@billos/firefly-iii-sdk"
 import axios from "axios"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("axios")
-vi.mock("@firefly", () => ({
+vi.mock("@billos/firefly-iii-sdk", () => ({
   AboutService: {
     getCron: vi.fn().mockResolvedValue({}),
   },
