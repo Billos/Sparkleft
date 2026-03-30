@@ -17,7 +17,12 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitOverride": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@firefly": ["src/types"],
+      "@firefly/*": ["src/types/*"]
+    }
   },
   "include": [
     "src/**/*"
