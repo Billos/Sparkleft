@@ -21,6 +21,15 @@ export class CheckBudgetLimitJob extends BudgetJob {
       logger.error("No budgetId provided for CheckBudgetLimit job")
       return
     }
+
+    try {
+      await BudgetsService.getBudget({ client, path: { id: budgetId } })
+      logger.debug("Successfully retrieved budget with id %s, proceeding with limit check", budgetId)
+    } catch (err) {
+      logger.error({ err }, "Failed to retrieve budget with id %s, skipping limit check", budgetId)
+      return
+    }
+
     const {
       data: { data: budget },
     } = await BudgetsService.getBudget({ client, path: { id: budgetId } })
