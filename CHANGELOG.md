@@ -1,3 +1,15 @@
+# [2.25.0](https://github.com/Billos/Sparkleft/compare/2.24.0...2.25.0) (2026-04-01)
+
+
+### Bug Fixes
+
+* Validates budget existence before processing ([5f78fcc](https://github.com/Billos/Sparkleft/commit/5f78fcc10d6a2ac3bfe4c85376369df6c1d767aa))
+
+
+### Features
+
+* Adds robust error handling for API requests ([8074645](https://github.com/Billos/Sparkleft/commit/8074645148fe400ba3be945c5ab2d0535869d0f8))
+
 # [2.24.0](https://github.com/Billos/Sparkleft/compare/2.23.0...2.24.0) (2026-03-30)
 
 
