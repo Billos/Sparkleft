@@ -1,26 +1,35 @@
-import axios, { AxiosInstance } from "axios"
-
 import { env } from "../../config"
 import { AbstractNotifier } from "./notifier"
 
 export class DiscordNotifier extends AbstractNotifier {
-  private request: AxiosInstance = axios.create({})
-
   constructor() {
     super()
   }
 
   override async notifyImpl(_title: string, content: string): Promise<void> {
-    await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
+    // await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
+    await fetch(`${env.discordWebhook}?wait=true`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    })
   }
 
   override async sendMessageImpl(content: string): Promise<string> {
-    const result = await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
-    return `${result.data.id}`
+    const result = await fetch(`${env.discordWebhook}?wait=true`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    })
+    if (!result.ok) {
+      throw new Error(`Failed to send message to Discord webhook: ${result.status} ${result.statusText}`)
+    }
+    const data = await result.json()
+    return data.id
   }
 
   override async deleteMessageImpl(id: string): Promise<void> {
-    await this.request.delete(`${env.discordWebhook}/messages/${id}`)
+    await fetch(`${env.discordWebhook}/messages/${id}`, { method: "DELETE" })
   }
 
   override async deleteAllMessagesImpl(): Promise<void> {

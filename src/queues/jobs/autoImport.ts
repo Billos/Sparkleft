@@ -1,5 +1,4 @@
 import { AboutService } from "@billos/firefly-iii-sdk"
-import axios from "axios"
 import pino from "pino"
 
 import { client } from "../../client"
@@ -51,7 +50,7 @@ export class AutoImportJob extends SimpleJob {
 
     const url = `${env.importerUrl}/autoimport?${params.toString()}`
     logger.info("Triggering auto-import at %s/autoimport with directory: %s", env.importerUrl, env.importDirectory)
-    await axios.post(url)
+    await fetch(url, { method: "POST" })
     logger.info("Auto-import triggered successfully")
     const msg = renderTemplate("auto-import.njk", { importDirectory: env.importDirectory })
     await notifier.notify("Auto Import", msg)

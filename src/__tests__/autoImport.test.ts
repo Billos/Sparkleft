@@ -1,8 +1,7 @@
 import { AboutService } from "@billos/firefly-iii-sdk"
-import axios from "axios"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-vi.mock("axios")
+vi.mock("fetch")
 vi.mock("@billos/firefly-iii-sdk", () => ({
   AboutService: {
     getCron: vi.fn().mockResolvedValue({}),
@@ -22,7 +21,11 @@ vi.mock("../queues/queue", () => ({
 
 describe("AutoImportJob", () => {
   beforeEach(() => {
-    vi.mocked(axios.post).mockResolvedValue({})
+    // vi.mocked(fetch).mockResolvedValue({
+    //   ok: true,
+    //   status: 200,
+    //   json: async () => ({}),
+    // } as Response)
   })
 
   afterEach(() => {
@@ -47,12 +50,12 @@ describe("AutoImportJob", () => {
         path: { cliToken: "myclitoken" },
       }),
     )
-    expect(axios.post).toHaveBeenCalledOnce()
+    expect(fetch).toHaveBeenCalledOnce()
 
-    // Verify getCron was called before axios.post
+    // Verify getCron was called before fetch
     const getCronOrder = vi.mocked(AboutService.getCron).mock.invocationCallOrder[0]
-    const axiosPostOrder = vi.mocked(axios.post).mock.invocationCallOrder[0]
-    expect(getCronOrder).toBeLessThan(axiosPostOrder)
+    const fetchPostOrder = vi.mocked(fetch).mock.invocationCallOrder[0]
+    expect(getCronOrder).toBeLessThan(fetchPostOrder)
   })
 
   it("skips getCron and still calls the importer when cliToken is not set", async () => {
@@ -66,7 +69,7 @@ describe("AutoImportJob", () => {
     await job.run()
 
     expect(AboutService.getCron).not.toHaveBeenCalled()
-    expect(axios.post).toHaveBeenCalledOnce()
+    expect(fetch).toHaveBeenCalledOnce()
   })
 
   it("skips both getCron and the importer when required config is missing", async () => {
@@ -80,6 +83,6 @@ describe("AutoImportJob", () => {
     await job.run()
 
     expect(AboutService.getCron).not.toHaveBeenCalled()
-    expect(axios.post).not.toHaveBeenCalled()
+    expect(fetch).not.toHaveBeenCalled()
   })
 })
