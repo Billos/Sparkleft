@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@billos/firefly-iii-sdk": "6.5.5-sdk.2",
-    "axios": "^1.7.9",
     "bullmq": "^5.56.0",
     "express": "^5.1.0",
     "luxon": "^3.5.0",
