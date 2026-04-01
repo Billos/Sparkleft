@@ -16,63 +16,53 @@ export class GotifyNotifier extends AbstractNotifier {
     super()
   }
 
-  override async notifyImpl(title: string, message: string): Promise<void> {
-    const result = await fetch(`${env.gotifyUrl}/message`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Gotify-Key": env.gotifyToken },
-      body: JSON.stringify({ title, message, extras: { "client::display": { contentType: "text/markdown" } } }),
+  async #request(path: string, options: RequestInit = {}): Promise<Response> {
+    const result = await fetch(`${env.gotifyUrl}${path}`, {
+      ...options,
+      headers: {
+        ...options.headers,
+        "X-Gotify-Key": env.gotifyToken,
+      },
     })
     if (!result.ok) {
-      throw new Error(`Failed to send message to Gotify: ${result.status} ${result.statusText}`)
+      throw new Error(`Gotify request to ${path} failed: ${result.status} ${result.statusText}`)
     }
+    return result
+  }
+
+  override async notifyImpl(title: string, message: string): Promise<void> {
+    await this.sendMessageImpl(title, message)
   }
 
   override async sendMessageImpl(title: string, message: string): Promise<string> {
-    const result = await fetch(`${env.gotifyUrl}/message`, {
+    const result = await this.#request("/message", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Gotify-Key": env.gotifyToken },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, message, extras: { "client::display": { contentType: "text/markdown" } } }),
     })
-    if (!result.ok) {
-      throw new Error(`Failed to send message to Gotify: ${result.status} ${result.statusText}`)
-    }
     const data = await result.json()
     return `${data.id}`
   }
 
   override async deleteMessageImpl(id: string): Promise<void> {
     if (await this.hasMessageIdImpl(id)) {
-      const result = await fetch(`${env.gotifyUrl}/message/${id}?token=${env.gotifyUserToken}`, {
+      await this.#request(`/message/${id}?token=${env.gotifyUserToken}`, {
         method: "DELETE",
-        headers: { "X-Gotify-Key": env.gotifyToken },
       })
-      if (!result.ok) {
-        throw new Error(`Failed to delete message with ID ${id} from Gotify: ${result.status} ${result.statusText}`)
-      }
     } else {
       logger.debug({ id }, "Message ID does not exist, skipping deletion")
     }
   }
 
   override async deleteAllMessagesImpl(): Promise<void> {
-    const result = await fetch(`${env.gotifyUrl}/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
+    await this.#request(`/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
       method: "DELETE",
-      headers: { "X-Gotify-Key": env.gotifyToken },
     })
-    if (!result.ok) {
-      throw new Error(`Failed to delete all messages from Gotify: ${result.status} ${result.statusText}`)
-    }
   }
 
   override async hasMessageIdImpl(messageId: string): Promise<boolean> {
     try {
-      const result = await fetch(`${env.gotifyUrl}/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
-        method: "GET",
-        headers: { "X-Gotify-Key": env.gotifyToken },
-      })
-      if (!result.ok) {
-        throw new Error(`Failed to fetch messages from Gotify: ${result.status} ${result.statusText}`)
-      }
+      const result = await this.#request(`/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`)
       const messages = (await result.json()) as GetMessage
       const ids = messages.messages.map((msg) => msg.id.toString())
       return ids.includes(messageId)
