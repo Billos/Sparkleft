@@ -22,17 +22,15 @@ export class CheckBudgetLimitJob extends BudgetJob {
       return
     }
 
-    try {
-      await BudgetsService.getBudget({ client, path: { id: budgetId } })
-      logger.debug("Successfully retrieved budget with id %s, proceeding with limit check", budgetId)
-    } catch (err) {
-      logger.error({ err }, "Failed to retrieve budget with id %s, skipping limit check", budgetId)
-      return
-    }
-
     const {
       data: { data: budget },
     } = await BudgetsService.getBudget({ client, path: { id: budgetId } })
+
+    if (!budget) {
+      logger.error("Budget with id %s not found", budgetId)
+      return
+    }
+
     if (budget.id === env.billsBudgetId) {
       logger.debug("Budget is Bills budget, skipping review of budget limit")
       return
