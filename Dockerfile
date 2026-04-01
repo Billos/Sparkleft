@@ -10,7 +10,7 @@ RUN yarn build
 FROM node:22.14.0-alpine AS runtime
 WORKDIR /app
 
-RUN apk add tzdata
+RUN apk update && apk add tzdata
 
 COPY ./package.json ./package.json
 RUN yarn install --frozen-lockfile --production --ignore-scripts && yarn cache clean
