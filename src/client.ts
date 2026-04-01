@@ -4,13 +4,13 @@ import { env } from "./config"
 
 const client = createClient({
   auth: env.fireflyToken,
-  baseURL: `${env.fireflyUrl}/api`,
+  baseUrl: `${env.fireflyUrl}/api`,
   throwOnError: true,
 })
 
 const paypalClient = createClient({
   auth: env.fireflyPaypalAccountToken,
-  baseURL: `${env.fireflyUrl}/api/paypal`,
+  baseUrl: `${env.fireflyUrl}/api/paypal`,
   throwOnError: true,
 })
 
