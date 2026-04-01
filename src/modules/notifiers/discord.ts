@@ -7,12 +7,14 @@ export class DiscordNotifier extends AbstractNotifier {
   }
 
   override async notifyImpl(_title: string, content: string): Promise<void> {
-    // await this.request.post<{ id: number }>(`${env.discordWebhook}?wait=true`, { content })
-    await fetch(`${env.discordWebhook}?wait=true`, {
+    const result = await fetch(`${env.discordWebhook}?wait=true`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
     })
+    if (!result.ok) {
+      throw new Error(`Failed to send message to Discord webhook: ${result.status} ${result.statusText}`)
+    }
   }
 
   override async sendMessageImpl(content: string): Promise<string> {
@@ -29,7 +31,10 @@ export class DiscordNotifier extends AbstractNotifier {
   }
 
   override async deleteMessageImpl(id: string): Promise<void> {
-    await fetch(`${env.discordWebhook}/messages/${id}`, { method: "DELETE" })
+    const result = await fetch(`${env.discordWebhook}/messages/${id}`, { method: "DELETE" })
+    if (!result.ok) {
+      throw new Error(`Failed to delete message with ID ${id} from Discord webhook: ${result.status} ${result.statusText}`)
+    }
   }
 
   override async deleteAllMessagesImpl(): Promise<void> {
