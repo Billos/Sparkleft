@@ -17,7 +17,7 @@ export class GotifyNotifier extends AbstractNotifier {
   }
 
   override async notifyImpl(title: string, message: string): Promise<void> {
-    const result = await fetch(`${env.gotifyUrl}/message?token=${env.gotifyUserToken}`, {
+    const result = await fetch(`${env.gotifyUrl}/message`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Gotify-Key": env.gotifyToken },
       body: JSON.stringify({ title, message, extras: { "client::display": { contentType: "text/markdown" } } }),
@@ -28,7 +28,7 @@ export class GotifyNotifier extends AbstractNotifier {
   }
 
   override async sendMessageImpl(title: string, message: string): Promise<string> {
-    const result = await fetch(`${env.gotifyUrl}/message?token=${env.gotifyUserToken}`, {
+    const result = await fetch(`${env.gotifyUrl}/message`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Gotify-Key": env.gotifyToken },
       body: JSON.stringify({ title, message, extras: { "client::display": { contentType: "text/markdown" } } }),
@@ -55,7 +55,7 @@ export class GotifyNotifier extends AbstractNotifier {
   }
 
   override async deleteAllMessagesImpl(): Promise<void> {
-    const result = await fetch(`/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
+    const result = await fetch(`${env.gotifyUrl}/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
       method: "DELETE",
       headers: { "X-Gotify-Key": env.gotifyToken },
     })
@@ -66,7 +66,7 @@ export class GotifyNotifier extends AbstractNotifier {
 
   override async hasMessageIdImpl(messageId: string): Promise<boolean> {
     try {
-      const result = await fetch(`/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
+      const result = await fetch(`${env.gotifyUrl}/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
         method: "GET",
         headers: { "X-Gotify-Key": env.gotifyToken },
       })
@@ -76,7 +76,8 @@ export class GotifyNotifier extends AbstractNotifier {
       const messages = (await result.json()) as GetMessage
       const ids = messages.messages.map((msg) => msg.id.toString())
       return ids.includes(messageId)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Error checking for message ID %s in Gotify:", messageId)
       return false
     }
   }
