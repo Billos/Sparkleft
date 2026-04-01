@@ -21,11 +21,7 @@ vi.mock("../queues/queue", () => ({
 
 describe("AutoImportJob", () => {
   beforeEach(() => {
-    // vi.mocked(fetch).mockResolvedValue({
-    //   ok: true,
-    //   status: 200,
-    //   json: async () => ({}),
-    // } as Response)
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, text: async () => "success" }))
   })
 
   afterEach(() => {
