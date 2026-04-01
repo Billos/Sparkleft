@@ -1,3 +1,10 @@
+## [2.25.1](https://github.com/Billos/Sparkleft/compare/2.25.0...2.25.1) (2026-04-01)
+
+
+### Bug Fixes
+
+* repair gotify notifier ([801110c](https://github.com/Billos/Sparkleft/commit/801110c20a5e0e082ff2a69b35c489892f19ca6d))
+
 # [2.25.0](https://github.com/Billos/Sparkleft/compare/2.24.0...2.25.0) (2026-04-01)
 
 
