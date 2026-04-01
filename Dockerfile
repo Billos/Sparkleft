@@ -3,7 +3,7 @@ FROM node:22.14.0-alpine AS builder
 
 WORKDIR /app
 COPY . .
-RUN yarn 
+RUN yarn --ignore-scripts
 RUN yarn build
 
 # Final production image
@@ -13,7 +13,7 @@ WORKDIR /app
 RUN apk add tzdata
 
 COPY ./package.json ./package.json
-RUN yarn install --frozen-lockfile --production && yarn cache clean
+RUN yarn install --frozen-lockfile --production --ignore-scripts && yarn cache clean
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/templates ./templates

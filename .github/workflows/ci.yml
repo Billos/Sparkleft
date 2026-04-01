@@ -29,7 +29,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm i
+        run: npm i --ignore-scripts
 
       - name: Run linter
         run: npm run lint
