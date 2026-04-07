@@ -63,14 +63,14 @@ export class AutoImportJob extends SimpleJob {
     if (previousNotificationId) {
       logger.info("Deleting previous auto-import notification with ID %s", previousNotificationId)
       try {
-        await notifier.deleteMessage("AutoImportMessage", previousNotificationId, "") // transactionId is not used for auto-import notifications
+        await notifier.deleteMessage("AutoImportMessage", previousNotificationId)
       } catch (err) {
         logger.error({ err }, "Failed to delete previous auto-import notification with ID %s", previousNotificationId)
       }
     }
 
     const msg = renderTemplate("auto-import.njk", { importDirectory: env.importDirectory })
-    const notificationId = await notifier.sendMessage("AutoImportMessage", msg, "")
+    const notificationId = await notifier.sendMessage("AutoImportMessage", msg)
     await redis.set(AUTOIMPORT_NOTIFICATION_KEY, notificationId)
   }
 }
