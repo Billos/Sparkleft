@@ -70,6 +70,8 @@ njkEnv.addFilter(
   (transactionId: string) => `${env.serviceUrl}/transaction/${transactionId}/categories?api_token=${env.apiToken}`,
 )
 
+njkEnv.addFilter("UrlSparkleftAutoImport", () => `${env.serviceUrl}/autoimport?api_token=${env.apiToken}`)
+
 export function renderTemplate(templateName: string, context: TemplateContext): string {
   return njkEnv.render(templateName, context).trim()
 }
