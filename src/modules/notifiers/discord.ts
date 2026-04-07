@@ -6,17 +6,6 @@ export class DiscordNotifier extends AbstractNotifier {
     super()
   }
 
-  override async notifyImpl(_title: string, content: string): Promise<void> {
-    const result = await fetch(`${env.discordWebhook}?wait=true`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
-    })
-    if (!result.ok) {
-      throw new Error(`Failed to send message to Discord webhook: ${result.status} ${result.statusText}`)
-    }
-  }
-
   override async sendMessageImpl(content: string): Promise<string> {
     const result = await fetch(`${env.discordWebhook}?wait=true`, {
       method: "POST",
