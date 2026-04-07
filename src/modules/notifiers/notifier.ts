@@ -11,7 +11,7 @@ export interface Notifier {
   getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
   notify: (title: string, message: string) => Promise<string>
-  sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
+  sendMessage: (type: MessageType, content: string, transactionId: string, title?: string) => Promise<string>
   deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
   deleteAllMessages: () => Promise<void>
   hasMessageId: (messageId: string) => Promise<boolean>
@@ -30,8 +30,8 @@ export abstract class AbstractNotifier implements Notifier {
         return "Uncategorized Transaction"
       case "BudgetMessageId":
         return "Unbudgeted Transaction"
-      default:
-        throw new Error(`Unknown message type: ${type}`)
+      case "AlertMessage":
+        return "Alert"
     }
   }
 
@@ -88,18 +88,22 @@ export abstract class AbstractNotifier implements Notifier {
     await this.setNotes(transactionId, notes)
   }
 
-  public async sendMessage(type: MessageType, content: string, transactionId: string): Promise<string> {
-    const messageId = await this.sendMessageImpl(this.getTitle(type), content)
-    await this.setMessageId(type, transactionId, messageId)
+  public async sendMessage(type: MessageType, content: string, transactionId: string, title?: string): Promise<string> {
+    const messageId = await this.sendMessageImpl(title ?? this.getTitle(type), content)
+    if (transactionId) {
+      await this.setMessageId(type, transactionId, messageId)
+    }
     return messageId
   }
 
   public async deleteMessage(type: MessageType, id: string, transactionId: string): Promise<void> {
-    try {
-      await this.unsetMessageId(type, transactionId)
-    } catch (err) {
-      logger.error({ err }, "Could not unset message ID for type %s and transaction %s:", type, transactionId)
-      return
+    if (transactionId) {
+      try {
+        await this.unsetMessageId(type, transactionId)
+      } catch (err) {
+        logger.error({ err }, "Could not unset message ID for type %s and transaction %s:", type, transactionId)
+        return
+      }
     }
     try {
       await this.deleteMessageImpl(id, transactionId)

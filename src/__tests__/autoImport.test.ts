@@ -9,8 +9,8 @@ vi.mock("@billos/firefly-iii-sdk", () => ({
 }))
 vi.mock("../modules/notifiers", () => ({
   notifier: {
-    sendMessageImpl: vi.fn().mockResolvedValue("notification-id-123"),
-    deleteMessageImpl: vi.fn().mockResolvedValue(undefined),
+    sendMessage: vi.fn().mockResolvedValue("notification-id-123"),
+    deleteMessage: vi.fn().mockResolvedValue(undefined),
   },
 }))
 vi.mock("../utils/renderTemplate", () => ({
@@ -100,7 +100,7 @@ describe("AutoImportJob", () => {
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.sendMessageImpl).toHaveBeenCalledWith("Auto Import", "mock message")
+    expect(notifier.sendMessage).toHaveBeenCalledWith("AlertMessage", "mock message", "", "Auto Import")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 
@@ -116,7 +116,7 @@ describe("AutoImportJob", () => {
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.deleteMessageImpl).toHaveBeenCalledWith("old-notification-id", "")
+    expect(notifier.deleteMessage).toHaveBeenCalledWith("AlertMessage", "old-notification-id", "")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 
@@ -129,11 +129,11 @@ describe("AutoImportJob", () => {
     const { notifier } = await import("../modules/notifiers")
     const { redis } = await import("../redis")
     vi.mocked(redis.get).mockResolvedValue("old-notification-id")
-    vi.mocked(notifier.deleteMessageImpl).mockRejectedValue(new Error("delete failed"))
+    vi.mocked(notifier.deleteMessage).mockRejectedValue(new Error("delete failed"))
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.sendMessageImpl).toHaveBeenCalledWith("Auto Import", "mock message")
+    expect(notifier.sendMessage).toHaveBeenCalledWith("AlertMessage", "mock message", "", "Auto Import")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 })
