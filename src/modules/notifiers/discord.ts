@@ -7,6 +7,7 @@ export class DiscordNotifier extends AbstractNotifier {
   }
 
   override async notifyImpl(_title: string, content: string): Promise<string | null> {
+    // Discord webhook notifications don't have a separate title field; the title is intentionally unused
     return this.sendMessageImpl(content)
   }
 

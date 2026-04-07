@@ -66,6 +66,7 @@ export class AutoImportJob extends SimpleJob {
     if (previousNotificationId) {
       logger.info("Deleting previous auto-import notification with ID %s", previousNotificationId)
       try {
+        // null is passed for transactionId since this is a generic notification (not tied to a Firefly III transaction)
         await notifier.deleteMessageImpl(previousNotificationId, null)
       } catch (err) {
         logger.warn({ err }, "Failed to delete previous auto-import notification %s", previousNotificationId)
