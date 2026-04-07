@@ -9,7 +9,7 @@ vi.mock("@billos/firefly-iii-sdk", () => ({
 }))
 vi.mock("../modules/notifiers", () => ({
   notifier: {
-    notify: vi.fn().mockResolvedValue("notification-id-123"),
+    sendMessageImpl: vi.fn().mockResolvedValue("notification-id-123"),
     deleteMessageImpl: vi.fn().mockResolvedValue(undefined),
   },
 }))
@@ -100,7 +100,7 @@ describe("AutoImportJob", () => {
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.notify).toHaveBeenCalledWith("Auto Import", "mock message")
+    expect(notifier.sendMessageImpl).toHaveBeenCalledWith("Auto Import", "mock message")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 
@@ -133,7 +133,7 @@ describe("AutoImportJob", () => {
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.notify).toHaveBeenCalledWith("Auto Import", "mock message")
+    expect(notifier.sendMessageImpl).toHaveBeenCalledWith("Auto Import", "mock message")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 })
