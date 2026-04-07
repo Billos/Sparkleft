@@ -16,7 +16,7 @@ export class GotifyNotifier extends AbstractNotifier {
     super()
   }
 
-  override async sendMessageImpl(title: string, message: string): Promise<string> {
+  override async sendMessage(title: string, message: string): Promise<string> {
     const result = await fetch(`${env.gotifyUrl}/message`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Gotify-Key": env.gotifyToken },
@@ -29,8 +29,8 @@ export class GotifyNotifier extends AbstractNotifier {
     return `${data.id}`
   }
 
-  override async deleteMessageImpl(id: string): Promise<void> {
-    if (await this.hasMessageIdImpl(id)) {
+  override async deleteMessage(id: string): Promise<void> {
+    if (await this.hasMessageId(id)) {
       const result = await fetch(`${env.gotifyUrl}/message/${id}?token=${env.gotifyUserToken}`, {
         method: "DELETE",
         headers: { "X-Gotify-Key": env.gotifyToken },
@@ -43,7 +43,7 @@ export class GotifyNotifier extends AbstractNotifier {
     }
   }
 
-  override async deleteAllMessagesImpl(): Promise<void> {
+  override async deleteAllMessages(): Promise<void> {
     const result = await fetch(`${env.gotifyUrl}/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
       method: "DELETE",
       headers: { "X-Gotify-Key": env.gotifyToken },
@@ -53,7 +53,7 @@ export class GotifyNotifier extends AbstractNotifier {
     }
   }
 
-  override async hasMessageIdImpl(messageId: string): Promise<boolean> {
+  override async hasMessageId(messageId: string): Promise<boolean> {
     try {
       const result = await fetch(`${env.gotifyUrl}/application/${env.gotifyApplicationId}/message?token=${env.gotifyUserToken}`, {
         method: "GET",
