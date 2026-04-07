@@ -9,14 +9,21 @@ vi.mock("@billos/firefly-iii-sdk", () => ({
 }))
 vi.mock("../modules/notifiers", () => ({
   notifier: {
-    notify: vi.fn().mockResolvedValue(undefined),
+    notify: vi.fn().mockResolvedValue("new-notif-id"),
+    deleteMessageImpl: vi.fn().mockResolvedValue(undefined),
   },
 }))
 vi.mock("../utils/renderTemplate", () => ({
   renderTemplate: vi.fn().mockReturnValue("mock message"),
 }))
+
+const mockGetJobScheduler = vi.fn().mockResolvedValue(undefined)
+const mockUpsertJobScheduler = vi.fn().mockResolvedValue(undefined)
 vi.mock("../queues/queue", () => ({
-  getQueue: vi.fn(),
+  getQueue: vi.fn().mockResolvedValue({
+    getJobScheduler: mockGetJobScheduler,
+    upsertJobScheduler: mockUpsertJobScheduler,
+  }),
 }))
 
 describe("AutoImportJob", () => {
@@ -80,5 +87,88 @@ describe("AutoImportJob", () => {
 
     expect(AboutService.getCron).not.toHaveBeenCalled()
     expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it("stores new notification ID in scheduler data when autoImportCron is set", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+    vi.stubEnv("AUTO_IMPORT_CRON", "0 * * * *")
+    mockGetJobScheduler.mockResolvedValue(undefined)
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const { notifier } = await import("../modules/notifiers/index.js")
+    const job = new AutoImportJob()
+    await job.run()
+
+    expect(notifier.notify).toHaveBeenCalledOnce()
+    expect(mockUpsertJobScheduler).toHaveBeenCalledWith(
+      "auto-import-repeat",
+      { pattern: "0 * * * *" },
+      expect.objectContaining({ data: expect.objectContaining({ notificationId: "new-notif-id" }) }),
+    )
+  })
+
+  it("deletes previous notification when previous ID is found in scheduler data", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+    vi.stubEnv("AUTO_IMPORT_CRON", "0 * * * *")
+    mockGetJobScheduler.mockResolvedValue({
+      template: { data: { job: "auto-import", notificationId: "old-notif-id" } },
+    })
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const { notifier } = await import("../modules/notifiers/index.js")
+    const job = new AutoImportJob()
+    await job.run()
+
+    expect(notifier.deleteMessageImpl).toHaveBeenCalledWith("old-notif-id", null)
+  })
+
+  it("does not call deleteMessageImpl when no previous notification ID is in scheduler data", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+    mockGetJobScheduler.mockResolvedValue({ template: { data: { job: "auto-import" } } })
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const { notifier } = await import("../modules/notifiers/index.js")
+    const job = new AutoImportJob()
+    await job.run()
+
+    expect(notifier.deleteMessageImpl).not.toHaveBeenCalled()
+  })
+
+  it("does not update scheduler when autoImportCron is not set", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+    vi.stubEnv("AUTO_IMPORT_CRON", "")
+    mockGetJobScheduler.mockResolvedValue(undefined)
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const job = new AutoImportJob()
+    await job.run()
+
+    expect(mockUpsertJobScheduler).not.toHaveBeenCalled()
+  })
+
+  it("continues gracefully if deleting previous notification fails", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+    vi.stubEnv("AUTO_IMPORT_CRON", "0 * * * *")
+    mockGetJobScheduler.mockResolvedValue({
+      template: { data: { job: "auto-import", notificationId: "old-notif-id" } },
+    })
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const { notifier } = await import("../modules/notifiers/index.js")
+    vi.mocked(notifier.deleteMessageImpl).mockRejectedValue(new Error("delete failed"))
+
+    const job = new AutoImportJob()
+    await expect(job.run()).resolves.toBeUndefined()
+    expect(mockUpsertJobScheduler).toHaveBeenCalled()
   })
 })

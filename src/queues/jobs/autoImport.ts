@@ -55,7 +55,30 @@ export class AutoImportJob extends SimpleJob {
       throw new Error(`Auto-import request failed with status ${result.status}: ${await result.text()}`)
     }
     logger.info("Auto-import triggered successfully")
+
+    const queue = await getQueue()
+    const scheduler = await queue.getJobScheduler("auto-import-repeat")
+    const previousNotificationId = scheduler?.template?.data?.notificationId as string | undefined
+
     const msg = renderTemplate("auto-import.njk", { importDirectory: env.importDirectory })
-    await notifier.notify("Auto Import", msg)
+    const notificationId = await notifier.notify("Auto Import", msg)
+
+    if (previousNotificationId) {
+      logger.info("Deleting previous auto-import notification with ID %s", previousNotificationId)
+      try {
+        await notifier.deleteMessageImpl(previousNotificationId, null)
+      } catch (err) {
+        logger.warn({ err }, "Failed to delete previous auto-import notification %s", previousNotificationId)
+      }
+    }
+
+    if (notificationId && env.autoImportCron) {
+      logger.info("Storing new auto-import notification ID %s in scheduler data", notificationId)
+      try {
+        await queue.upsertJobScheduler("auto-import-repeat", { pattern: env.autoImportCron }, { name: this.id, data: { job: this.id, notificationId } })
+      } catch (err) {
+        logger.warn({ err }, "Failed to store auto-import notification ID %s in scheduler data", notificationId)
+      }
+    }
   }
 }

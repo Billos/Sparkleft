@@ -1,6 +1,6 @@
 import { BaseJob, BudgetJob, EndpointJob, TransactionJob } from "./jobs/BaseJob"
 
-type JobArgs = { job: string; delayedMessageId?: string; retryCount?: number }
+type JobArgs = { job: string; delayedMessageId?: string; retryCount?: number; notificationId?: string }
 
 export type EndpointJobArgs = { transactionId: string; data: unknown } & JobArgs
 

@@ -10,13 +10,13 @@ export interface Notifier {
   // Function about transactions
   getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
-  notify: (title: string, message: string) => Promise<void>
+  notify: (title: string, message: string) => Promise<string | null>
   sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
   deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
   deleteAllMessages: () => Promise<void>
   hasMessageId: (messageId: string) => Promise<boolean>
   // Functions about messages, implemented by the child class
-  notifyImpl: (title: string, message: string) => Promise<void>
+  notifyImpl: (title: string, message: string) => Promise<string | null>
   sendMessageImpl: (title: string, message: string) => Promise<string>
   deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
   deleteAllMessagesImpl: () => Promise<void>
@@ -58,8 +58,8 @@ export abstract class AbstractNotifier implements Notifier {
     return null
   }
 
-  public async notify(title: string, message: string): Promise<void> {
-    await this.notifyImpl(title, message)
+  public async notify(title: string, message: string): Promise<string | null> {
+    return this.notifyImpl(title, message)
   }
 
   private async setNotes(transactionId: string, notes: string): Promise<void> {
@@ -116,7 +116,7 @@ export abstract class AbstractNotifier implements Notifier {
     await this.deleteAllMessagesImpl()
   }
 
-  abstract notifyImpl(title: string, message: string): Promise<void>
+  abstract notifyImpl(title: string, message: string): Promise<string | null>
 
   abstract sendMessageImpl(title: string, content: string): Promise<string>
 
