@@ -9,7 +9,8 @@ vi.mock("@billos/firefly-iii-sdk", () => ({
 }))
 vi.mock("../modules/notifiers", () => ({
   notifier: {
-    notify: vi.fn().mockResolvedValue(undefined),
+    notify: vi.fn().mockResolvedValue("notification-id-123"),
+    deleteMessageImpl: vi.fn().mockResolvedValue(undefined),
   },
 }))
 vi.mock("../utils/renderTemplate", () => ({
@@ -17,6 +18,12 @@ vi.mock("../utils/renderTemplate", () => ({
 }))
 vi.mock("../queues/queue", () => ({
   getQueue: vi.fn(),
+}))
+vi.mock("../redis", () => ({
+  redis: {
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue("OK"),
+  },
 }))
 
 describe("AutoImportJob", () => {
@@ -80,5 +87,53 @@ describe("AutoImportJob", () => {
 
     expect(AboutService.getCron).not.toHaveBeenCalled()
     expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it("stores the new notification ID in Redis after sending notification", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const { notifier } = await import("../modules/notifiers")
+    const { redis } = await import("../redis")
+    const job = new AutoImportJob()
+    await job.run()
+
+    expect(notifier.notify).toHaveBeenCalledWith("Auto Import", "mock message")
+    expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
+  })
+
+  it("deletes the previous notification when a stored ID exists in Redis", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const { notifier } = await import("../modules/notifiers")
+    const { redis } = await import("../redis")
+    vi.mocked(redis.get).mockResolvedValue("old-notification-id")
+    const job = new AutoImportJob()
+    await job.run()
+
+    expect(notifier.deleteMessageImpl).toHaveBeenCalledWith("old-notification-id", "")
+    expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
+  })
+
+  it("still sends notification even if deleting the previous one fails", async () => {
+    vi.stubEnv("IMPORTER_URL", "http://importer:8080")
+    vi.stubEnv("IMPORT_DIRECTORY", "/imports")
+    vi.stubEnv("AUTO_IMPORT_SECRET", "mysecret")
+
+    const { AutoImportJob } = await import("../queues/jobs/autoImport.js")
+    const { notifier } = await import("../modules/notifiers")
+    const { redis } = await import("../redis")
+    vi.mocked(redis.get).mockResolvedValue("old-notification-id")
+    vi.mocked(notifier.deleteMessageImpl).mockRejectedValue(new Error("delete failed"))
+    const job = new AutoImportJob()
+    await job.run()
+
+    expect(notifier.notify).toHaveBeenCalledWith("Auto Import", "mock message")
+    expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 })

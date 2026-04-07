@@ -29,6 +29,7 @@
   "dependencies": {
     "@billos/firefly-iii-sdk": "6.5.5-sdk.2",
     "bullmq": "^5.56.0",
+    "ioredis": "^5.10.1",
     "express": "^5.1.0",
     "luxon": "^3.5.0",
     "nunjucks": "^3.2.4",

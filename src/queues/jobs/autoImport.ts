@@ -4,11 +4,14 @@ import pino from "pino"
 import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
+import { redis } from "../../redis"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
+
+const AUTOIMPORT_NOTIFICATION_KEY = "sparkleft:notification:autoimport:id"
 
 export class AutoImportJob extends SimpleJob {
   readonly id = "auto-import"
@@ -55,7 +58,19 @@ export class AutoImportJob extends SimpleJob {
       throw new Error(`Auto-import request failed with status ${result.status}: ${await result.text()}`)
     }
     logger.info("Auto-import triggered successfully")
+
+    const previousNotificationId = await redis.get(AUTOIMPORT_NOTIFICATION_KEY)
+    if (previousNotificationId) {
+      logger.info("Deleting previous auto-import notification with ID %s", previousNotificationId)
+      try {
+        await notifier.deleteMessageImpl(previousNotificationId, "")
+      } catch (err) {
+        logger.error({ err }, "Failed to delete previous auto-import notification with ID %s", previousNotificationId)
+      }
+    }
+
     const msg = renderTemplate("auto-import.njk", { importDirectory: env.importDirectory })
-    await notifier.notify("Auto Import", msg)
+    const notificationId = await notifier.notify("Auto Import", msg)
+    await redis.set(AUTOIMPORT_NOTIFICATION_KEY, notificationId)
   }
 }

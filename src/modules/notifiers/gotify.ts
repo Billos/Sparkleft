@@ -16,7 +16,7 @@ export class GotifyNotifier extends AbstractNotifier {
     super()
   }
 
-  override async notifyImpl(title: string, message: string): Promise<void> {
+  override async notifyImpl(title: string, message: string): Promise<string> {
     const result = await fetch(`${env.gotifyUrl}/message`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Gotify-Key": env.gotifyToken },
@@ -25,6 +25,8 @@ export class GotifyNotifier extends AbstractNotifier {
     if (!result.ok) {
       throw new Error(`Failed to send message to Gotify: ${result.status} ${result.statusText}`)
     }
+    const data = await result.json()
+    return `${data.id}`
   }
 
   override async sendMessageImpl(title: string, message: string): Promise<string> {
