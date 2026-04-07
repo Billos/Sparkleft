@@ -3,6 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { notifier } from "../../modules/notifiers"
+import { unbindTransactionToNotification } from "../../utils/notification"
 import { TransactionJob } from "./BaseJob"
 
 const logger = pino()
@@ -28,7 +29,13 @@ export class RemoveTransactionMessagesJob extends TransactionJob {
       const categoryMessageId = await notifier.getMessageId("CategoryMessageId", id)
       if (categoryMessageId) {
         logger.info("Removing category message %s for transaction %s", categoryMessageId, id)
-        await notifier.deleteMessage("CategoryMessageId", categoryMessageId, id)
+        try {
+          await unbindTransactionToNotification(id, "CategoryMessageId", categoryMessageId)
+        } catch (err) {
+          logger.error({ err }, "Could not unset message ID for type CategoryMessageId and transaction %s:", id)
+          return
+        }
+        await notifier.deleteMessage(categoryMessageId)
       }
     }
 
@@ -36,7 +43,13 @@ export class RemoveTransactionMessagesJob extends TransactionJob {
       const budgetMessageId = await notifier.getMessageId("BudgetMessageId", id)
       if (budgetMessageId) {
         logger.info("Removing budget message %s for transaction %s", budgetMessageId, id)
-        await notifier.deleteMessage("BudgetMessageId", budgetMessageId, id)
+        try {
+          await unbindTransactionToNotification(id, "BudgetMessageId", budgetMessageId)
+        } catch (err) {
+          logger.error({ err }, "Could not unset message ID for type BudgetMessageId and transaction %s:", id)
+          return
+        }
+        await notifier.deleteMessage(budgetMessageId)
       }
     }
   }

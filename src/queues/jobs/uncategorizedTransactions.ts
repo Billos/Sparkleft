@@ -6,6 +6,7 @@ import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow } from "../../utils/date"
+import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addTransactionJobToQueue } from "../utils"
 import { TransactionJob } from "./BaseJob"
@@ -90,7 +91,8 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       }
       logger.info("Category message defined but not found in notifier for transaction %s", id)
     }
-    await notifier.sendMessage("CategoryMessageId", msg, id)
+    const newMessageId = await notifier.sendMessage("Uncategorized Transaction", msg)
+    await bindTransactionToNotification(id, "CategoryMessageId", newMessageId)
   }
 
   override async init(): Promise<void> {
