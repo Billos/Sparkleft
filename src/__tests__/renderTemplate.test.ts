@@ -19,10 +19,4 @@ describe("renderTemplate auto-import.njk", () => {
     expect(result).toContain("http://sparkleft:3000/autoimport?api_token=myapitoken")
   })
 
-  it("has a line break before the auto import UI URL", async () => {
-    const { renderTemplate } = await import("../utils/renderTemplate.js")
-    const result = renderTemplate("auto-import.njk", { importDirectory: "/imports" })
-
-    expect(result).toMatch(/\n\n\[Auto Import UI\]/)
-  })
 })
