@@ -63,7 +63,7 @@ export class AutoImportJob extends SimpleJob {
     if (previousNotificationId) {
       logger.info("Deleting previous auto-import notification with ID %s", previousNotificationId)
       try {
-        await notifier.deleteMessageImpl(previousNotificationId, "")
+        await notifier.deleteMessageImpl(previousNotificationId, "") // transactionId is not used for auto-import notifications
       } catch (err) {
         logger.error({ err }, "Failed to delete previous auto-import notification with ID %s", previousNotificationId)
       }
