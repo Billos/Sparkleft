@@ -1,3 +1,10 @@
+# [2.26.0](https://github.com/Billos/Sparkleft/compare/2.25.1...2.26.0) (2026-04-07)
+
+
+### Features
+
+* add auto import UI URL link to auto import notification ([e9fb2ca](https://github.com/Billos/Sparkleft/commit/e9fb2ca85f5e01d6a7cc35060d8e56a8aac30158))
+
 ## [2.25.1](https://github.com/Billos/Sparkleft/compare/2.25.0...2.25.1) (2026-04-01)
 
 
