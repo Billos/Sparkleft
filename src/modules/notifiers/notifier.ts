@@ -4,19 +4,19 @@ import pino from "pino"
 import { client } from "../../client"
 
 const logger = pino()
-export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"
+export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AutoImportMessage"
 
 export interface Notifier {
   // Function about transactions
   getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
-  notify: (title: string, message: string) => Promise<string>
-  sendMessage: (type: MessageType, content: string, transactionId: string, title?: string) => Promise<string>
+  notify: (title: string, message: string) => Promise<void>
+  sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
   deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
   deleteAllMessages: () => Promise<void>
   hasMessageId: (messageId: string) => Promise<boolean>
   // Functions about messages, implemented by the child class
-  notifyImpl: (title: string, message: string) => Promise<string>
+  notifyImpl: (title: string, message: string) => Promise<void>
   sendMessageImpl: (title: string, message: string) => Promise<string>
   deleteMessageImpl: (id: string, transactionId: string) => Promise<void>
   deleteAllMessagesImpl: () => Promise<void>
@@ -30,8 +30,8 @@ export abstract class AbstractNotifier implements Notifier {
         return "Uncategorized Transaction"
       case "BudgetMessageId":
         return "Unbudgeted Transaction"
-      case "AlertMessage":
-        return "Alert"
+      case "AutoImportMessage":
+        return "Auto Import"
     }
   }
 
@@ -58,8 +58,8 @@ export abstract class AbstractNotifier implements Notifier {
     return null
   }
 
-  public async notify(title: string, message: string): Promise<string> {
-    return this.notifyImpl(title, message)
+  public async notify(title: string, message: string): Promise<void> {
+    await this.notifyImpl(title, message)
   }
 
   private async setNotes(transactionId: string, notes: string): Promise<void> {
@@ -88,8 +88,8 @@ export abstract class AbstractNotifier implements Notifier {
     await this.setNotes(transactionId, notes)
   }
 
-  public async sendMessage(type: MessageType, content: string, transactionId: string, title?: string): Promise<string> {
-    const messageId = await this.sendMessageImpl(title ?? this.getTitle(type), content)
+  public async sendMessage(type: MessageType, content: string, transactionId: string): Promise<string> {
+    const messageId = await this.sendMessageImpl(this.getTitle(type), content)
     if (transactionId) {
       await this.setMessageId(type, transactionId, messageId)
     }
@@ -120,7 +120,7 @@ export abstract class AbstractNotifier implements Notifier {
     await this.deleteAllMessagesImpl()
   }
 
-  abstract notifyImpl(title: string, message: string): Promise<string>
+  abstract notifyImpl(title: string, message: string): Promise<void>
 
   abstract sendMessageImpl(title: string, content: string): Promise<string>
 
