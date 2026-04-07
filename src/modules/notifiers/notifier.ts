@@ -4,15 +4,15 @@ import pino from "pino"
 import { client } from "../../client"
 
 const logger = pino()
-export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AlertMessage"
+export type MessageType = "BudgetMessageId" | "CategoryMessageId" | "AutoImportMessage"
 
 export interface Notifier {
   // Function about transactions
   getMessageId: (type: MessageType, transactionId: string) => Promise<string>
   // Generic function about messages
   notify: (title: string, message: string) => Promise<void>
-  sendMessage: (type: MessageType, content: string, transactionId: string) => Promise<string>
-  deleteMessage: (type: MessageType, id: string, transactionId: string) => Promise<void>
+  sendMessage: (type: MessageType, content: string, transactionId?: string) => Promise<string>
+  deleteMessage: (type: MessageType, id: string, transactionId?: string) => Promise<void>
   deleteAllMessages: () => Promise<void>
   hasMessageId: (messageId: string) => Promise<boolean>
   // Functions about messages, implemented by the child class
@@ -30,8 +30,8 @@ export abstract class AbstractNotifier implements Notifier {
         return "Uncategorized Transaction"
       case "BudgetMessageId":
         return "Unbudgeted Transaction"
-      default:
-        throw new Error(`Unknown message type: ${type}`)
+      case "AutoImportMessage":
+        return "Auto Import"
     }
   }
 
@@ -88,18 +88,22 @@ export abstract class AbstractNotifier implements Notifier {
     await this.setNotes(transactionId, notes)
   }
 
-  public async sendMessage(type: MessageType, content: string, transactionId: string): Promise<string> {
+  public async sendMessage(type: MessageType, content: string, transactionId?: string): Promise<string> {
     const messageId = await this.sendMessageImpl(this.getTitle(type), content)
-    await this.setMessageId(type, transactionId, messageId)
+    if (transactionId) {
+      await this.setMessageId(type, transactionId, messageId)
+    }
     return messageId
   }
 
-  public async deleteMessage(type: MessageType, id: string, transactionId: string): Promise<void> {
-    try {
-      await this.unsetMessageId(type, transactionId)
-    } catch (err) {
-      logger.error({ err }, "Could not unset message ID for type %s and transaction %s:", type, transactionId)
-      return
+  public async deleteMessage(type: MessageType, id: string, transactionId?: string): Promise<void> {
+    if (transactionId) {
+      try {
+        await this.unsetMessageId(type, transactionId)
+      } catch (err) {
+        logger.error({ err }, "Could not unset message ID for type %s and transaction %s:", type, transactionId)
+        return
+      }
     }
     try {
       await this.deleteMessageImpl(id, transactionId)
