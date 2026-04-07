@@ -1,3 +1,10 @@
+# [2.27.0](https://github.com/Billos/Sparkleft/compare/2.26.1...2.27.0) (2026-04-07)
+
+
+### Features
+
+* Redis-backed notification lifecycle for auto-import ([#73](https://github.com/Billos/Sparkleft/issues/73)) ([9b4fea9](https://github.com/Billos/Sparkleft/commit/9b4fea9cc65fd9bc263e1aaebb5e5e4eefed01c4))
+
 ## [2.26.1](https://github.com/Billos/Sparkleft/compare/2.26.0...2.26.1) (2026-04-07)
 
 # [2.26.0](https://github.com/Billos/Sparkleft/compare/2.25.1...2.26.0) (2026-04-07)
