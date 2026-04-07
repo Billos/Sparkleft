@@ -100,7 +100,7 @@ describe("AutoImportJob", () => {
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.sendMessage).toHaveBeenCalledWith("AutoImportMessage", "mock message")
+    expect(notifier.sendMessage).toHaveBeenCalledWith("Auto Import", "mock message")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 
@@ -116,7 +116,7 @@ describe("AutoImportJob", () => {
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.deleteMessage).toHaveBeenCalledWith("AutoImportMessage", "old-notification-id")
+    expect(notifier.deleteMessage).toHaveBeenCalledWith("old-notification-id")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 
@@ -133,7 +133,7 @@ describe("AutoImportJob", () => {
     const job = new AutoImportJob()
     await job.run()
 
-    expect(notifier.sendMessage).toHaveBeenCalledWith("AutoImportMessage", "mock message")
+    expect(notifier.sendMessage).toHaveBeenCalledWith("Auto Import", "mock message")
     expect(redis.set).toHaveBeenCalledWith("sparkleft:notification:autoimport:id", "notification-id-123")
   })
 })

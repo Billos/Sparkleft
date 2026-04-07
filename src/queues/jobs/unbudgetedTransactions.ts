@@ -5,6 +5,7 @@ import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
+import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../utils"
 import { TransactionJob } from "./BaseJob"
@@ -67,7 +68,8 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
       }
       logger.info("Budget message defined but not found in notifier for transaction %s", id)
     }
-    await notifier.sendMessage("BudgetMessageId", msg, id)
+    const newMessageId = await notifier.sendMessage("Unbudgeted Transaction", msg)
+    await bindTransactionToNotification(id, "BudgetMessageId", newMessageId)
   }
 
   override async init(): Promise<void> {

@@ -78,7 +78,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
       limit,
       currencySymbol,
     })
-    await notifier.notify(title, message)
+    await notifier.sendMessage(title, message)
     return
   }
 

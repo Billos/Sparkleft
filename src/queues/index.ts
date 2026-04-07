@@ -50,7 +50,7 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
     `Attempt: ${retryCount}`,
     `Delaying until ${delayed.toISOTime()} with data ${JSON.stringify(job.data)}.`,
   ].join("\n")
-  const delayedMessageId = await notifier.sendMessageImpl(title, message)
+  const delayedMessageId = await notifier.sendMessage(title, message)
 
   logger.info(
     "Delaying job %s (%s) until %s - Attempt: %d - Error: %s",
@@ -124,21 +124,21 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     startedAt.set(id, DateTime.now())
     if (data.delayedMessageId) {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
-      await notifier.deleteMessageImpl(data.delayedMessageId, null)
+      await notifier.deleteMessage(data.delayedMessageId)
     }
   })
 
   worker.on("completed", async ({ id, name, data }) => {
     if (data.delayedMessageId) {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
-      await notifier.deleteMessageImpl(data.delayedMessageId, null)
+      await notifier.deleteMessage(data.delayedMessageId)
     }
     logJobDuration(true, id, name)
   })
 
   worker.on("failed", (job, err) => {
     logger.error({ err }, "Job %s failed with error %s", job.id, err.message)
-    notifier.sendMessageImpl(
+    notifier.sendMessage(
       "Job Failed",
       `Job **${job.data.job}** (${job.id}) failed with error ${err.message} and data ${JSON.stringify(job.data)}`,
     )

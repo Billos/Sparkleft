@@ -3,6 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { notifier } from "../../modules/notifiers"
+import { unbindTransactionToNotification } from "../../utils/notification"
 import { EndpointJob } from "./BaseJob"
 
 const logger = pino()
@@ -21,7 +22,8 @@ export class SetCategoryForTransactionJob extends EndpointJob {
     logger.info("Deleting notifier message")
     try {
       const messageId = await notifier.getMessageId("CategoryMessageId", id)
-      await notifier.deleteMessage("CategoryMessageId", messageId, id)
+      await unbindTransactionToNotification(id, "CategoryMessageId", messageId)
+      await notifier.deleteMessage(messageId)
     } catch (error) {
       logger.error("No notifier message to delete for transaction %s", id)
     }
