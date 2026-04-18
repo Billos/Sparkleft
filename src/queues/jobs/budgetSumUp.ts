@@ -1,6 +1,7 @@
 import { BudgetsService } from "@billos/firefly-iii-sdk"
 
 import { client } from "../../client"
+import { env } from "../../config"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
 import { SimpleJob } from "./BaseJob"
@@ -21,7 +22,7 @@ export class BudgetSumUpJob extends SimpleJob {
       BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
 
-    const insights: BudgetSumUpData[] = []
+    const allInsights: BudgetSumUpData[] = []
     for (const budget of allBudgets.data.data) {
       const limit = allLimits.data.data.find(({ attributes: { budget_id } }) => budget_id === budget.id)
       if (!limit) {
@@ -38,7 +39,7 @@ export class BudgetSumUpJob extends SimpleJob {
       const [spentValue] = spent
       const leftover = parseFloat(budgetLimit) + parseFloat(spentValue.sum || "0")
 
-      insights.push({
+      allInsights.push({
         name,
         budgetLimit,
         spent: spentValue.sum || "0",
@@ -47,6 +48,7 @@ export class BudgetSumUpJob extends SimpleJob {
       })
     }
 
+    const insights = allInsights.filter(({ name }) => !env.hiddenBudgetsSumUp.includes(name))
     await this.sendUniqueNotification("Budgets Sum Up", "budget-sumup.njk", { insights })
   }
 }

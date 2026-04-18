@@ -17,6 +17,7 @@ const env = {
   gotifyToken: process.env.GOTIFY_TOKEN,
   serviceUrl: process.env.SERVICE_URL,
   hiddenCategories: process.env.HIDDEN_CATEGORIES ? process.env.HIDDEN_CATEGORIES.split(",").map((cat) => cat.trim()) : [],
+  hiddenBudgetsSumUp: process.env.HIDDEN_BUDGETS_SUM_UP ? process.env.HIDDEN_BUDGETS_SUM_UP.split(",").map((cat) => cat.trim()) : [],
   importerUrl: process.env.IMPORTER_URL,
   importDirectory: process.env.IMPORT_DIRECTORY,
   autoImportSecret: process.env.AUTO_IMPORT_SECRET,
