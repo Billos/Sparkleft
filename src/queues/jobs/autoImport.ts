@@ -69,7 +69,7 @@ export class AutoImportJob extends SimpleJob {
       }
     }
 
-    const msg = renderTemplate("auto-import.njk", { importDirectory: env.importDirectory })
+    const msg = renderTemplate("auto-import.njk", {})
     const notificationId = await notifier.sendMessage("Auto Import", msg)
     await redis.set(AUTOIMPORT_NOTIFICATION_KEY, notificationId)
   }
