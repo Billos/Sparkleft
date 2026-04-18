@@ -11,22 +11,33 @@ html(lang="en")
       .subtitle Trigger Sparkleft control jobs
       .items
         h2 Auto Import
-        button#auto-import-btn(type="button", data-token=token, onclick="triggerAction('autoimport', 'auto-import-btn', 'auto-import-status')") Trigger Auto Import
+        button.control-button(type="button", data-token=token, data-action="autoimport", data-status-id="auto-import-status") Trigger Auto Import
         .status-message#auto-import-status
           span.status-icon
           span.status-text
       .items
         h2 Budget Sum Up
-        button#budget-sumup-btn(type="button", data-token=token, onclick="triggerAction('budget-sumup', 'budget-sumup-btn', 'budget-sumup-status')") Trigger Budget Sum Up
+        button.control-button(type="button", data-token=token, data-action="budget-sumup", data-status-id="budget-sumup-status") Trigger Budget Sum Up
         .status-message#budget-sumup-status
           span.status-icon
           span.status-text
       script.
         const allowedActions = new Set(['autoimport', 'budget-sumup'])
+        const controlButtons = document.querySelectorAll('.control-button')
 
-        async function triggerAction(action, buttonId, statusId) {
-          const btn = document.getElementById(buttonId)
-          const status = document.getElementById(statusId)
+        controlButtons.forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const action = btn.dataset.action
+            const statusId = btn.dataset.statusId
+            const status = document.getElementById(statusId)
+            if (!status) {
+              return
+            }
+            await triggerAction(action, btn, status)
+          })
+        })
+
+        async function triggerAction(action, btn, status) {
           const statusIcon = status.querySelector('.status-icon')
           const statusText = status.querySelector('.status-text')
           const token = btn.getAttribute('data-token')
