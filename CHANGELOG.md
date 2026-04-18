@@ -1,3 +1,23 @@
+# [2.28.0](https://github.com/Billos/Sparkleft/compare/2.27.1...2.28.0) (2026-04-18)
+
+
+### Bug Fixes
+
+* auto import unique notification key ([94a873c](https://github.com/Billos/Sparkleft/commit/94a873c4691905a18dc24b7abaf1db22be5559b2))
+* remove useless line in the auto import notification ([ed2a291](https://github.com/Billos/Sparkleft/commit/ed2a29137d4715ee41df11fd508d72936db66dbc))
+* review types ([bbe968c](https://github.com/Billos/Sparkleft/commit/bbe968c01cf512741a3b14403b29204dced146bf))
+* types issue ([4eea49e](https://github.com/Billos/Sparkleft/commit/4eea49e192e0e8ea8d24eabf8d6e9cb7b2998414))
+* update sdk to have default throwOnError ([b70d7e2](https://github.com/Billos/Sparkleft/commit/b70d7e2556a6600e48cdb5790e8985934669a4b4))
+
+
+### Features
+
+* add budget sumup link to notification template ([a4a9e57](https://github.com/Billos/Sparkleft/commit/a4a9e57f09d74b84ced8395f1d74ea69b2c2b1f8))
+* add manual trigger page and endpoint ([e4b60ad](https://github.com/Billos/Sparkleft/commit/e4b60ad297e4bd86c96257ae47ade5e0e90d9822))
+* BudgetSumUp Job ([c8d5560](https://github.com/Billos/Sparkleft/commit/c8d5560bf24f00431cbc0edeb6c7f1f2eed00d61))
+* Hide some budgets in the sumup ([75d9f52](https://github.com/Billos/Sparkleft/commit/75d9f52361a26f183fad7e24f286866cd22fd953))
+* trigger budget sum-up automatically after limit updates ([6f78b9b](https://github.com/Billos/Sparkleft/commit/6f78b9bdbe2ee21e62513cf131d0fcf13168a79e))
+
 ## [2.27.1](https://github.com/Billos/Sparkleft/compare/2.27.0...2.27.1) (2026-04-07)
 
 # [2.27.0](https://github.com/Billos/Sparkleft/compare/2.26.1...2.27.0) (2026-04-07)
