@@ -1,0 +1,8 @@
+| Name | Limit | Spent | Left |
+|-----|-------|-------|----------|
+{% for budget in insights %}
+| {{ budget.name }} | {{ budget.budgetLimit }} {{ budget.currency }} | {{ budget.spent }} {{ budget.currency }} | {{ budget.leftover }} {{ budget.currency }} |
+{% endfor %}
+
+[View Budgets](<{{ "" | UrlFireflyBudgets }}>)
+

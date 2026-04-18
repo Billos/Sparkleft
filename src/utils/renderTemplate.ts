@@ -4,8 +4,10 @@ import { BudgetRead, CategoryRead, TransactionSplit } from "@billos/firefly-iii-
 import nunjucks from "nunjucks"
 
 import { env } from "../config"
+import { BudgetSumUpData } from "./types/budgetSumUp"
 
 export type TemplateContext = {
+  insights?: BudgetSumUpData[]
   transaction?: TransactionSplit
   transactionId?: string
   categories?: CategoryRead[]

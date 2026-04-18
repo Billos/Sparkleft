@@ -1,5 +1,6 @@
 import { AutoImportJob } from "./autoImport"
 import { BudgetJob, EndpointJob, SimpleJob, TransactionJob } from "./BaseJob"
+import { BudgetSumUpJob } from "./budgetSumUp"
 import { CheckBudgetLimitJob } from "./checkBudgetLimit"
 import { LinkPaypalTransactionsJob } from "./linkPaypalTransactions"
 import { RemoveTransactionMessagesJob } from "./removeTransactionMessages"
@@ -15,6 +16,7 @@ export const simpleJobs: SimpleJob[] = [
   new UpdateBillsBudgetLimitJob(),
   new LinkPaypalTransactionsJob(),
   new AutoImportJob(),
+  new BudgetSumUpJob(),
 ]
 
 export const transactionJobs: TransactionJob[] = [
