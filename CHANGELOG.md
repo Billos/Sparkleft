@@ -1,3 +1,10 @@
+# [2.29.0](https://github.com/Billos/Sparkleft/compare/2.28.0...2.29.0) (2026-04-18)
+
+
+### Features
+
+* include daily remaining budget in summary ([f5e2c96](https://github.com/Billos/Sparkleft/commit/f5e2c96c78af7774e80c113b626c43c3a8f4634f))
+
 # [2.28.0](https://github.com/Billos/Sparkleft/compare/2.27.1...2.28.0) (2026-04-18)
 
 
