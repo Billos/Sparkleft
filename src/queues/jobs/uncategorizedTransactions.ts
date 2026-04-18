@@ -5,7 +5,7 @@ import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
-import { getDateNow } from "../../utils/date"
+import { getDateNow, getStartOfCurrentMonth } from "../../utils/date"
 import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addTransactionJobToQueue } from "../utils"
@@ -17,9 +17,7 @@ async function getUncategorizedTransactions(start?: string, end?: string): Promi
   const transactions: TransactionRead[] = []
   const {
     data: {
-      meta: {
-        pagination: { total_pages },
-      },
+      meta: { pagination: { total_pages = 1 } = { total_pages: 1 } },
     },
   } = await TransactionsService.listTransaction({ client, query: { page: 1, limit: 200, start, end } })
 
@@ -98,8 +96,12 @@ export class UncategorizedTransactionsJob extends TransactionJob {
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
     if (notifier) {
-      const start = getDateNow().startOf("month").toISODate()
+      const start = getStartOfCurrentMonth()
       const end = getDateNow().toISODate()
+      if (!end) {
+        logger.error("Failed to get current date in ISO format")
+        return
+      }
       const uncategorizedTransactionsList = await getUncategorizedTransactions(start, end)
       for (const { id: transactionId } of uncategorizedTransactionsList) {
         await addTransactionJobToQueue(this, transactionId)

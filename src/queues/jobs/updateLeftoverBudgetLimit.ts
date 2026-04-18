@@ -11,7 +11,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import { getDateNow } from "../../utils/date"
+import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
@@ -25,18 +25,26 @@ async function getSumWithoutLeftovers(
   end: string,
 ): Promise<number> {
   const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
-  if (!assetAccount) {
+  if (!assetAccount || !assetAccount.data || !assetAccount.data.data) {
     throw new Error("Asset account not found")
   }
-  let leftoverAmount = Number.parseFloat(assetAccount.data.data.attributes.current_balance)
+  let leftoverAmount = Number.parseFloat(assetAccount.data.data.attributes.current_balance || "0")
   logger.info("Current balance %d", leftoverAmount)
 
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const budgetsIds = allLimits.data.map(({ attributes: { budget_id } }) => Number(budget_id))
 
   const { data: insightsRaw } = await InsightService.insightExpenseBudget({ client, query: { start, end, "budgets[]": budgetsIds } })
+  if (!insightsRaw) {
+    logger.info("No insights found, returning current balance as leftover amount")
+    return leftoverAmount
+  }
   const insights: Record<string, InsightGroupEntry> = {}
   for (const insight of insightsRaw) {
+    if (!insight.id) {
+      logger.warn("Insight with no id found, skipping")
+      continue
+    }
     insights[insight.id] = insight
   }
   for (const limit of limitsWithoutLeftovers) {
@@ -44,12 +52,16 @@ async function getSumWithoutLeftovers(
       // attributes: { spent, budget_id, amount },
       attributes: { budget_id, amount },
     } = limit
+    if (!budget_id || !amount) {
+      logger.warn("Budget limit with id %s has no budget_id or amount, skipping", limit.id)
+      continue
+    }
     const insight = insights[budget_id]
 
     let spentValue = "0"
     const budget = allBudgets.find((b) => b.id === budget_id)!
     const { name } = budget.attributes
-    if (insight) {
+    if (insight.difference) {
       spentValue = insight.difference
     }
 
@@ -70,8 +82,8 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
   override readonly startDelay = 25
 
   async run(): Promise<void> {
-    const start = getDateNow().startOf("month").toISODate()
-    const end = getDateNow().endOf("month").toISODate()
+    const start = getStartOfCurrentMonth()
+    const end = getEndOfCurrentMonth()
 
     const [allBudgets, allLimits] = await Promise.all([
       BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
@@ -80,6 +92,11 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
     const leftoversBudget = allBudgets.data.data.find(({ id }) => id === env.leftoversBudgetId)
     const leftOverLimit = allLimits.data.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
 
+    if (!leftoversBudget) {
+      logger.warn("Leftovers budget not found, skipping updateLeftoverBudgetLimit job")
+      throw new Error("Leftovers budget not found")
+    }
+
     let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data.data, leftoversBudget, allLimits.data, start, end)
     if (leftoverAmount < 0) {
       logger.info("Leftover amount is negative, setting to 0.1")
@@ -87,7 +104,7 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
     }
 
     const currentLeftOverBudget = allBudgets.data.data.find(({ id }) => id === leftoversBudget.id)!
-    const [spent] = currentLeftOverBudget.attributes.spent
+    const [spent] = currentLeftOverBudget.attributes.spent || []
     if (!spent) {
       logger.info("No spent amount found, setting it to 0")
     }

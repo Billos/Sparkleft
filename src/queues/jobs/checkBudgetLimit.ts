@@ -4,7 +4,7 @@ import pino from "pino"
 import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
-import { getDateNow } from "../../utils/date"
+import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue } from "../utils"
 import { BudgetJob } from "./BaseJob"
@@ -43,8 +43,8 @@ export class CheckBudgetLimitJob extends BudgetJob {
 
     logger.info("Reviewing budget limit for %s with id %s", budget.attributes.name, budget.id)
 
-    const start = getDateNow().startOf("month").toISODate()
-    const end = getDateNow().endOf("month").toISODate()
+    const start = getStartOfCurrentMonth()
+    const end = getEndOfCurrentMonth()
     const {
       data: {
         data: [existingLimits],
@@ -52,8 +52,9 @@ export class CheckBudgetLimitJob extends BudgetJob {
     } = await BudgetsService.listBudgetLimitByBudget({ client, path: { id: budget.id }, query: { start, end } })
 
     const currencySymbol = budget.attributes.currency_code === "EUR" ? "€" : "$"
-    const spent = -parseFloat(existingLimits?.attributes.spent[0]?.sum || "0")
-    const limit = parseFloat(existingLimits?.attributes.amount) || 0
+    const [{ sum }] = budget.attributes.spent || [{ sum: "0" }]
+    const spent = -parseFloat(sum || "0")
+    const limit = parseFloat(existingLimits?.attributes.amount ?? "0") || 0
 
     if (spent <= limit) {
       logger.info("Budget is within limit. Spent: %d, Limit: %d", spent, limit)
@@ -84,8 +85,8 @@ export class CheckBudgetLimitJob extends BudgetJob {
 
   override async init(): Promise<void> {
     logger.info("Initializing CheckBudgetLimit jobs for all budgets")
-    const start = getDateNow().startOf("month").toISODate()
-    const end = getDateNow().endOf("month").toISODate()
+    const start = getStartOfCurrentMonth()
+    const end = getEndOfCurrentMonth()
     const {
       data: { data: budgets },
     } = await BudgetsService.listBudget({ client, query: { start, end, limit: 100 } })

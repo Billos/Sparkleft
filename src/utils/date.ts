@@ -15,3 +15,19 @@ export function getDateNow(): DateTime {
   // logger.info("Current time is %s", date.toISO())
   return date
 }
+
+export function getStartOfCurrentMonth(): string {
+  const date = getDateNow().startOf("month").toISODate()
+  if (!date) {
+    throw new Error("Failed to get start of current month")
+  }
+  return date
+}
+
+export function getEndOfCurrentMonth(): string {
+  const date = getDateNow().endOf("month").toISODate()
+  if (!date) {
+    throw new Error("Failed to get end of current month")
+  }
+  return date
+}

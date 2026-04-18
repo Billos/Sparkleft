@@ -24,13 +24,18 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
     const start = getDateNow().minus({ days: 20 }).toISODate()
     const end = getDateNow().toISODate()
 
+    if (!start || !end) {
+      logger.error("Could not get start or end date for LinkPaypalTransactionsJob, skipping job")
+      throw new Error("Could not get start or end date for LinkPaypalTransactionsJob")
+    }
+
     // This function will retrieve the Paypal transactions that do not have the tag "Linked"
     const {
       data: { data },
     } = await TransactionsService.listTransaction({ client: paypalClient, query: { start, end, limit: 50, page: 1 } })
     const unlinkedPaypalTransactions = data.filter(
       ({ attributes: { transactions } }) =>
-        !transactions[0].tags.includes("Linked") && transactions[0].type === TransactionTypeProperty.WITHDRAWAL,
+        !transactions[0]?.tags?.includes("Linked") && transactions[0].type === TransactionTypeProperty.WITHDRAWAL,
     )
     logger.info("Found %d Unlinked Paypal transactions", unlinkedPaypalTransactions.length)
 
@@ -44,7 +49,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
     } = await TransactionsService.listTransaction({ client, query: { start, end, limit: 50, page: 1 } })
     // Filtering Firefly III transactions to only include those that do not have the tag "Linked" and have "PayPal" in the description
     const unlinkedFFTransactions = ffData.filter(
-      ({ attributes: { transactions } }) => !transactions[0].tags.includes("Linked") && transactions[0].description.includes("PAYPAL"),
+      ({ attributes: { transactions } }) => !transactions[0]?.tags?.includes("Linked") && transactions[0].description.includes("PAYPAL"),
     )
 
     logger.info("Found %d Unlinked Firefly III transactions", unlinkedFFTransactions.length)
@@ -57,7 +62,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
     for (const paypalTransaction of unlinkedPaypalTransactions) {
       const [transaction] = paypalTransaction.attributes.transactions
       // It will retrieve the transactions that do not have the tag "Linked"
-      if (transaction.tags.includes("Linked")) {
+      if (transaction.tags?.includes("Linked")) {
         continue
       }
       logger.info("Checking unlinked Paypal transaction %s - type: %s - %s", paypalTransaction.id, transaction.type, transaction.amount)
@@ -90,7 +95,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
           body: {
             apply_rules: false,
             fire_webhooks: false,
-            transactions: [{ tags: [...transaction.tags, "Linked"] }],
+            transactions: [{ tags: [...(transaction.tags ?? []), "Linked"] }],
           },
         })
         await TransactionsService.updateTransaction({
@@ -99,7 +104,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
           body: {
             apply_rules: true,
             fire_webhooks: false,
-            transactions: [{ tags: [...ffTransaction.tags, "Linked"], notes: transaction.destination_name }],
+            transactions: [{ tags: [...(ffTransaction.tags ?? []), "Linked"], notes: transaction.destination_name }],
           },
         })
       }

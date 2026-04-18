@@ -3,7 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import { getDateNow } from "../../utils/date"
+import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
@@ -13,12 +13,12 @@ async function getTotalAmountOfBills(start: string, end: string): Promise<number
   const allBills = await BillsService.listBill({ client, query: { page: 1, limit: 50, start, end } })
   // Filtering inactive bills
   const bills = allBills.data.data.filter(({ attributes }) => attributes.active)
-  const paidBills = bills.filter(({ attributes: { paid_dates } }) => paid_dates.length > 0)
+  const paidBills = bills.filter(({ attributes: { paid_dates } }) => paid_dates && paid_dates.length > 0)
   const unpaidBills = bills
-    .filter(({ attributes: { paid_dates } }) => paid_dates.length === 0)
+    .filter(({ attributes: { paid_dates } }) => paid_dates && paid_dates.length === 0)
     .filter(({ attributes: { next_expected_match } }) => !!next_expected_match)
 
-  const maximumUnpaidBill = unpaidBills.reduce((acc, bill) => acc + parseFloat(bill.attributes.amount_max), 0)
+  const maximumUnpaidBill = unpaidBills.reduce((acc, bill) => acc + parseFloat(bill.attributes.amount_max || "0"), 0)
   let paidBillsValue = 0
   for (const bill of paidBills) {
     const {
@@ -53,8 +53,8 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
     }
 
     // Get all budgets
-    const start = getDateNow().startOf("month").toISODate()
-    const end = getDateNow().endOf("month").toISODate()
+    const start = getStartOfCurrentMonth()
+    const end = getEndOfCurrentMonth()
 
     const total = await getTotalAmountOfBills(start, end)
 
