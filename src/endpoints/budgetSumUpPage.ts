@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
+import { autoImportPage } from "./autoImportPage"
 
 export async function budgetSumUpPage(req: Request, res: Response) {
-  res.render("auto-import", { token: req.query.api_token })
+  await autoImportPage(req, res)
 }

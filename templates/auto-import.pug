@@ -11,30 +11,41 @@ html(lang="en")
       .subtitle Trigger Sparkleft control jobs
       .items
         h2 Auto Import
-        button#auto-import-btn(type="button", data-token=token, onclick="triggerAction('autoimport', 'auto-import-btn', 'auto-import-status', 'Trigger Auto Import')") Trigger Auto Import
+        button#auto-import-btn(type="button", data-token=token, onclick="triggerAction('autoimport', 'auto-import-btn', 'auto-import-status')") Trigger Auto Import
         .status-message#auto-import-status
           span.status-icon
           span.status-text
       .items
         h2 Budget Sum Up
-        button#budget-sumup-btn(type="button", data-token=token, onclick="triggerAction('budget-sumup', 'budget-sumup-btn', 'budget-sumup-status', 'Trigger Budget Sum Up')") Trigger Budget Sum Up
+        button#budget-sumup-btn(type="button", data-token=token, onclick="triggerAction('budget-sumup', 'budget-sumup-btn', 'budget-sumup-status')") Trigger Budget Sum Up
         .status-message#budget-sumup-status
           span.status-icon
           span.status-text
       script.
-        async function triggerAction(action, buttonId, statusId, defaultLabel) {
+        const allowedActions = new Set(['autoimport', 'budget-sumup'])
+
+        async function triggerAction(action, buttonId, statusId) {
           const btn = document.getElementById(buttonId)
           const status = document.getElementById(statusId)
           const statusIcon = status.querySelector('.status-icon')
           const statusText = status.querySelector('.status-text')
           const token = btn.getAttribute('data-token')
+          const defaultLabel = btn.textContent
+
+          if (!allowedActions.has(action)) {
+            statusIcon.textContent = '❌'
+            statusText.textContent = 'Invalid action'
+            status.className = 'status-message error visible'
+            return
+          }
 
           btn.disabled = true
           btn.textContent = 'Running…'
           statusText.textContent = ''
 
           try {
-            const res = await fetch('/' + action + '?api_token=' + token, { method: 'POST' })
+            const params = new URLSearchParams({ api_token: token })
+            const res = await fetch('/' + action + '?' + params.toString(), { method: 'POST' })
             const data = await res.json()
             if (res.ok) {
               statusIcon.textContent = '✅'
