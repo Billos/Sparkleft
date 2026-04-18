@@ -16,8 +16,6 @@ const BUDGET_SUMUP_NOTIFICATION_KEY = "sparkleft:notification:budget-sumup:id"
 export class BudgetSumUpJob extends SimpleJob {
   readonly id = "budget-sum-up"
 
-  override startDelay = 5
-
   override readonly retryable = false
 
   async run(): Promise<void> {

@@ -1,0 +1,46 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Budget Sum Up – Sparkleft
+    link(rel="stylesheet" href="/public/style.css")
+  body
+    .container
+      h1 Budget Sum Up
+      .subtitle Trigger the budget-sumup job
+      .items
+        button#import-btn(type="button", data-token=token, onclick="triggerImport()") Trigger Budget Sum Up
+      .status-message#status
+        span.status-icon#status-icon
+        span#status-text
+      script.
+        async function triggerImport() {
+          const btn = document.getElementById('import-btn')
+          const status = document.getElementById('status')
+          const statusIcon = document.getElementById('status-icon')
+          const statusText = document.getElementById('status-text')
+          const token = btn.getAttribute('data-token')
+          btn.disabled = true
+          btn.textContent = 'Running…'
+          statusText.textContent = ''
+          try {
+            const res = await fetch('/budget-sumup?api_token=' + token, { method: 'POST' })
+            const data = await res.json()
+            if (res.ok) {
+              statusIcon.textContent = '✅'
+              status.className = 'status-message success visible'
+            } else {
+              statusIcon.textContent = '❌'
+              status.className = 'status-message error visible'
+            }
+            statusText.textContent = data.message
+          } catch (e) {
+            statusIcon.textContent = '❌'
+            statusText.textContent = 'An error occurred'
+            status.className = 'status-message error visible'
+          } finally {
+            btn.disabled = false
+            btn.textContent = 'Trigger Budget Sum Up'
+          }
+        }

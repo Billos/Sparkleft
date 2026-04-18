@@ -4,11 +4,13 @@ import pino from "pino"
 import { env } from "./config"
 import { about } from "./endpoints/about"
 import { autoImportPage } from "./endpoints/autoImportPage"
+import { budgetSumUpPage } from "./endpoints/budgetSumUpPage"
 import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { triggerAutoImport } from "./endpoints/triggerAutoImport"
+import { triggerBudgetSumUp } from "./endpoints/triggerBudgetSumUp"
 import { webhook } from "./endpoints/webhook"
 import { initializeJobs } from "./queues"
 import { AssertTransactionExistsMiddleware } from "./utils/assertTransactionExistsMiddleware"
@@ -51,6 +53,8 @@ app.get(
 app.post("/webhook", verifyWebhookMiddleware, webhook)
 app.get("/autoimport", TokenMiddleware, autoImportPage)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
+app.get("/budget-sumup", TokenMiddleware, budgetSumUpPage)
+app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
 app.get("/about", about)
 
 async function startServer() {
