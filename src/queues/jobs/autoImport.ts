@@ -13,7 +13,7 @@ export class AutoImportJob extends SimpleJob {
 
   override readonly retryable = false // auto-import is triggered externally and should not be retried on failure
 
-  override readonly uniqueNotificationKey = "sparkleft:notification:auto-import:id"
+  override readonly uniqueNotificationKey = "sparkleft:notification:autoimport:id"
 
   override async init(): Promise<void> {
     if (!env.autoImportCron) {
