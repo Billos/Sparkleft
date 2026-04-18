@@ -143,10 +143,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-1.0.2.tgz#bbe12dca5b4ef983a0d0af4b07b9bc90ea0ababa"
   integrity sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==
 
-"@billos/firefly-iii-sdk@6.5.5-sdk.2":
-  version "6.5.5-sdk.2"
-  resolved "https://registry.yarnpkg.com/@billos/firefly-iii-sdk/-/firefly-iii-sdk-6.5.5-sdk.2.tgz#1f1336b83cb024bec6777cc91429f4eab8641e0b"
-  integrity sha512-rUQWrWlMQWHgRUcCXv2S/ULO452a7RVGYFNVJE1+R/TNibww3t3fZzvH221oZ0fFB7+RPfRlBpO9xulLEBQUnw==
+"@billos/firefly-iii-sdk@6.5.5-sdk.3":
+  version "6.5.5-sdk.3"
+  resolved "https://registry.yarnpkg.com/@billos/firefly-iii-sdk/-/firefly-iii-sdk-6.5.5-sdk.3.tgz#f47ca121a99e61282dae8de1081f682e196c6938"
+  integrity sha512-zoeAQHQkTAJWXY3xI/h4x/RqqVsy/LWFsvXoSNc799n2RfgsqEpY80yXPG63x5COzOIyh6uhjaP9M/8zc80Q9A==
 
 "@codedependant/semantic-release-docker@^5.0.3":
   version "5.1.1"
