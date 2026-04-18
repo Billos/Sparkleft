@@ -34,9 +34,20 @@ html(lang="en")
             const statusId = btn.dataset.statusId
             const status = document.getElementById(statusId)
             if (!status) {
+              console.error('Missing status element for control button:', statusId)
               return
             }
-            await triggerAction(action, btn, status)
+            try {
+              await triggerAction(action, btn, status)
+            } catch (e) {
+              const statusIcon = status.querySelector('.status-icon')
+              const statusText = status.querySelector('.status-text')
+              statusIcon.textContent = '❌'
+              statusText.textContent = 'An error occurred'
+              status.className = 'status-message error visible'
+              btn.disabled = false
+              console.error('Control action failed:', e)
+            }
           })
         })
 
