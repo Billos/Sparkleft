@@ -6,6 +6,7 @@ import { about } from "./endpoints/about"
 import { autoImportPage } from "./endpoints/autoImportPage"
 import { budgetSumUpPage } from "./endpoints/budgetSumUpPage"
 import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
+import { controlPage } from "./endpoints/controlPage"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
@@ -51,6 +52,7 @@ app.get(
   TransactionResultMiddleware,
 )
 app.post("/webhook", verifyWebhookMiddleware, webhook)
+app.get("/control", TokenMiddleware, controlPage)
 app.get("/autoimport", TokenMiddleware, autoImportPage)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.get("/budget-sumup", TokenMiddleware, budgetSumUpPage)

@@ -1,0 +1,92 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Control UI – Sparkleft
+    link(rel="stylesheet" href="/public/style.css")
+  body
+    .container
+      h1 Control UI
+      .subtitle Trigger Sparkleft control jobs
+      .items
+        h2 Auto Import
+        button.control-button(type="button", data-token=token, data-action="autoimport", data-status-id="auto-import-status") Trigger Auto Import
+        .status-message#auto-import-status
+          span.status-icon
+          span.status-text
+      .items
+        h2 Budget Sum Up
+        button.control-button(type="button", data-token=token, data-action="budget-sumup", data-status-id="budget-sumup-status") Trigger Budget Sum Up
+        .status-message#budget-sumup-status
+          span.status-icon
+          span.status-text
+      script.
+        const actionEndpoints = {
+          autoimport: '/autoimport',
+          'budget-sumup': '/budget-sumup',
+        }
+        const controlButtons = document.querySelectorAll('.control-button')
+
+        controlButtons.forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const action = btn.dataset.action
+            const statusId = btn.dataset.statusId
+            const status = document.getElementById(statusId)
+            if (!status) {
+              console.error('Missing status element for control button:', statusId)
+              return
+            }
+            try {
+              await triggerAction(action, btn, status)
+            } catch (e) {
+              const statusIcon = status.querySelector('.status-icon')
+              const statusText = status.querySelector('.status-text')
+              statusIcon.textContent = '❌'
+              statusText.textContent = 'An error occurred'
+              status.className = 'status-message error visible'
+              btn.disabled = false
+              console.error('Control action failed:', e)
+            }
+          })
+        })
+
+        async function triggerAction(action, btn, status) {
+          const statusIcon = status.querySelector('.status-icon')
+          const statusText = status.querySelector('.status-text')
+          const token = btn.getAttribute('data-token')
+          const defaultLabel = btn.textContent
+          const endpoint = actionEndpoints[action]
+
+          if (!endpoint) {
+            statusIcon.textContent = '❌'
+            statusText.textContent = 'Invalid action'
+            status.className = 'status-message error visible'
+            return
+          }
+
+          btn.disabled = true
+          btn.textContent = 'Running…'
+          statusText.textContent = ''
+
+          try {
+            const params = new URLSearchParams({ api_token: token })
+            const res = await fetch(endpoint + '?' + params.toString(), { method: 'POST' })
+            const data = await res.json()
+            if (res.ok) {
+              statusIcon.textContent = '✅'
+              status.className = 'status-message success visible'
+            } else {
+              statusIcon.textContent = '❌'
+              status.className = 'status-message error visible'
+            }
+            statusText.textContent = data.message
+          } catch (e) {
+            statusIcon.textContent = '❌'
+            statusText.textContent = 'An error occurred'
+            status.className = 'status-message error visible'
+          } finally {
+            btn.disabled = false
+            btn.textContent = defaultLabel
+          }
+        }

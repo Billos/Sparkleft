@@ -57,6 +57,7 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 button {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
