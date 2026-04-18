@@ -1,22 +1,16 @@
 import { BudgetsService } from "@billos/firefly-iii-sdk"
-import pino from "pino"
 
 import { client } from "../../client"
-import { notifier } from "../../modules/notifiers"
-import { redis } from "../../redis"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
-import { renderTemplate } from "../../utils/renderTemplate"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
 import { SimpleJob } from "./BaseJob"
-
-const logger = pino()
-
-const BUDGET_SUMUP_NOTIFICATION_KEY = "sparkleft:notification:budget-sumup:id"
 
 export class BudgetSumUpJob extends SimpleJob {
   readonly id = "budget-sum-up"
 
   override readonly retryable = false
+
+  override readonly uniqueNotificationKey = "sparkleft:notification:budget-sumup:id"
 
   async run(): Promise<void> {
     const start = getStartOfCurrentMonth()
@@ -53,18 +47,6 @@ export class BudgetSumUpJob extends SimpleJob {
       })
     }
 
-    const previousNotificationId = await redis.get(BUDGET_SUMUP_NOTIFICATION_KEY)
-    if (previousNotificationId) {
-      logger.info("Deleting previous budget sum-up notification with ID %s", previousNotificationId)
-      try {
-        await notifier.deleteMessage(previousNotificationId)
-      } catch (err) {
-        logger.error({ err }, "Failed to delete previous budget sum-up notification with ID %s", previousNotificationId)
-      }
-    }
-
-    const msg = renderTemplate("budget-sumup.njk", { insights })
-    const notificationId = await notifier.sendMessage("Budgets Sum Up", msg)
-    await redis.set(BUDGET_SUMUP_NOTIFICATION_KEY, notificationId)
+    await this.sendUniqueNotification("Budgets Sum Up", "budget-sumup.njk", { insights })
   }
 }

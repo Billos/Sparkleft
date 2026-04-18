@@ -1,3 +1,11 @@
+import pino from "pino"
+
+import { notifier } from "../../modules/notifiers"
+import { redis } from "../../redis"
+import { renderTemplate, TemplateContext } from "../../utils/renderTemplate"
+
+const logger = pino()
+
 export abstract class BaseJob {
   abstract readonly id: string
 
@@ -6,6 +14,8 @@ export abstract class BaseJob {
   readonly startDelay: number = 0
 
   readonly retryDelay: number = 60
+
+  readonly uniqueNotificationKey?: string
 
   getStartDelay(asap: boolean = false): number {
     if (asap) {
@@ -19,6 +29,25 @@ export abstract class BaseJob {
   }
 
   async init(): Promise<void> {}
+
+  async sendUniqueNotification(title: string, template: string, data: TemplateContext): Promise<void> {
+    if (!this.uniqueNotificationKey) {
+      throw new Error("uniqueNotificationKey is not set for this job")
+    }
+    const previousNotificationId = await redis.get(this.uniqueNotificationKey)
+    if (previousNotificationId) {
+      logger.info("Deleting previous notification with ID %s", previousNotificationId)
+      try {
+        await notifier.deleteMessage(previousNotificationId)
+      } catch (err) {
+        logger.error({ err }, "Failed to delete previous notification with ID %s", previousNotificationId)
+      }
+    }
+
+    const msg = renderTemplate(template, data)
+    const notificationId = await notifier.sendMessage(title, msg)
+    await redis.set(this.uniqueNotificationKey, notificationId)
+  }
 }
 
 export abstract class SimpleJob extends BaseJob {
