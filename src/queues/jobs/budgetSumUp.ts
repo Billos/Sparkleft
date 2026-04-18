@@ -26,7 +26,7 @@ export class BudgetSumUpJob extends SimpleJob {
 
     const today = getDateNow().day
     const lastDayOfMonth = getDateNow().endOf("month").day
-    const remainingDays = lastDayOfMonth - today
+    const remainingDays = lastDayOfMonth - today + 1 // Include today in the count of remaining days
 
     const allInsights: BudgetSumUpData[] = []
     for (const budget of allBudgets.data.data) {
