@@ -1,3 +1,10 @@
+## [2.29.1](https://github.com/Billos/Sparkleft/compare/2.29.0...2.29.1) (2026-04-18)
+
+
+### Bug Fixes
+
+* left over per day should count today ([fb644e8](https://github.com/Billos/Sparkleft/commit/fb644e8796a1a617f0eef87e6c71b8f1eeb0c0bb))
+
 # [2.29.0](https://github.com/Billos/Sparkleft/compare/2.28.0...2.29.0) (2026-04-18)
 
 
