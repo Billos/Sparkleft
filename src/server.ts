@@ -3,7 +3,7 @@ import pino from "pino"
 
 import { env } from "./config"
 import { about } from "./endpoints/about"
-import { autoImportPage } from "./endpoints/autoImportPage"
+import { controlPage } from "./endpoints/autoImportPage"
 import { budgetSumUpPage } from "./endpoints/budgetSumUpPage"
 import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
 import { createNewCategory } from "./endpoints/createNewCategory"
@@ -51,7 +51,7 @@ app.get(
   TransactionResultMiddleware,
 )
 app.post("/webhook", verifyWebhookMiddleware, webhook)
-app.get("/autoimport", TokenMiddleware, autoImportPage)
+app.get("/autoimport", TokenMiddleware, controlPage)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.get("/budget-sumup", TokenMiddleware, budgetSumUpPage)
 app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)

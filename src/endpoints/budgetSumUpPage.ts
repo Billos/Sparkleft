@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import { autoImportPage } from "./autoImportPage"
+import { controlPage } from "./autoImportPage"
 
 export async function budgetSumUpPage(req: Request, res: Response) {
-  await autoImportPage(req, res)
+  await controlPage(req, res)
 }
