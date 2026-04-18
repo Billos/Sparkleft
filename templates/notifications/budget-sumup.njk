@@ -1,7 +1,7 @@
-| Name | Limit | Spent | Left |
+| Name | Limit | Spent | Left (left per day) |
 |-----|-------|-------|----------|
 {% for budget in insights %}
-| {{ budget.name }} | {{ budget.budgetLimit }} {{ budget.currency }} | {{ budget.spent }} {{ budget.currency }} | {{ budget.leftover }} {{ budget.currency }} |
+| {{ budget.name }} | {{ budget.budgetLimit }} {{ budget.currency }} | {{ budget.spent }} {{ budget.currency }} | {{ budget.leftover }} {{ budget.currency }} ({{ budget.leftPerDay }} {{ budget.currency }}) |
 {% endfor %}
 
 [View Budgets](<{{ "" | UrlFireflyBudgets }}>)

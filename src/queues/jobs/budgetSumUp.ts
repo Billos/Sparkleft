@@ -2,7 +2,7 @@ import { BudgetsService } from "@billos/firefly-iii-sdk"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
+import { getDateNow, getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
 import { SimpleJob } from "./BaseJob"
 
@@ -23,6 +23,10 @@ export class BudgetSumUpJob extends SimpleJob {
       BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
       BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
+
+    const today = getDateNow().day
+    const lastDayOfMonth = getDateNow().endOf("month").day
+    const remainingDays = lastDayOfMonth - today
 
     const allInsights: BudgetSumUpData[] = []
     for (const budget of allBudgets.data.data) {
@@ -46,6 +50,7 @@ export class BudgetSumUpJob extends SimpleJob {
         budgetLimit,
         spent: spentValue.sum || "0",
         leftover: String(leftover.toFixed(2)),
+        leftPerDay: String((leftover / remainingDays).toFixed(2)),
         currency,
       })
     }
