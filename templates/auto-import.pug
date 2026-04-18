@@ -3,29 +3,38 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title Auto Import – Sparkleft
+    title Control UI – Sparkleft
     link(rel="stylesheet" href="/public/style.css")
   body
     .container
-      h1 Auto Import
-      .subtitle Trigger the auto-import job to import transactions
+      h1 Control UI
+      .subtitle Trigger Sparkleft control jobs
       .items
-        button#import-btn(type="button", data-token=token, onclick="triggerImport()") Trigger Auto Import
-      .status-message#status
-        span.status-icon#status-icon
-        span#status-text
+        h2 Auto Import
+        button#auto-import-btn(type="button", data-token=token, onclick="triggerAction('autoimport', 'auto-import-btn', 'auto-import-status', 'Trigger Auto Import')") Trigger Auto Import
+        .status-message#auto-import-status
+          span.status-icon
+          span.status-text
+      .items
+        h2 Budget Sum Up
+        button#budget-sumup-btn(type="button", data-token=token, onclick="triggerAction('budget-sumup', 'budget-sumup-btn', 'budget-sumup-status', 'Trigger Budget Sum Up')") Trigger Budget Sum Up
+        .status-message#budget-sumup-status
+          span.status-icon
+          span.status-text
       script.
-        async function triggerImport() {
-          const btn = document.getElementById('import-btn')
-          const status = document.getElementById('status')
-          const statusIcon = document.getElementById('status-icon')
-          const statusText = document.getElementById('status-text')
+        async function triggerAction(action, buttonId, statusId, defaultLabel) {
+          const btn = document.getElementById(buttonId)
+          const status = document.getElementById(statusId)
+          const statusIcon = status.querySelector('.status-icon')
+          const statusText = status.querySelector('.status-text')
           const token = btn.getAttribute('data-token')
+
           btn.disabled = true
           btn.textContent = 'Running…'
           statusText.textContent = ''
+
           try {
-            const res = await fetch('/autoimport?api_token=' + token, { method: 'POST' })
+            const res = await fetch('/' + action + '?api_token=' + token, { method: 'POST' })
             const data = await res.json()
             if (res.ok) {
               statusIcon.textContent = '✅'
@@ -41,6 +50,6 @@ html(lang="en")
             status.className = 'status-message error visible'
           } finally {
             btn.disabled = false
-            btn.textContent = 'Trigger Auto Import'
+            btn.textContent = defaultLabel
           }
         }
