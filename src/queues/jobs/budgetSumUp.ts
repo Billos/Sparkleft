@@ -11,6 +11,8 @@ export class BudgetSumUpJob extends SimpleJob {
 
   override readonly retryable = false
 
+  override readonly startDelay = 60
+
   override readonly uniqueNotificationKey = "sparkleft:notification:budget-sumup:id"
 
   async run(): Promise<void> {

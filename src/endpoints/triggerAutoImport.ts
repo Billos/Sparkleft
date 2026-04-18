@@ -20,7 +20,7 @@ export async function triggerAutoImport(_req: Request, res: Response) {
   const queue = await getQueue()
   const queueEvents = new QueueEvents(queue.name, { connection: env.redisConnection })
   try {
-    const job = await addJobToQueue(new AutoImportJob())
+    const job = await addJobToQueue(new AutoImportJob(), true)
     await job.waitUntilFinished(queueEvents)
     res.status(200).json({ message: "Auto-import completed" })
   } catch (err) {

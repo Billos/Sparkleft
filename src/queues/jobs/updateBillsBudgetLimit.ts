@@ -6,6 +6,7 @@ import { env } from "../../config"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
+import { BudgetSumUpJob } from "./budgetSumUp"
 
 const logger = pino()
 
@@ -94,6 +95,8 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
       logger.error({ err }, "Error updating bills budget limit:")
     }
     logger.info("Bills budget limit updated")
+
+    await addJobToQueue(new BudgetSumUpJob())
   }
 
   override async init(): Promise<void> {
