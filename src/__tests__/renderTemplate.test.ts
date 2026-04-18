@@ -12,10 +12,10 @@ describe("renderTemplate auto-import.njk", () => {
     vi.unstubAllEnvs()
   })
 
-  it("includes a link to the auto import UI URL", async () => {
+  it("includes a link to the control page URL", async () => {
     const { renderTemplate } = await import("../utils/renderTemplate.js")
     const result = renderTemplate("auto-import.njk", { importDirectory: "/imports" })
 
-    expect(result).toContain("http://sparkleft:3000/autoimport?api_token=myapitoken")
+    expect(result).toContain("http://sparkleft:3000/control?api_token=myapitoken")
   })
 })

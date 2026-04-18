@@ -76,6 +76,8 @@ njkEnv.addFilter("UrlSparkleftAutoImport", () => `${env.serviceUrl}/autoimport?a
 
 njkEnv.addFilter("UrlSparkleftBudgetSumUp", () => `${env.serviceUrl}/budget-sumup?api_token=${env.apiToken}`)
 
+njkEnv.addFilter("UrlSparkleftControlPage", () => `${env.serviceUrl}/control?api_token=${env.apiToken}`)
+
 export function renderTemplate(templateName: string, context: TemplateContext): string {
   return njkEnv.render(templateName, context).trim()
 }
