@@ -120,6 +120,11 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   )
 
   worker.on("active", async ({ id, name, data }) => {
+    if (!id || !name) {
+      logger.error("A job started without context: %s", JSON.stringify({ id, name, data }))
+      return
+    }
+
     logger.info("******************************************************************************** Job(%s) %s started", id, name)
     startedAt.set(id, DateTime.now())
     if (data.delayedMessageId) {
@@ -133,17 +138,21 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
       await notifier.deleteMessage(data.delayedMessageId)
     }
-    logJobDuration(true, id, name)
+    logJobDuration(true, id ?? "unknown", name ?? "unknown")
   })
 
   worker.on("failed", (job, err) => {
+    if (!job) {
+      logger.error({ err }, "A job failed without job context: %s", err?.message ?? "Unknown error")
+      return
+    }
     logger.error({ err }, "Job %s failed with error %s", job.id, err.message)
     notifier.sendMessage(
       "Job Failed",
       `Job **${job.data.job}** (${job.id}) failed with error ${err.message} and data ${JSON.stringify(job.data)}`,
     )
 
-    logJobDuration(false, job.id, job.name)
+    logJobDuration(false, job.id ?? "unknown", job.name ?? "unknown")
   })
 
   worker.on("ready", () => {
