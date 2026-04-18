@@ -1,3 +1,11 @@
+# [2.30.0](https://github.com/Billos/Sparkleft/compare/2.29.1...2.30.0) (2026-04-18)
+
+
+### Features
+
+* Control UI that merges Auto Import and Budget SumUp ([cc78d01](https://github.com/Billos/Sparkleft/commit/cc78d01f61cc58e7dad2963be367477e1cae92db))
+* link to unified control page in templates ([c089959](https://github.com/Billos/Sparkleft/commit/c0899599e82dcbd757091e4239b7485077edb033))
+
 ## [2.29.1](https://github.com/Billos/Sparkleft/compare/2.29.0...2.29.1) (2026-04-18)
 
 
