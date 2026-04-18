@@ -22,7 +22,10 @@ html(lang="en")
           span.status-icon
           span.status-text
       script.
-        const allowedActions = new Set(['autoimport', 'budget-sumup'])
+        const actionEndpoints = {
+          autoimport: '/autoimport',
+          'budget-sumup': '/budget-sumup',
+        }
         const controlButtons = document.querySelectorAll('.control-button')
 
         controlButtons.forEach((btn) => {
@@ -42,8 +45,9 @@ html(lang="en")
           const statusText = status.querySelector('.status-text')
           const token = btn.getAttribute('data-token')
           const defaultLabel = btn.textContent
+          const endpoint = actionEndpoints[action]
 
-          if (!allowedActions.has(action)) {
+          if (!endpoint) {
             statusIcon.textContent = '❌'
             statusText.textContent = 'Invalid action'
             status.className = 'status-message error visible'
@@ -56,7 +60,7 @@ html(lang="en")
 
           try {
             const params = new URLSearchParams({ api_token: token })
-            const res = await fetch('/' + action + '?' + params.toString(), { method: 'POST' })
+            const res = await fetch(endpoint + '?' + params.toString(), { method: 'POST' })
             const data = await res.json()
             if (res.ok) {
               statusIcon.textContent = '✅'
