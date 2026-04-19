@@ -62,6 +62,8 @@ REDIS_DB=
 REDIS_PASSWORD=
 # Comma-separated list of category names to hide from uncategorized transaction listings (optional)
 HIDDEN_CATEGORIES=
+# Cron expression used to automatically trigger budget sum-up (optional)
+BUDGET_SUM_UP_CRON=
 ```
 
 ### Running Services
