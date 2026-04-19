@@ -14,7 +14,14 @@ export class RemoveTransactionMessagesJob extends TransactionJob {
   override readonly startDelay = 15
 
   async run(id: string): Promise<void> {
-    logger.info("Checking and removing messages for updated transaction %s", id)
+    // Checking that the transaction exists in Firefly, otherwise the error will be handled by the retry mechanism of the job and the transaction will be checked again later, when it might have been deleted from Firefly
+    try {
+      await TransactionsService.getTransaction({ client, path: { id } })
+    } catch (err) {
+      logger.error({ err }, "Could not find transaction %s in Firefly, skipping message removal", id)
+      return
+    }
+    logger.info("Transaction %s found, removing messages for updated transaction %s", id, id)
     const {
       data: {
         data: {
