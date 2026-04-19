@@ -1,3 +1,10 @@
+# [2.31.0](https://github.com/Billos/Sparkleft/compare/2.30.0...2.31.0) (2026-04-19)
+
+
+### Features
+
+* add configurable cron for budget sum-up job ([#76](https://github.com/Billos/Sparkleft/issues/76)) ([07ee46b](https://github.com/Billos/Sparkleft/commit/07ee46b348b8da46bf99198eb71472d192c9917d))
+
 # [2.30.0](https://github.com/Billos/Sparkleft/compare/2.29.1...2.30.0) (2026-04-18)
 
 
