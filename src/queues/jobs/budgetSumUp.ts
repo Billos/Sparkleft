@@ -1,10 +1,14 @@
 import { BudgetsService } from "@billos/firefly-iii-sdk"
+import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
 import { getDateNow, getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
+import { getQueue } from "../queue"
 import { SimpleJob } from "./BaseJob"
+
+const logger = pino()
 
 export class BudgetSumUpJob extends SimpleJob {
   readonly id = "budget-sum-up"
@@ -14,6 +18,24 @@ export class BudgetSumUpJob extends SimpleJob {
   override readonly startDelay = 60
 
   override readonly uniqueNotificationKey = "sparkleft:notification:budget-sumup:id"
+
+  override async init(): Promise<void> {
+    if (!env.budgetSumUpCron) {
+      logger.info("BUDGET_SUM_UP_CRON is not set, skipping budget sum-up scheduler setup")
+      return
+    }
+    const queue = await getQueue()
+    logger.info("Setting up budget sum-up scheduler with cron '%s'", env.budgetSumUpCron)
+    try {
+      await queue.upsertJobScheduler(
+        "budget-sum-up-repeat",
+        { pattern: env.budgetSumUpCron },
+        { name: this.id, data: { job: this.id } },
+      )
+    } catch (err) {
+      logger.error({ err }, "Failed to set up budget sum-up scheduler; budget sum-up will not run automatically")
+    }
+  }
 
   async run(): Promise<void> {
     const start = getStartOfCurrentMonth()
