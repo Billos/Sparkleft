@@ -21,10 +21,12 @@ export class CheckBudgetLimitJob extends BudgetJob {
       logger.error("No budgetId provided for CheckBudgetLimit job")
       return
     }
+    const start = getStartOfCurrentMonth()
+    const end = getEndOfCurrentMonth()
 
     const {
       data: { data: budget },
-    } = await BudgetsService.getBudget({ client, path: { id: budgetId } })
+    } = await BudgetsService.getBudget({ client, path: { id: budgetId }, query: { start, end } })
 
     if (!budget) {
       logger.error("Budget with id %s not found", budgetId)
@@ -43,8 +45,6 @@ export class CheckBudgetLimitJob extends BudgetJob {
 
     logger.info("Reviewing budget limit for %s with id %s", budget.attributes.name, budget.id)
 
-    const start = getStartOfCurrentMonth()
-    const end = getEndOfCurrentMonth()
     const {
       data: {
         data: [existingLimits],
