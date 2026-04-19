@@ -3,6 +3,7 @@ import pino from "pino"
 import { notifier } from "../../modules/notifiers"
 import { redis } from "../../redis"
 import { renderTemplate, TemplateContext } from "../../utils/renderTemplate"
+import { getQueue } from "../queue"
 
 const logger = pino()
 
@@ -17,6 +18,8 @@ export abstract class BaseJob {
 
   readonly uniqueNotificationKey?: string
 
+  readonly cronPattern?: string
+
   getStartDelay(asap: boolean = false): number {
     if (asap) {
       return 2000 // 2 seconds
@@ -28,7 +31,21 @@ export abstract class BaseJob {
     return retryCount * this.retryDelay * 1000
   }
 
-  async init(): Promise<void> {}
+  async init(): Promise<void> {
+    if (this.cronPattern) {
+      await this.scheduleCronJob(this.cronPattern)
+    }
+  }
+
+  private async scheduleCronJob(pattern: string): Promise<void> {
+    const queue = await getQueue()
+    logger.info("Setting up scheduler for %s with cron '%s'", this.id, pattern)
+    try {
+      await queue.upsertJobScheduler(`${this.id}-repeat`, { pattern }, { name: this.id, data: { job: this.id } })
+    } catch (err) {
+      logger.error({ err }, "Failed to set up scheduler for job %s", this.id)
+    }
+  }
 
   async sendUniqueNotification(title: string, template: string, data: TemplateContext): Promise<void> {
     if (!this.uniqueNotificationKey) {

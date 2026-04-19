@@ -3,7 +3,6 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import { getQueue } from "../queue"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
@@ -15,19 +14,7 @@ export class AutoImportJob extends SimpleJob {
 
   override readonly uniqueNotificationKey = "sparkleft:notification:autoimport:id"
 
-  override async init(): Promise<void> {
-    if (!env.autoImportCron) {
-      logger.info("AUTO_IMPORT_CRON is not set, skipping auto-import scheduler setup")
-      return
-    }
-    const queue = await getQueue()
-    logger.info("Setting up auto-import scheduler with cron '%s'", env.autoImportCron)
-    try {
-      await queue.upsertJobScheduler("auto-import-repeat", { pattern: env.autoImportCron }, { name: this.id, data: { job: this.id } })
-    } catch (err) {
-      logger.error({ err }, "Failed to set up auto-import scheduler; auto-import will not run automatically")
-    }
-  }
+  override readonly cronPattern = env.autoImportCron
 
   async run(): Promise<void> {
     if (!env.importerUrl || !env.importDirectory || !env.autoImportSecret) {
