@@ -1,3 +1,11 @@
+## [2.31.2](https://github.com/Billos/Sparkleft/compare/2.31.1...2.31.2) (2026-04-19)
+
+
+### Bug Fixes
+
+* pass current month range when fetching budget ([e747fcd](https://github.com/Billos/Sparkleft/commit/e747fcd3dbb90556e06b652e62075232aa1261f8))
+* remove BudgetSumUpJob trigger from bill budget update ([44709b4](https://github.com/Billos/Sparkleft/commit/44709b4745b4845152ab9dfc52726148ea5af3d9))
+
 ## [2.31.1](https://github.com/Billos/Sparkleft/compare/2.31.0...2.31.1) (2026-04-19)
 
 # [2.31.0](https://github.com/Billos/Sparkleft/compare/2.30.0...2.31.0) (2026-04-19)
