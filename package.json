@@ -1,6 +1,6 @@
 {
   "name": "sparkleft",
-  "version": "2.31.2",
+  "version": "2.31.3",
   "description": "Budget management assistant integrating with Firefly III. Automatically categorises transactions, manages budgets, and sends notifications via Discord or Gotify.",
   "repository": {
     "type": "git",

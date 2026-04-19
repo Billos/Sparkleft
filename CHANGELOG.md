@@ -1,3 +1,10 @@
+## [2.31.3](https://github.com/Billos/Sparkleft/compare/2.31.2...2.31.3) (2026-04-19)
+
+
+### Bug Fixes
+
+* Do not crash on RemoveTransactionMessagesJob ([9a41c8f](https://github.com/Billos/Sparkleft/commit/9a41c8ff9729130703975ebf095d229224e045ba))
+
 ## [2.31.2](https://github.com/Billos/Sparkleft/compare/2.31.1...2.31.2) (2026-04-19)
 
 
