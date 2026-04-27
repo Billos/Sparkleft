@@ -71,6 +71,10 @@ describe("BaseJob", () => {
     expect(job.getRetryDelay(5)).toBe(5 * 60 * 1000) // 5 minutes
   })
 
+  it("unique defaults to false", () => {
+    expect(job.unique).toBe(false)
+  })
+
   it("init() resolves without error by default", async () => {
     await expect(job.init()).resolves.toBeUndefined()
   })

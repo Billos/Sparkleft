@@ -38,6 +38,17 @@ export async function addBudgetJobToQueue(job: BudgetJob, budgetId: string): Pro
 export async function addJobToQueue(job: BaseJob, asap?: boolean): Promise<Job> {
   const queue = await getQueue()
   const delay = job.getStartDelay(asap)
+
+  if (job.unique) {
+    const existingJobs = await queue.getJobs(["waiting", "delayed", "prioritized"])
+    for (const existingJob of existingJobs) {
+      if (existingJob.data.job === job.id) {
+        logger.info("Removing existing unique job %s (%s) before rescheduling", existingJob.id, job.id)
+        await existingJob.remove()
+      }
+    }
+  }
+
   logger.info("Adding job to queue: %s with delay: %d seconds", job.id, delay / 1000)
   return queue.add(job.id, { job: job.id }, queueConfig(delay))
 }

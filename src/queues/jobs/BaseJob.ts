@@ -16,6 +16,8 @@ export abstract class BaseJob {
 
   readonly retryDelay: number = 60
 
+  readonly unique: boolean = false
+
   readonly uniqueNotificationKey?: string
 
   readonly cronPattern?: string
