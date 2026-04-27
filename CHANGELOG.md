@@ -1,3 +1,10 @@
+# [2.32.0](https://github.com/Billos/Sparkleft/compare/2.31.3...2.32.0) (2026-04-27)
+
+
+### Features
+
+* Add favicon SVG to public directory and link in all templates ([#78](https://github.com/Billos/Sparkleft/issues/78)) ([7fac9c1](https://github.com/Billos/Sparkleft/commit/7fac9c147b4c0993b525c97554b3aede14073892))
+
 ## [2.31.3](https://github.com/Billos/Sparkleft/compare/2.31.2...2.31.3) (2026-04-19)
 
 
