@@ -41,12 +41,13 @@ export async function addJobToQueue(job: BaseJob, asap?: boolean): Promise<Job> 
 
   if (job.unique) {
     const existingJobs = await queue.getJobs(["waiting", "delayed", "prioritized"])
-    for (const existingJob of existingJobs) {
-      if (existingJob.data.job === job.id) {
+    const matchingJobs = existingJobs.filter((existingJob) => existingJob.data.job === job.id)
+    await Promise.all(
+      matchingJobs.map((existingJob) => {
         logger.info("Removing existing unique job %s (%s) before rescheduling", existingJob.id, job.id)
-        await existingJob.remove()
-      }
-    }
+        return existingJob.remove()
+      }),
+    )
   }
 
   logger.info("Adding job to queue: %s with delay: %d seconds", job.id, delay / 1000)
