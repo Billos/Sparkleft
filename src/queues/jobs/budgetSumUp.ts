@@ -11,13 +11,15 @@ export class BudgetSumUpJob extends SimpleJob {
 
   override readonly retryable = false
 
-  override readonly unique = true
-
   override readonly startDelay = 60
 
   override readonly uniqueNotificationKey = "sparkleft:notification:budget-sumup:id"
 
   override readonly cronPattern = env.budgetSumUpCron
+
+  override uniqueKey(): Record<string, unknown> {
+    return { job: this.id }
+  }
 
   async run(): Promise<void> {
     const start = getStartOfCurrentMonth()

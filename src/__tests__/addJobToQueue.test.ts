@@ -15,7 +15,9 @@ class NonUniqueJob extends SimpleJob {
 
 class UniqueJob extends SimpleJob {
   readonly id = "unique-job"
-  override readonly unique = true
+  override uniqueKey(): Record<string, unknown> {
+    return { job: this.id }
+  }
   async run(): Promise<void> {}
 }
 

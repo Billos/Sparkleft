@@ -39,9 +39,12 @@ export async function addJobToQueue(job: BaseJob, asap?: boolean): Promise<Job> 
   const queue = await getQueue()
   const delay = job.getStartDelay(asap)
 
-  if (job.unique) {
+  const key = job.uniqueKey()
+  if (key) {
     const existingJobs = await queue.getJobs(["waiting", "delayed", "prioritized"])
-    const matchingJobs = existingJobs.filter((existingJob) => existingJob.data.job === job.id)
+    const matchingJobs = existingJobs.filter((existingJob) =>
+      Object.entries(key).every(([k, v]) => (existingJob.data as Record<string, unknown>)[k] === v),
+    )
     await Promise.all(
       matchingJobs.map((existingJob) => {
         logger.info("Removing existing unique job %s (%s) before rescheduling", existingJob.id, job.id)
