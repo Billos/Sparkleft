@@ -14,7 +14,7 @@ const env = {
   gotifyUrl: process.env.GOTIFY_URL,
   gotifyApplicationId: process.env.GOTIFY_APPLICATION_ID,
   gotifyUserToken: process.env.GOTIFY_USER_TOKEN,
-  gotifyToken: process.env.GOTIFY_TOKEN,
+  gotifyToken: process.env.GOTIFY_TOKEN || "",
   serviceUrl: process.env.SERVICE_URL,
   hiddenCategories: process.env.HIDDEN_CATEGORIES ? process.env.HIDDEN_CATEGORIES.split(",").map((cat) => cat.trim()) : [],
   hiddenBudgetsSumUp: process.env.HIDDEN_BUDGETS_SUM_UP ? process.env.HIDDEN_BUDGETS_SUM_UP.split(",").map((cat) => cat.trim()) : [],
