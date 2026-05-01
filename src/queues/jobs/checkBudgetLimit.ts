@@ -1,4 +1,4 @@
-import { BudgetLimitStoreWritable, BudgetsService } from "@billos/firefly-iii-sdk"
+import { BudgetLimitStoreWritable, BudgetRead, BudgetsService } from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"
@@ -10,6 +10,15 @@ import { addBudgetJobToQueue } from "../utils"
 import { BudgetJob } from "./BaseJob"
 
 const logger = pino()
+
+function getSpent(budget: BudgetRead): number {
+  const { spent } = budget.attributes
+  if (!spent || !spent.length) {
+    return 0
+  }
+  const [sum] = spent
+  return -parseFloat(sum.sum ?? "0")
+}
 
 export class CheckBudgetLimitJob extends BudgetJob {
   readonly id = "check-budget-limit"
@@ -52,8 +61,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     } = await BudgetsService.listBudgetLimitByBudget({ client, path: { id: budget.id }, query: { start, end } })
 
     const currencySymbol = budget.attributes.currency_code === "EUR" ? "€" : "$"
-    const [{ sum }] = budget.attributes.spent || [{ sum: "0" }]
-    const spent = -parseFloat(sum || "0")
+    const spent = getSpent(budget)
     const limit = parseFloat(existingLimits?.attributes.amount ?? "0") || 0
 
     if (spent <= limit) {

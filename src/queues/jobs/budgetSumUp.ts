@@ -41,16 +41,16 @@ export class BudgetSumUpJob extends SimpleJob {
       } = limit
 
       const {
-        attributes: { name, currency_symbol: currency = "€", spent = [{ sum: "0" }] },
+        attributes: { name, currency_symbol: currency = "€", spent = [] },
       } = budget
 
-      const [spentValue] = spent
-      const leftover = parseFloat(budgetLimit) + parseFloat(spentValue.sum || "0")
+      const spentValue = spent[0]?.sum || "0"
+      const leftover = parseFloat(budgetLimit) + parseFloat(spentValue)
 
       allInsights.push({
         name,
         budgetLimit,
-        spent: spentValue.sum || "0",
+        spent: spentValue,
         leftover: String(leftover.toFixed(2)),
         leftPerDay: String((leftover / remainingDays).toFixed(2)),
         currency,

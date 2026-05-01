@@ -40,7 +40,7 @@ async function getSumWithoutLeftovers(
     logger.info("No insights found, returning current balance as leftover amount")
     return leftoverAmount
   }
-  const insights: Record<string, InsightGroupEntry> = {}
+  const insights: Record<string, InsightGroupEntry | undefined> = {}
   for (const insight of insightsRaw) {
     if (!insight.id) {
       logger.warn("Insight with no id found, skipping")
@@ -62,7 +62,7 @@ async function getSumWithoutLeftovers(
     let spentValue = "0"
     const budget = allBudgets.find((b) => b.id === budget_id)!
     const { name } = budget.attributes
-    if (insight.difference) {
+    if (insight?.difference) {
       spentValue = insight.difference
     }
 
