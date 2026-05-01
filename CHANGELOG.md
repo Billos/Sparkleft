@@ -1,3 +1,11 @@
+## [2.32.1](https://github.com/Billos/Sparkleft/compare/2.32.0...2.32.1) (2026-05-01)
+
+
+### Bug Fixes
+
+* Repair issues when no expenses yet ([3699658](https://github.com/Billos/Sparkleft/commit/36996580da1212ebe59f1407f70abce08496561a))
+* Types for config ([5c1d07c](https://github.com/Billos/Sparkleft/commit/5c1d07c2ce8977c13c97afbf4413429462731805))
+
 # [2.32.0](https://github.com/Billos/Sparkleft/compare/2.31.3...2.32.0) (2026-04-27)
 
 
