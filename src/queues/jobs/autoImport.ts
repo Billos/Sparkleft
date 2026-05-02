@@ -1,11 +1,17 @@
-import { AboutService } from "@billos/firefly-iii-sdk"
+import { AboutService, AccountsService, TransactionRead, TransactionTypeProperty } from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
+import { getDateNow } from "../../utils/date"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
+
+interface AccountTransactions {
+  expenses: TransactionRead[]
+  deposits: TransactionRead[]
+}
 
 export class AutoImportJob extends SimpleJob {
   readonly id = "auto-import"
@@ -16,11 +22,33 @@ export class AutoImportJob extends SimpleJob {
 
   override readonly cronPattern = env.autoImportCron
 
+  private async getExpensesAndIncome(): Promise<AccountTransactions> {
+    const start = getDateNow().minus({ days: 7 }).toISODate()!
+    const end = getDateNow().toISODate()!
+
+    const {
+      data: { data: transactions },
+    } = await AccountsService.listTransactionByAccount({
+      client,
+      path: { id: env.assetAccountId },
+      query: { start, end },
+    })
+    const expenses = transactions.filter(({ attributes: { transactions } }) => transactions[0].type === TransactionTypeProperty.WITHDRAWAL)
+    const deposits = transactions.filter(({ attributes: { transactions } }) => transactions[0].type === TransactionTypeProperty.DEPOSIT)
+    return { expenses, deposits }
+  }
+
   async run(): Promise<void> {
     if (!env.importerUrl || !env.importDirectory || !env.autoImportSecret) {
       logger.warn("Missing required configuration for auto-import job (importerUrl, importDirectory, autoImportSecret), skipping")
       return
     }
+
+    const previousTransactions = await this.getExpensesAndIncome()
+    logger.info(
+      "Found %d transactions in the last 7 days for asset account",
+      previousTransactions.expenses.length + previousTransactions.deposits.length,
+    )
 
     if (env.fireflyCliToken) {
       logger.info("Triggering Firefly III cron job before auto-import")
@@ -43,6 +71,16 @@ export class AutoImportJob extends SimpleJob {
     }
     logger.info("Auto-import triggered successfully")
 
-    await this.sendUniqueNotification("Auto Import", "auto-import.njk", {})
+    const newTransactions = await this.getExpensesAndIncome()
+    const diffExpenses = newTransactions.expenses.length - previousTransactions.expenses.length
+    const diffDeposits = newTransactions.deposits.length - previousTransactions.deposits.length
+    logger.info(
+      "Found %d new transactions after auto-import (expenses: %d, income: %d)",
+      diffExpenses + diffDeposits,
+      diffExpenses,
+      diffDeposits,
+    )
+
+    await this.sendUniqueNotification("Auto Import", "auto-import.njk", { diffExpenses, diffDeposits })
   }
 }

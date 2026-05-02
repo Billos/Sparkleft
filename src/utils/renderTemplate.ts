@@ -17,6 +17,8 @@ export type TemplateContext = {
   limit?: number
   currencySymbol?: string
   importDirectory?: string
+  diffExpenses?: number
+  diffDeposits?: number
 }
 
 // Resolve the templates/notifications directory relative to this source file.

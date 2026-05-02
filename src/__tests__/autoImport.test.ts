@@ -1,10 +1,17 @@
-import { AboutService } from "@billos/firefly-iii-sdk"
+import { AboutService, AccountsService } from "@billos/firefly-iii-sdk"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("fetch")
 vi.mock("@billos/firefly-iii-sdk", () => ({
   AboutService: {
     getCron: vi.fn().mockResolvedValue({}),
+  },
+  AccountsService: {
+    listTransactionByAccount: vi.fn().mockResolvedValue({
+      data: {
+        data: [],
+      },
+    }),
   },
 }))
 vi.mock("../modules/notifiers", () => ({
