@@ -1,3 +1,10 @@
+# [2.33.0](https://github.com/Billos/Sparkleft/compare/2.32.1...2.33.0) (2026-05-02)
+
+
+### Features
+
+* Report new transaction counts in notification ([5225b9c](https://github.com/Billos/Sparkleft/commit/5225b9c8e5524e2f6ea1f29ab31f266af9fbbe17))
+
 ## [2.32.1](https://github.com/Billos/Sparkleft/compare/2.32.0...2.32.1) (2026-05-01)
 
 
