@@ -85,7 +85,7 @@ njkEnv.addFilter("UrlSparkleftControlPage", () => `${env.serviceUrl}/control?api
 njkEnv.addFilter("TransactionSummary", ({ attributes }: TransactionRead) => {
   try {
     const [{ amount, description }] = attributes.transactions
-    return `${amount} - ${description}`
+    return `${Number(amount).toFixed(2)} - ${description}`
   } catch (error) {
     return `Invalid transaction data: ${(error as Error).message}`
   }
