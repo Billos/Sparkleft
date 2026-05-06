@@ -1,6 +1,22 @@
 Auto-import completed successfully.
 
-Imported {{ diffExpenses }} expenses and {{ diffDeposits }} deposits.
+{% if diffExpenses > 0 %}
+Imported {{ diffExpenses }} expenses.
+{% for expense in expenses %}
+ - {{ expense | TransactionSummary }}
+{% endfor %}
+{% else %}
+No new expenses imported.
+{% endif %}
+
+{% if diffDeposits > 0 %}
+Imported {{ diffDeposits }} deposits.
+{% for deposit in deposits %}
+ - {{ deposit | TransactionSummary }}
+{% endfor %}
+{% else %}
+No new deposits imported.
+{% endif %}
 
 [View Transactions](<{{ "" | UrlFireflyTransactions }}>)
 

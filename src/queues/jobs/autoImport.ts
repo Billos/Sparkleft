@@ -72,6 +72,9 @@ export class AutoImportJob extends SimpleJob {
     logger.info("Auto-import triggered successfully")
 
     const newTransactions = await this.getExpensesAndIncome()
+
+    const expenses = newTransactions.expenses.filter((newTx) => !previousTransactions.expenses.some((prevTx) => prevTx.id === newTx.id))
+    const deposits = newTransactions.deposits.filter((newTx) => !previousTransactions.deposits.some((prevTx) => prevTx.id === newTx.id))
     const diffExpenses = newTransactions.expenses.length - previousTransactions.expenses.length
     const diffDeposits = newTransactions.deposits.length - previousTransactions.deposits.length
     logger.info(
@@ -81,6 +84,6 @@ export class AutoImportJob extends SimpleJob {
       diffDeposits,
     )
 
-    await this.sendUniqueNotification("Auto Import", "auto-import.njk", { diffExpenses, diffDeposits })
+    await this.sendUniqueNotification("Auto Import", "auto-import.njk", { diffExpenses, diffDeposits, expenses, deposits })
   }
 }

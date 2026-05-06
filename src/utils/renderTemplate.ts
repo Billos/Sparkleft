@@ -1,6 +1,6 @@
 import path from "path"
 
-import { BudgetRead, CategoryRead, TransactionSplit } from "@billos/firefly-iii-sdk"
+import { BudgetRead, CategoryRead, TransactionRead, TransactionSplit } from "@billos/firefly-iii-sdk"
 import nunjucks from "nunjucks"
 
 import { env } from "../config"
@@ -19,6 +19,8 @@ export type TemplateContext = {
   importDirectory?: string
   diffExpenses?: number
   diffDeposits?: number
+  expenses?: TransactionRead[]
+  deposits?: TransactionRead[]
 }
 
 // Resolve the templates/notifications directory relative to this source file.
@@ -79,6 +81,15 @@ njkEnv.addFilter("UrlSparkleftAutoImport", () => `${env.serviceUrl}/autoimport?a
 njkEnv.addFilter("UrlSparkleftBudgetSumUp", () => `${env.serviceUrl}/budget-sumup?api_token=${env.apiToken}`)
 
 njkEnv.addFilter("UrlSparkleftControlPage", () => `${env.serviceUrl}/control?api_token=${env.apiToken}`)
+
+njkEnv.addFilter("TransactionSummary", ({ attributes }: TransactionRead) => {
+  try {
+    const [{ amount, description }] = attributes.transactions
+    return `${amount} - ${description}`
+  } catch (error) {
+    return `Invalid transaction data: ${(error as Error).message}`
+  }
+})
 
 export function renderTemplate(templateName: string, context: TemplateContext): string {
   return njkEnv.render(templateName, context).trim()
