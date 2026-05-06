@@ -1,3 +1,10 @@
+# [2.34.0](https://github.com/Billos/Sparkleft/compare/2.33.0...2.34.0) (2026-05-06)
+
+
+### Features
+
+* List the expenses and deposits in the import notification ([30859f1](https://github.com/Billos/Sparkleft/commit/30859f15cb23a061b0b7f86e759b72b3f87fa093))
+
 # [2.33.0](https://github.com/Billos/Sparkleft/compare/2.32.1...2.33.0) (2026-05-02)
 
 
