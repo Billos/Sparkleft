@@ -1,3 +1,10 @@
+## [2.34.1](https://github.com/Billos/Sparkleft/compare/2.34.0...2.34.1) (2026-05-06)
+
+
+### Bug Fixes
+
+* Format transaction amount to two decimal places ([c43149c](https://github.com/Billos/Sparkleft/commit/c43149cc476b54d962f67af2d0275df345967426))
+
 # [2.34.0](https://github.com/Billos/Sparkleft/compare/2.33.0...2.34.0) (2026-05-06)
 
 
