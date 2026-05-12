@@ -1,3 +1,10 @@
+## [2.34.3](https://github.com/Billos/Sparkleft/compare/2.34.2...2.34.3) (2026-05-12)
+
+
+### Bug Fixes
+
+* repair dockerfile ([7f6e8f7](https://github.com/Billos/Sparkleft/commit/7f6e8f7dd788f1475f962618dd9b78d7600ae27b))
+
 ## [2.34.2](https://github.com/Billos/Sparkleft/compare/2.34.1...2.34.2) (2026-05-12)
 
 
