@@ -15,7 +15,10 @@ RUN apk update && apk add tzdata
 
 COPY ./package.json ./package.json
 COPY ./yarn.lock ./yarn.lock
-# RUN yarn install --frozen-lockfile --production --ignore-scripts && yarn cache clean
+COPY .yarnrc.yml ./.yarnrc.yml
+COPY tsconfig.json ./tsconfig.json
+COPY .yarn ./.yarn
+
 RUN yarn workspaces focus --all --production
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/public ./public
