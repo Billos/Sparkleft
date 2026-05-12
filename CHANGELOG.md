@@ -1,3 +1,10 @@
+## [2.34.2](https://github.com/Billos/Sparkleft/compare/2.34.1...2.34.2) (2026-05-12)
+
+
+### Bug Fixes
+
+* Yarn 4 ([33cfe8b](https://github.com/Billos/Sparkleft/commit/33cfe8b877b771033d7f0a885b37d444413a09bf))
+
 ## [2.34.1](https://github.com/Billos/Sparkleft/compare/2.34.0...2.34.1) (2026-05-06)
 
 
