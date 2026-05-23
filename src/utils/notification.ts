@@ -6,10 +6,8 @@ import { MessageType } from "../modules/notifiers/notifier"
 async function getTransaction(id: string): Promise<TransactionSplit> {
   const {
     data: {
-      data: {
-        attributes: {
-          transactions: [transaction],
-        },
+      attributes: {
+        transactions: [transaction],
       },
     },
   } = await TransactionsService.getTransaction({ client, path: { id } })

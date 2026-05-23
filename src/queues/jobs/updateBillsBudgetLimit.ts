@@ -12,7 +12,7 @@ const logger = pino()
 async function getTotalAmountOfBills(start: string, end: string): Promise<number> {
   const allBills = await BillsService.listBill({ client, query: { page: 1, limit: 50, start, end } })
   // Filtering inactive bills
-  const bills = allBills.data.data.filter(({ attributes }) => attributes.active)
+  const bills = allBills.data.filter(({ attributes }) => attributes.active)
   const paidBills = bills.filter(({ attributes: { paid_dates } }) => paid_dates && paid_dates.length > 0)
   const unpaidBills = bills
     .filter(({ attributes: { paid_dates } }) => paid_dates && paid_dates.length === 0)
@@ -21,9 +21,7 @@ async function getTotalAmountOfBills(start: string, end: string): Promise<number
   const maximumUnpaidBill = unpaidBills.reduce((acc, bill) => acc + parseFloat(bill.attributes.amount_max || "0"), 0)
   let paidBillsValue = 0
   for (const bill of paidBills) {
-    const {
-      data: { data: transactions },
-    } = await BillsService.listTransactionByBill({
+    const { data: transactions } = await BillsService.listTransactionByBill({
       client,
       path: { id: bill.id },
       query: { page: 1, limit: 50, start, end },
@@ -64,7 +62,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
       query: { start, end },
     })
 
-    if (existingLimits.data.length > 1) {
+    if (existingLimits.length > 1) {
       throw new Error("There are more than one limit for the bills budget")
     }
 
@@ -76,18 +74,18 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
       fire_webhooks: false,
     }
 
-    if (existingLimits.data.length === 0) {
+    if (existingLimits.length === 0) {
       logger.info("There are no limits for the bills budget, creating budget limit")
       await BudgetsService.storeBudgetLimit({ client, path: { id: env.billsBudgetId }, body })
       return
     }
+    const [limit] = existingLimits
 
-    if (existingLimits.data[0].attributes.amount === body.amount) {
+    if (limit.attributes.amount === body.amount) {
       logger.info("The bills budget limit is already up to date, no changes needed")
       return
     }
 
-    const [limit] = existingLimits.data
     try {
       await BudgetsService.updateBudgetLimit({ client, path: { id: env.billsBudgetId, limitId: limit.id }, body })
     } catch (err) {

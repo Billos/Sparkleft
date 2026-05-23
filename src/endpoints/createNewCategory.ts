@@ -16,9 +16,9 @@ export async function createNewCategory(
 
   logger.info("Creating new category with name: %s", name)
   const { data: categories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
-  let category = categories.data.find(({ attributes }) => attributes.name === name)
+  let category = categories.find(({ attributes }) => attributes.name === name)
   if (!category) {
-    category = (await CategoriesService.storeCategory({ client, body: { name } })).data.data
+    category = (await CategoriesService.storeCategory({ client, body: { name } })).data
     logger.info("Category with name %s created successfully", name)
   } else {
     logger.info("Category with name %s already exists, skipping creation", name)

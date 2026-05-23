@@ -16,15 +16,11 @@ const logger = pino()
 async function getUncategorizedTransactions(start?: string, end?: string): Promise<TransactionRead[]> {
   const transactions: TransactionRead[] = []
   const {
-    data: {
-      meta: { pagination: { total_pages = 1 } = { total_pages: 1 } },
-    },
+    meta: { pagination: { total_pages = 1 } = { total_pages: 1 } },
   } = await TransactionsService.listTransaction({ client, query: { page: 1, limit: 200, start, end } })
 
   for (let page = 1; page <= total_pages; page++) {
-    const {
-      data: { data },
-    } = await TransactionsService.listTransaction({ client, query: { page, limit: 200, start, end } })
+    const { data } = await TransactionsService.listTransaction({ client, query: { page, limit: 200, start, end } })
     const filteredData = data.filter(
       (transaction) =>
         !transaction.attributes.transactions[0].category_id &&
@@ -44,10 +40,8 @@ export class UncategorizedTransactionsJob extends TransactionJob {
     logger.info("Creating a new message for uncategorized transaction with key %s", id)
     const {
       data: {
-        data: {
-          attributes: {
-            transactions: [transaction],
-          },
+        attributes: {
+          transactions: [transaction],
         },
       },
     } = await TransactionsService.getTransaction({ client, path: { id } })
@@ -69,9 +63,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
     }
 
     const billsBudgetName = await getBudgetName(env.billsBudgetId)
-    const {
-      data: { data: allCategories },
-    } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
+    const { data: allCategories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
     const hiddenCategoriesSet = new Set(env.hiddenCategories)
     const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
 

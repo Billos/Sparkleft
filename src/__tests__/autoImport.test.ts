@@ -8,9 +8,7 @@ vi.mock("@billos/firefly-iii-sdk", () => ({
   },
   AccountsService: {
     listTransactionByAccount: vi.fn().mockResolvedValue({
-      data: {
-        data: [],
-      },
+      data: [],
     }),
   },
 }))

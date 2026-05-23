@@ -26,16 +26,16 @@ async function getSumWithoutLeftovers(
   end: string,
 ): Promise<number> {
   const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
-  if (!assetAccount || !assetAccount.data || !assetAccount.data.data) {
+  if (!assetAccount || !assetAccount.data || !assetAccount.data) {
     throw new Error("Asset account not found")
   }
-  let leftoverAmount = Number.parseFloat(assetAccount.data.data.attributes.current_balance || "0")
+  let leftoverAmount = Number.parseFloat(assetAccount.data.attributes.current_balance || "0")
   logger.info("Current balance %d", leftoverAmount)
 
   const limitsWithoutLeftovers = allLimits.data.filter(({ attributes: { budget_id } }) => budget_id !== leftoversBudget.id)
   const budgetsIds = allLimits.data.map(({ attributes: { budget_id } }) => Number(budget_id))
 
-  const { data: insightsRaw } = await InsightService.insightExpenseBudget({ client, query: { start, end, "budgets[]": budgetsIds } })
+  const insightsRaw = await InsightService.insightExpenseBudget({ client, query: { start, end, "budgets[]": budgetsIds } })
   if (!insightsRaw) {
     logger.info("No insights found, returning current balance as leftover amount")
     return leftoverAmount
@@ -90,21 +90,21 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
       BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
       BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
-    const leftoversBudget = allBudgets.data.data.find(({ id }) => id === env.leftoversBudgetId)
-    const leftOverLimit = allLimits.data.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
+    const leftoversBudget = allBudgets.data.find(({ id }) => id === env.leftoversBudgetId)
+    const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
 
     if (!leftoversBudget) {
       logger.warn("Leftovers budget not found, skipping updateLeftoverBudgetLimit job")
       throw new Error("Leftovers budget not found")
     }
 
-    let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data.data, leftoversBudget, allLimits.data, start, end)
+    let leftoverAmount = await getSumWithoutLeftovers(allBudgets.data, leftoversBudget, allLimits, start, end)
     if (leftoverAmount < 0) {
       logger.info("Leftover amount is negative, setting to 0.1")
       leftoverAmount = 0.1
     }
 
-    const currentLeftOverBudget = allBudgets.data.data.find(({ id }) => id === leftoversBudget.id)!
+    const currentLeftOverBudget = allBudgets.data.find(({ id }) => id === leftoversBudget.id)!
     const [spent] = currentLeftOverBudget.attributes.spent || []
     if (!spent) {
       logger.info("No spent amount found, setting it to 0")

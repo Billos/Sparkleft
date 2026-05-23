@@ -182,10 +182,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@billos/firefly-iii-sdk@npm:6.5.5-sdk.3":
-  version: 6.5.5-sdk.3
-  resolution: "@billos/firefly-iii-sdk@npm:6.5.5-sdk.3"
-  checksum: 10c0/92d1418b16e3c8c8119c76352d159bebcf42bd989380a07469528534026055a852c655eda7bfe3fa554a843d3177e5003918f16c831141355fadf7d2e97eea3e
+"@billos/firefly-iii-sdk@npm:6.5.5-sdk.6":
+  version: 6.5.5-sdk.6
+  resolution: "@billos/firefly-iii-sdk@npm:6.5.5-sdk.6"
+  checksum: 10c0/3d48c0cecb30c590208cc139d4895e001fef7e3def61204497d991bc05a9e4b4064315d6a87942caf71a9bf471d552a11ad858392e2e2439738f590dddd3d548
   languageName: node
   linkType: hard
 
@@ -7046,7 +7046,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sparkleft@workspace:."
   dependencies:
-    "@billos/firefly-iii-sdk": "npm:6.5.5-sdk.3"
+    "@billos/firefly-iii-sdk": "npm:6.5.5-sdk.6"
     "@codedependant/semantic-release-docker": "npm:^5.0.3"
     "@ianvs/prettier-plugin-sort-imports": "npm:^4.4.0"
     "@semantic-release/changelog": "npm:^6.0.3"

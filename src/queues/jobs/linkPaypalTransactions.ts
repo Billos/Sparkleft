@@ -30,9 +30,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
     }
 
     // This function will retrieve the Paypal transactions that do not have the tag "Linked"
-    const {
-      data: { data },
-    } = await TransactionsService.listTransaction({ client: paypalClient, query: { start, end, limit: 50, page: 1 } })
+    const { data } = await TransactionsService.listTransaction({ client: paypalClient, query: { start, end, limit: 50, page: 1 } })
     const unlinkedPaypalTransactions = data.filter(
       ({ attributes: { transactions } }) =>
         !transactions[0]?.tags?.includes("Linked") && transactions[0].type === TransactionTypeProperty.WITHDRAWAL,
@@ -44,9 +42,7 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
       return
     }
 
-    const {
-      data: { data: ffData },
-    } = await TransactionsService.listTransaction({ client, query: { start, end, limit: 50, page: 1 } })
+    const { data: ffData } = await TransactionsService.listTransaction({ client, query: { start, end, limit: 50, page: 1 } })
     // Filtering Firefly III transactions to only include those that do not have the tag "Linked" and have "PayPal" in the description
     const unlinkedFFTransactions = ffData.filter(
       ({ attributes: { transactions } }) => !transactions[0]?.tags?.includes("Linked") && transactions[0].description.includes("PAYPAL"),

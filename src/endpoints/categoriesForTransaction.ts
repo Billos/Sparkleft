@@ -14,9 +14,7 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
   const { transactionId } = req.params
 
   // Get all categories
-  const {
-    data: { data: allCategories },
-  } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
+  const { data: allCategories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
 
   // Filter out hidden categories
   const billsBudgetName = await getBudgetName(env.billsBudgetId)
@@ -24,10 +22,8 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
 
   const {
     data: {
-      data: {
-        attributes: {
-          transactions: [{ description, amount, currency_symbol: currency }],
-        },
+      attributes: {
+        transactions: [{ description, amount, currency_symbol: currency }],
       },
     },
   } = await TransactionsService.getTransaction({ client, path: { id: transactionId } })

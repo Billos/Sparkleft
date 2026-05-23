@@ -18,10 +18,8 @@ export abstract class AbstractNotifier implements Notifier {
   private async getTransaction(id: string): Promise<TransactionSplit> {
     const {
       data: {
-        data: {
-          attributes: {
-            transactions: [transaction],
-          },
+        attributes: {
+          transactions: [transaction],
         },
       },
     } = await TransactionsService.getTransaction({ client, path: { id } })
@@ -35,7 +33,7 @@ export abstract class AbstractNotifier implements Notifier {
     if (match) {
       return match[1]
     }
-    return null
+    return ""
   }
 
   abstract sendMessage(title: string, content: string): Promise<string>

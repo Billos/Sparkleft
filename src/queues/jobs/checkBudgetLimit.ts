@@ -33,9 +33,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     const start = getStartOfCurrentMonth()
     const end = getEndOfCurrentMonth()
 
-    const {
-      data: { data: budget },
-    } = await BudgetsService.getBudget({ client, path: { id: budgetId }, query: { start, end } })
+    const { data: budget } = await BudgetsService.getBudget({ client, path: { id: budgetId }, query: { start, end } })
 
     if (!budget) {
       logger.error("Budget with id %s not found", budgetId)
@@ -55,9 +53,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     logger.info("Reviewing budget limit for %s with id %s", budget.attributes.name, budget.id)
 
     const {
-      data: {
-        data: [existingLimits],
-      },
+      data: [existingLimits],
     } = await BudgetsService.listBudgetLimitByBudget({ client, path: { id: budget.id }, query: { start, end } })
 
     const currencySymbol = budget.attributes.currency_code === "EUR" ? "€" : "$"
@@ -95,9 +91,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     logger.info("Initializing CheckBudgetLimit jobs for all budgets")
     const start = getStartOfCurrentMonth()
     const end = getEndOfCurrentMonth()
-    const {
-      data: { data: budgets },
-    } = await BudgetsService.listBudget({ client, query: { start, end, limit: 100 } })
+    const { data: budgets } = await BudgetsService.listBudget({ client, query: { start, end, limit: 100 } })
     for (const budget of budgets) {
       if (budget.id !== env.billsBudgetId && budget.id !== env.leftoversBudgetId) {
         await addBudgetJobToQueue(this, budget.id)

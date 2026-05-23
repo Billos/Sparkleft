@@ -22,10 +22,8 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
     logger.info("Creating a new message for unbudgeted transaction with key %s", id)
     const {
       data: {
-        data: {
-          attributes: {
-            transactions: [transaction],
-          },
+        attributes: {
+          transactions: [transaction],
         },
       },
     } = await TransactionsService.getTransaction({ client, path: { id } })
@@ -49,9 +47,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
     }
 
     const billsBudgetName = await getBudgetName(env.billsBudgetId)
-    const {
-      data: { data: allBudgets },
-    } = await BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } })
+    const { data: allBudgets } = await BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } })
     const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
     const msg = renderTemplate("unbudgeted-transaction.njk", {
@@ -75,9 +71,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
     if (notifier) {
-      const {
-        data: { data },
-      } = await BudgetsService.listTransactionWithoutBudget({ client, query: { page: 1, limit: 50 } })
+      const { data } = await BudgetsService.listTransactionWithoutBudget({ client, query: { page: 1, limit: 50 } })
       for (const { id: transactionId } of data) {
         await addTransactionJobToQueue(this, transactionId)
       }

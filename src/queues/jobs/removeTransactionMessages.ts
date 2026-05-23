@@ -24,10 +24,8 @@ export class RemoveTransactionMessagesJob extends TransactionJob {
     logger.info("Transaction %s found, removing messages for updated transaction %s", id, id)
     const {
       data: {
-        data: {
-          attributes: {
-            transactions: [transaction],
-          },
+        attributes: {
+          transactions: [transaction],
         },
       },
     } = await TransactionsService.getTransaction({ client, path: { id } })

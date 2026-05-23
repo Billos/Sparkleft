@@ -26,9 +26,7 @@ export class AutoImportJob extends SimpleJob {
     const start = getDateNow().minus({ days: 7 }).toISODate()!
     const end = getDateNow().toISODate()!
 
-    const {
-      data: { data: transactions },
-    } = await AccountsService.listTransactionByAccount({
+    const { data: transactions } = await AccountsService.listTransactionByAccount({
       client,
       path: { id: env.assetAccountId },
       query: { start, end },
