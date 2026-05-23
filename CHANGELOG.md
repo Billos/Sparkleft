@@ -1,3 +1,10 @@
+## [2.34.4](https://github.com/Billos/Sparkleft/compare/2.34.3...2.34.4) (2026-05-23)
+
+
+### Bug Fixes
+
+* Update Firefly SDK and use fields rather than data ([ce7577a](https://github.com/Billos/Sparkleft/commit/ce7577a1e77e03160cbc53e3b020737872291af3))
+
 ## [2.34.3](https://github.com/Billos/Sparkleft/compare/2.34.2...2.34.3) (2026-05-12)
 
 
