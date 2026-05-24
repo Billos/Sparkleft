@@ -1,3 +1,5 @@
+## [2.34.6](https://github.com/Billos/Sparkleft/compare/2.34.5...2.34.6) (2026-05-24)
+
 ## [2.34.5](https://github.com/Billos/Sparkleft/compare/2.34.4...2.34.5) (2026-05-24)
 
 
