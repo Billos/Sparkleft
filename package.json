@@ -11,9 +11,9 @@
   "scripts": {
     "build": "tsc --build tsconfig.json",
     "dev:server": "yarn dev:server:raw | pino-pretty -c",
-    "dev:server:raw": "tsx watch --clear-screen=false src/server.ts",
+    "dev:server:raw": "tsx watch --clear-screen=false --include 'src/**/*.ts' src/server.ts",
     "dev:worker": "yarn dev:worker:raw | pino-pretty -c",
-    "dev:worker:raw": "tsx watch --clear-screen=false src/worker.ts",
+    "dev:worker:raw": "tsx watch --clear-screen=false --include 'src/**/*.ts' src/worker.ts",
     "docker:build": "docker build --no-cache . -t billos/sparkleft:latest",
     "format": "prettier . --write",
     "format-check": "prettier . --check",
