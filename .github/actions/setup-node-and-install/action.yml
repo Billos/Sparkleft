@@ -9,6 +9,7 @@ runs:
       with:
         node-version: "22"
         cache: "yarn"
+        cache-dependency-path: yarn.lock
 
     - name: Enable Corepack
       shell: bash
