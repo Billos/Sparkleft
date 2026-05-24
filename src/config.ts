@@ -23,12 +23,11 @@ const env = {
   autoImportSecret: process.env.AUTO_IMPORT_SECRET,
   autoImportCron: process.env.AUTO_IMPORT_CRON,
   budgetSumUpCron: process.env.BUDGET_SUM_UP_CRON,
-  redisConnection: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: parseInt(process.env.REDIS_PORT || "6379", 10),
-    db: parseInt(process.env.REDIS_DB || "0", 10),
-    password: process.env.REDIS_PASSWORD,
-  },
+  redisUrl: process.env.REDIS_URL || "",
+}
+
+if (!env.redisUrl) {
+  throw new Error("REDIS_URL is not defined in the environment variables")
 }
 
 export { env }

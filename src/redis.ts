@@ -2,6 +2,6 @@ import Redis from "ioredis"
 
 import { env } from "./config"
 
-const redis = new Redis(env.redisConnection)
-
-export { redis }
+export const redis = new Redis(env.redisUrl, {
+  maxRetriesPerRequest: null,
+})

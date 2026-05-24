@@ -6,6 +6,7 @@ import { env } from "../config"
 import { getQueue } from "../queues"
 import { AutoImportJob } from "../queues/jobs/autoImport"
 import { addJobToQueue } from "../queues/utils"
+import { redis as connection } from "../redis"
 
 const logger = pino()
 
@@ -18,7 +19,7 @@ export async function triggerAutoImport(_req: Request, res: Response) {
   }
 
   const queue = await getQueue()
-  const queueEvents = new QueueEvents(queue.name, { connection: env.redisConnection })
+  const queueEvents = new QueueEvents(queue.name, { connection })
   try {
     const job = await addJobToQueue(new AutoImportJob(), true)
     await job.waitUntilFinished(queueEvents)

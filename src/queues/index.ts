@@ -4,8 +4,8 @@ import { DateTime } from "luxon"
 import pino from "pino"
 
 import { client } from "../client"
-import { env } from "../config"
 import { notifier } from "../modules/notifiers"
+import { redis as connection } from "../redis"
 import { BaseJob, SimpleJob } from "./jobs/BaseJob"
 import { budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
 import { getQueue } from "./queue"
@@ -112,7 +112,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
       }
     },
     {
-      connection: env.redisConnection,
+      connection,
       concurrency: 1,
       removeOnComplete: { count: 5000 },
       removeOnFail: { count: 5000 },
