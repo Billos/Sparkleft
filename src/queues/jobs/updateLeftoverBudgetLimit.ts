@@ -12,6 +12,7 @@ import pino from "pino"
 import { client } from "../../client"
 import { env } from "../../config"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
+import { getQueue } from "../queue"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 import { BudgetSumUpJob } from "./budgetSumUp"
@@ -138,7 +139,17 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
     await BudgetsService.updateBudgetLimit({ client, path: { id: leftoversBudget.id, limitId: leftOverLimit.id }, body })
     logger.info("Leftovers budget limit updated")
 
-    await addJobToQueue(new BudgetSumUpJob())
+    const budgetSumUpJob = new BudgetSumUpJob()
+    const queue = await getQueue()
+    const existingJobs = await queue.getJobs(["waiting", "delayed"])
+    for (const existingJob of existingJobs) {
+      if (existingJob.name === budgetSumUpJob.id) {
+        logger.info("Cancelling existing BudgetSumUpJob %s before adding new one", existingJob.id)
+        await existingJob.remove()
+      }
+    }
+
+    await addJobToQueue(budgetSumUpJob)
   }
 
   override async init(): Promise<void> {
