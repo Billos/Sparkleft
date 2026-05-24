@@ -26,9 +26,9 @@ describe("BaseJob - cron scheduler", () => {
 
     expect(upsertJobScheduler).toHaveBeenCalledOnce()
     expect(upsertJobScheduler).toHaveBeenCalledWith(
-      "cron-job-repeat",
+      "cron-job-repeat-repeat",
       { pattern: "0 * * * *" },
-      { name: "cron-job", data: { job: "cron-job" } },
+      { name: "cron-job-repeat", data: { job: "cron-job-repeat" } },
     )
   })
 

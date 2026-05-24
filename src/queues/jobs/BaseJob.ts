@@ -39,11 +39,12 @@ export abstract class BaseJob {
 
   private async scheduleCronJob(pattern: string): Promise<void> {
     const queue = await getQueue()
-    logger.info("Setting up scheduler for %s with cron '%s'", this.id, pattern)
+    const id = `${this.id}-repeat`
+    logger.info("Setting up scheduler for %s with cron '%s'", id, pattern)
     try {
-      await queue.upsertJobScheduler(`${this.id}-repeat`, { pattern }, { name: this.id, data: { job: this.id } })
+      await queue.upsertJobScheduler(`${id}-repeat`, { pattern }, { name: id, data: { job: id } })
     } catch (err) {
-      logger.error({ err }, "Failed to set up scheduler for job %s", this.id)
+      logger.error({ err }, "Failed to set up scheduler for job %s", id)
     }
   }
 
