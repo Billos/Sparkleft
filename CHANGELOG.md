@@ -1,3 +1,10 @@
+## [2.34.5](https://github.com/Billos/Sparkleft/compare/2.34.4...2.34.5) (2026-05-24)
+
+
+### Bug Fixes
+
+* Deduplicate BudgetSumUpJob before enqueuing from UpdateLeftoverBudgetLimit ([#80](https://github.com/Billos/Sparkleft/issues/80)) ([e4e8a41](https://github.com/Billos/Sparkleft/commit/e4e8a41aae1cddd8b6ae35ed921f727107202ae3))
+
 ## [2.34.4](https://github.com/Billos/Sparkleft/compare/2.34.3...2.34.4) (2026-05-23)
 
 
