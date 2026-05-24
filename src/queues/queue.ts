@@ -1,6 +1,6 @@
 import { Queue } from "bullmq"
 
-import { env } from "../config"
+import { redis as connection } from "../redis"
 import { QueueArgs } from "./queueArgs"
 
 let queue: Queue<QueueArgs> | null = null
@@ -10,6 +10,6 @@ export async function getQueue(): Promise<Queue<QueueArgs>> {
     return queue
   }
 
-  queue = new Queue("manager", { connection: env.redisConnection })
+  queue = new Queue("manager", { connection })
   return queue
 }

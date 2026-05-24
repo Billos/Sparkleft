@@ -2,10 +2,10 @@ import { QueueEvents } from "bullmq"
 import { NextFunction, Request, Response } from "express"
 import pino from "pino"
 
-import { env } from "../config"
 import { getQueue } from "../queues"
 import { SetCategoryForTransactionJob } from "../queues/jobs/setCategoryForTransaction"
 import { addEndpointJobToQueue } from "../queues/utils"
+import { redis as connection } from "../redis"
 
 const logger = pino()
 
@@ -16,7 +16,7 @@ export async function settingCategoryForTransaction(
 ) {
   logger.info("=================================== Setting category for transaction ===================================")
   const queue = await getQueue()
-  const queueEvents = new QueueEvents(queue.name, { connection: env.redisConnection })
+  const queueEvents = new QueueEvents(queue.name, { connection })
   const { transactionId, category_id } = req.params
 
   const job = await addEndpointJobToQueue(new SetCategoryForTransactionJob(), transactionId, { category_id })
