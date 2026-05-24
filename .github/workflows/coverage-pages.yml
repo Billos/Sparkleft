@@ -22,6 +22,7 @@ jobs:
   deploy:
     name: Deploy Coverage
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
     environment:
       name: github-pages
@@ -30,17 +31,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm i --ignore-scripts
+      - name: Setup environment
+        uses: ./.github/actions/setup-node-and-install
 
       - name: Generate coverage report
-        run: npm run test:coverage
+        run: yarn test:coverage
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
