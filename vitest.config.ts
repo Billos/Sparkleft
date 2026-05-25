@@ -2,6 +2,9 @@ import { defineConfig } from "vitest/config"
 
 export default defineConfig({
   test: {
+    env: {
+      REDIS_URL: "redis://localhost:6379",
+    },
     environment: "node",
     include: ["src/**/*.test.ts"],
     typecheck: {
