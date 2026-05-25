@@ -1,3 +1,12 @@
+## [2.34.7](https://github.com/Billos/Sparkleft/compare/2.34.6...2.34.7) (2026-05-25)
+
+
+### Bug Fixes
+
+* repair tests ([4042d35](https://github.com/Billos/Sparkleft/commit/4042d35d7c1cfd1ccd08deb14e9c05da98911c7a))
+* repair watch ([1946d33](https://github.com/Billos/Sparkleft/commit/1946d3365419ccf8f2dcc0218bc52bb8c56a47fd))
+* repeat jobs are also declared in the jobMap ([2bc68d7](https://github.com/Billos/Sparkleft/commit/2bc68d78b418f85d406717b0c4f355582b09786b))
+
 ## [2.34.6](https://github.com/Billos/Sparkleft/compare/2.34.5...2.34.6) (2026-05-24)
 
 ## [2.34.5](https://github.com/Billos/Sparkleft/compare/2.34.4...2.34.5) (2026-05-24)
