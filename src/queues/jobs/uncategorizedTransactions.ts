@@ -66,11 +66,17 @@ export class UncategorizedTransactionsJob extends TransactionJob {
     const { data: allCategories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
     const hiddenCategoriesSet = new Set(env.hiddenCategories)
     const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
+    const groupSize = 3
+    const categoriesGroups = []
+    for (let i = 0; i < categories.length; i += groupSize) {
+      categoriesGroups.push(categories.slice(i, i + groupSize))
+    }
 
     const msg = renderTemplate("uncategorized-transaction.njk", {
       transaction,
       transactionId: id,
       categories,
+      categoriesGroups,
     })
     const messageId = await notifier.getMessageId("CategoryMessageId", id)
     if (messageId) {

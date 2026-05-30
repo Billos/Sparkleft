@@ -11,6 +11,7 @@ export type TemplateContext = {
   transaction?: TransactionSplit
   transactionId?: string
   categories?: CategoryRead[]
+  categoriesGroups?: CategoryRead[][]
   budgets?: BudgetRead[]
   budgetName?: string
   spent?: number

@@ -8,6 +8,13 @@
 
 [Rules](<{{ "" | UrlFireflyRules }}>)
 
-{% for category in categories %}
-- [`{{ category.attributes.name }}`](<{{ transactionId | UrlSparkleftCategorySet(category.id) }}>)
+{# {% for category in categories %} #}
+{# - [`{{ category.attributes.name }}`](<{{ transactionId | UrlSparkleftCategorySet(category.id) }}>)   #}
+{# {% endfor %} #}
+
+|  |  |  |
+|--|--|--|
+{% for group in categoriesGroups %}
+|{% for category in group %} [{{ category.attributes.name }}](<{{ transactionId | UrlSparkleftCategorySet(category.id) }}>) | {% endfor %}{% for _ in range(3 - group.length) %} |{% endfor %}
+
 {% endfor %}
