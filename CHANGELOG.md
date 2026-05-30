@@ -1,3 +1,14 @@
+## [2.34.8](https://github.com/Billos/Sparkleft/compare/2.34.7...2.34.8) (2026-05-30)
+
+
+### Bug Fixes
+
+* Group categories ([f30bb41](https://github.com/Billos/Sparkleft/commit/f30bb4136b793587a8c3ce27f1032e11143b1b91))
+* Improve import listing ([b6d6c5d](https://github.com/Billos/Sparkleft/commit/b6d6c5d1f09b20948b4459f4ee6638a10db331b0))
+* More links in the unbudgeted and uncategorized notifications ([25b41ef](https://github.com/Billos/Sparkleft/commit/25b41efa11c4e48c5de7815263d94241cfcc4e83))
+* update bullmq ([52970e7](https://github.com/Billos/Sparkleft/commit/52970e7634f98decf6118e11957ba3354e04ae85))
+* use same version for ioredis ([d863bde](https://github.com/Billos/Sparkleft/commit/d863bde850cc9fa8c86d2c917d1fbc81cd05d849))
+
 ## [2.34.7](https://github.com/Billos/Sparkleft/compare/2.34.6...2.34.7) (2026-05-25)
 
 
