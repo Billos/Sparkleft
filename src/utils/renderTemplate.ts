@@ -84,8 +84,10 @@ njkEnv.addFilter("UrlSparkleftControlPage", () => `${env.serviceUrl}/control?api
 
 njkEnv.addFilter("TransactionSummary", ({ attributes }: TransactionRead) => {
   try {
-    const [{ amount, description }] = attributes.transactions
-    return `${Number(amount).toFixed(2)} - ${description}`
+    const [{ amount, description, currency_symbol, currency_decimal_places }] = attributes.transactions
+    const beforeDecimal = 4
+    const pad = (currency_decimal_places ?? 0) + beforeDecimal
+    return `${Number(amount).toFixed(currency_decimal_places).padStart(pad, "\u00A0")} ${currency_symbol} - ${description}`
   } catch (error) {
     return `Invalid transaction data: ${(error as Error).message}`
   }
