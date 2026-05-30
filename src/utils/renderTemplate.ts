@@ -59,6 +59,13 @@ njkEnv.addFilter("UrlFireflyBudgets", () => `${env.fireflyUrl}/budgets`)
 
 njkEnv.addFilter("UrlFireflyTransactions", () => `${env.fireflyUrl}/transactions/withdrawal`)
 
+njkEnv.addFilter("UrlFireflyRules", () => `${env.fireflyUrl}/rules`)
+
+njkEnv.addFilter(
+  "UrlFireflyNewRule",
+  (transaction: TransactionSplit) => `${env.fireflyUrl}/rules/create-from-journal/${transaction.transaction_journal_id}`,
+)
+
 njkEnv.addFilter(
   "UrlSparkleftCategorySet",
   (transactionId: string, categoryId: string) =>
