@@ -22,6 +22,8 @@ export type TemplateContext = {
   diffDeposits?: number
   expenses?: TransactionRead[]
   deposits?: TransactionRead[]
+  accountBalance?: string
+  accountCurrency?: string
 }
 
 // Resolve the templates/notifications directory relative to this source file.

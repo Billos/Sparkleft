@@ -1,4 +1,4 @@
-import { BudgetsService } from "@billos/firefly-iii-sdk"
+import { AccountsService, BudgetsService } from "@billos/firefly-iii-sdk"
 
 import { client } from "../../client"
 import { env } from "../../config"
@@ -58,6 +58,11 @@ export class BudgetSumUpJob extends SimpleJob {
     }
 
     const insights = allInsights.filter(({ name }) => !env.hiddenBudgetsSumUp.includes(name))
-    await this.sendUniqueNotification("Budgets Sum Up", "budget-sumup.njk", { insights })
+
+    const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
+    const accountBalance = assetAccount.data.attributes.current_balance || "0"
+    const accountCurrency = assetAccount.data.attributes.currency_symbol || "€"
+
+    await this.sendUniqueNotification("Budgets Sum Up", "budget-sumup.njk", { insights, accountBalance, accountCurrency })
   }
 }
