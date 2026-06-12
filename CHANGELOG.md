@@ -1,3 +1,10 @@
+# [2.35.0](https://github.com/Billos/Sparkleft/compare/2.34.8...2.35.0) (2026-06-12)
+
+
+### Features
+
+* display account balance in Budget Sum Up and Auto Import notifications ([bc16bcd](https://github.com/Billos/Sparkleft/commit/bc16bcda23df6f53c364b39273c8b93b60f00322))
+
 ## [2.34.8](https://github.com/Billos/Sparkleft/compare/2.34.7...2.34.8) (2026-05-30)
 
 
