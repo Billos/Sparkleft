@@ -10,6 +10,9 @@ vi.mock("@billos/firefly-iii-sdk", () => ({
     listTransactionByAccount: vi.fn().mockResolvedValue({
       data: [],
     }),
+    getAccount: vi.fn().mockResolvedValue({
+      data: { attributes: { current_balance: "1234.56", currency_symbol: "€" } },
+    }),
   },
 }))
 vi.mock("../modules/notifiers", () => ({

@@ -4,6 +4,8 @@
 | {{ budget.name }} | {{ budget.budgetLimit }} {{ budget.currency }} | {{ budget.spent }} {{ budget.currency }} | {{ budget.leftover }} {{ budget.currency }} ({{ budget.leftPerDay }} {{ budget.currency }}) |
 {% endfor %}
 
+**Account balance:** {{ accountBalance }} {{ accountCurrency }}
+
 [View Budgets](<{{ "" | UrlFireflyBudgets }}>)
 
 [Control Page](<{{ "" | UrlSparkleftControlPage }}>)

@@ -82,6 +82,15 @@ export class AutoImportJob extends SimpleJob {
       diffDeposits,
     )
 
-    await this.sendUniqueNotification("Auto Import", "auto-import.njk", { diffExpenses, diffDeposits, expenses, deposits })
+    const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
+
+    await this.sendUniqueNotification("Auto Import", "auto-import.njk", {
+      diffExpenses,
+      diffDeposits,
+      expenses,
+      deposits,
+      accountBalance: assetAccount.data.attributes.current_balance || "0",
+      accountCurrency: assetAccount.data.attributes.currency_symbol || "€",
+    })
   }
 }
