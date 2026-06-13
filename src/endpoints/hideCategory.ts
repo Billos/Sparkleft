@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express"
+import { Request, Response } from "express"
 import pino from "pino"
 
 import { redis as connection, hiddenCategoriesKey } from "../redis"
 
 const logger = pino()
 
-export async function hideCategory(req: Request<{ categoryName: string }>, _res: Response, next: NextFunction) {
+export async function hideCategory(req: Request<{ categoryName: string }>, res: Response) {
   const { categoryName } = req.params
   logger.info("=================================== Hiding toggle category ===================================")
   const hiddenCategories = await connection.lrange(hiddenCategoriesKey, 0, -1)
@@ -19,5 +19,5 @@ export async function hideCategory(req: Request<{ categoryName: string }>, _res:
     await connection.rpush(hiddenCategoriesKey, categoryName)
   }
 
-  next()
+  res.json({ hidden: !isCategoryHidden, categoryName })
 }

@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from "express"
+import { Request, Response } from "express"
 import pino from "pino"
 
 import { redis as connection, hiddenBudgetsKey } from "../redis"
 
 const logger = pino()
 
-export async function hideBudget(req: Request<{ budgetName: string }>, _res: Response, next: NextFunction) {
-  const { budgetName: budgetName } = req.params
+export async function hideBudget(req: Request<{ budgetName: string }>, res: Response) {
+  const { budgetName } = req.params
   logger.info("=================================== Hiding toggle budget ===================================")
   const hiddenBudgets = await connection.lrange(hiddenBudgetsKey, 0, -1)
   const isBudgetHidden = hiddenBudgets.includes(budgetName)
@@ -19,5 +19,5 @@ export async function hideBudget(req: Request<{ budgetName: string }>, _res: Res
     await connection.rpush(hiddenBudgetsKey, budgetName)
   }
 
-  next()
+  res.json({ hidden: !isBudgetHidden, budgetName })
 }

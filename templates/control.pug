@@ -22,6 +22,36 @@ html(lang="en")
         .status-message#budget-sumup-status
           span.status-icon
           span.status-text
+      .items
+        h2 Hide Toggle Budgets
+        if budgets && budgets.length > 0
+          each budget in budgets
+            - const budgetName = budget.attributes && budget.attributes.name
+            - const isHidden = budgetName && hiddenBudgets && hiddenBudgets.includes(budgetName)
+            button.toggle-button(
+              type="button",
+              data-token=token,
+              data-type="budget",
+              data-name=budgetName,
+              class=isHidden ? "hidden-item" : "visible-item"
+            )= budgetName + (isHidden ? " 🙈" : " 👁️")
+        else
+          p No budgets available
+      .items
+        h2 Hide Toggle Categories
+        if categories && categories.length > 0
+          each category in categories
+            - const categoryName = category.attributes && category.attributes.name
+            - const isHidden = categoryName && hiddenCategories && hiddenCategories.includes(categoryName)
+            button.toggle-button(
+              type="button",
+              data-token=token,
+              data-type="category",
+              data-name=categoryName,
+              class=isHidden ? "hidden-item" : "visible-item"
+            )= categoryName + (isHidden ? " 🙈" : " 👁️")
+        else
+          p No categories available
       script.
         const actionEndpoints = {
           autoimport: '/autoimport',
@@ -91,3 +121,43 @@ html(lang="en")
             btn.textContent = defaultLabel
           }
         }
+
+        const toggleButtons = document.querySelectorAll('.toggle-button')
+
+        toggleButtons.forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const token = btn.getAttribute('data-token')
+            const type = btn.getAttribute('data-type')
+            const name = btn.getAttribute('data-name')
+
+            if (type !== 'budget' && type !== 'category') {
+              console.error('Invalid toggle type:', type)
+              return
+            }
+
+            btn.disabled = true
+
+            try {
+              const params = new URLSearchParams({ api_token: token })
+              const res = await fetch(`/hide-toggle/${type}/${encodeURIComponent(name)}?` + params.toString())
+              if (!res.ok) {
+                console.error('Hide toggle failed with status:', res.status)
+                return
+              }
+              const data = await res.json()
+              if (data.hidden) {
+                btn.textContent = name + ' 🙈'
+                btn.classList.remove('visible-item')
+                btn.classList.add('hidden-item')
+              } else {
+                btn.textContent = name + ' 👁️'
+                btn.classList.remove('hidden-item')
+                btn.classList.add('visible-item')
+              }
+            } catch (e) {
+              console.error('Hide toggle failed:', e)
+            } finally {
+              btn.disabled = false
+            }
+          })
+        })
