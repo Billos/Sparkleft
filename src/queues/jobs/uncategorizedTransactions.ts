@@ -4,6 +4,7 @@ import pino from "pino"
 import { client } from "../../client"
 import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
+import { hiddenCategoriesKey, redis } from "../../redis"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow, getStartOfCurrentMonth } from "../../utils/date"
 import { bindTransactionToNotification } from "../../utils/notification"
@@ -64,7 +65,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
 
     const billsBudgetName = await getBudgetName(env.billsBudgetId)
     const { data: allCategories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
-    const hiddenCategoriesSet = new Set(env.hiddenCategories)
+    const hiddenCategoriesSet = new Set(await redis.lrange(hiddenCategoriesKey, 0, -1))
     const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))
     const groupSize = 3
     const categoriesGroups = []
