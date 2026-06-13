@@ -2,6 +2,7 @@ import { AccountsService, BudgetsService } from "@billos/firefly-iii-sdk"
 
 import { client } from "../../client"
 import { env } from "../../config"
+import { hiddenBudgetsKey, redis } from "../../redis"
 import { getDateNow, getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
 import { SimpleJob } from "./BaseJob"
@@ -57,7 +58,8 @@ export class BudgetSumUpJob extends SimpleJob {
       })
     }
 
-    const insights = allInsights.filter(({ name }) => !env.hiddenBudgetsSumUp.includes(name))
+    const hiddenBudgets = await redis.lrange(hiddenBudgetsKey, 0, -1)
+    const insights = allInsights.filter(({ name }) => !hiddenBudgets.includes(name))
 
     const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
     const accountBalance = assetAccount.data.attributes.current_balance || "0"
