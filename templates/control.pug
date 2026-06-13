@@ -10,6 +10,8 @@ html(lang="en")
     .container
       h1 Control UI
       .subtitle Trigger Sparkleft control jobs
+      if version
+        .version v#{version}
       .items
         h2 Auto Import
         button.control-button(type="button", data-token=token, data-action="autoimport", data-status-id="auto-import-status") Trigger Auto Import
