@@ -1,3 +1,17 @@
+# [2.36.0](https://github.com/Billos/Sparkleft/compare/2.35.0...2.36.0) (2026-06-13)
+
+
+### Bug Fixes
+
+* Reload page to reflect budget/category visibility changes ([42b033d](https://github.com/Billos/Sparkleft/commit/42b033d4103baeceadf12fa493638743990c74a8))
+
+
+### Features
+
+* Add API endpoints to toggle hidden budgets and categories ([94df300](https://github.com/Billos/Sparkleft/commit/94df3007d1f773e7850c7eb35dfa2d60b25814bd))
+* Add UI to toggle budget and category visibility ([4de67ae](https://github.com/Billos/Sparkleft/commit/4de67ae125281a530733d2828b6b885cc4a8d41f))
+* Store hidden budgets and categories in Redis ([fd16c1a](https://github.com/Billos/Sparkleft/commit/fd16c1abe7fd9caf03e512ff2100c3a1e1dea137))
+
 # [2.35.0](https://github.com/Billos/Sparkleft/compare/2.34.8...2.35.0) (2026-06-12)
 
 
