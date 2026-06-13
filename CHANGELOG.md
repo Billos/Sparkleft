@@ -1,3 +1,10 @@
+# [2.37.0](https://github.com/Billos/Sparkleft/compare/2.36.1...2.37.0) (2026-06-13)
+
+
+### Features
+
+* display app version in Control UI ([65c9576](https://github.com/Billos/Sparkleft/commit/65c9576972d0e57220790f5a6b0882933334c54a))
+
 ## [2.36.1](https://github.com/Billos/Sparkleft/compare/2.36.0...2.36.1) (2026-06-13)
 
 # [2.36.0](https://github.com/Billos/Sparkleft/compare/2.35.0...2.36.0) (2026-06-13)
