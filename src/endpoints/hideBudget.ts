@@ -14,10 +14,10 @@ export async function hideBudget(req: Request<{ budgetName: string }>, res: Resp
   if (isBudgetHidden) {
     logger.info("Budget with name %s is already hidden, removing from hidden budgets", budgetName)
     await connection.lrem(hiddenBudgetsKey, 0, budgetName)
-    return res.status(202)
+    return res.status(202).send({})
   } else {
     logger.info("Budget with name %s is not hidden, adding to hidden budgets", budgetName)
     await connection.rpush(hiddenBudgetsKey, budgetName)
-    return res.status(201)
+    return res.status(201).send({})
   }
 }

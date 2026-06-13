@@ -14,10 +14,10 @@ export async function hideCategory(req: Request<{ categoryName: string }>, res: 
   if (isCategoryHidden) {
     logger.info("Category with name %s is already hidden, removing from hidden categories", categoryName)
     await connection.lrem(hiddenCategoriesKey, 0, categoryName)
-    return res.status(202)
+    return res.status(202).send({})
   } else {
     logger.info("Category with name %s is not hidden, adding to hidden categories", categoryName)
     await connection.rpush(hiddenCategoriesKey, categoryName)
-    return res.status(201)
+    return res.status(201).send({})
   }
 }
