@@ -157,6 +157,8 @@ html(lang="en")
               console.error('Hide toggle failed:', e)
             } finally {
               btn.disabled = false
+              console.log('Reloading page to reflect changes...')
+              window.location.reload()
             }
           })
         })
