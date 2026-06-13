@@ -8,6 +8,8 @@ import { budgetSumUpPage } from "./endpoints/budgetSumUpPage"
 import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
 import { controlPage } from "./endpoints/controlPage"
 import { createNewCategory } from "./endpoints/createNewCategory"
+import { hideBudget } from "./endpoints/hideBudget"
+import { hideCategory } from "./endpoints/hideCategory"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { triggerAutoImport } from "./endpoints/triggerAutoImport"
@@ -51,6 +53,8 @@ app.get(
   settingCategoryForTransaction,
   TransactionResultMiddleware,
 )
+app.get("/hide-toggle/category/:categoryName", TokenMiddleware, hideCategory)
+app.get("/hide-toggle/budget/:budgetName", TokenMiddleware, hideBudget)
 app.post("/webhook", verifyWebhookMiddleware, webhook)
 app.get("/control", TokenMiddleware, controlPage)
 app.get("/autoimport", TokenMiddleware, autoImportPage)
