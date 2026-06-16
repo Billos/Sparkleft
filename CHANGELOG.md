@@ -1,3 +1,10 @@
+## [2.37.2](https://github.com/Billos/Sparkleft/compare/2.37.1...2.37.2) (2026-06-16)
+
+
+### Bug Fixes
+
+* Quick error message review ([470b926](https://github.com/Billos/Sparkleft/commit/470b9269774b12461f4eee1c5d06d2fad00b7803))
+
 ## [2.37.1](https://github.com/Billos/Sparkleft/compare/2.37.0...2.37.1) (2026-06-16)
 
 
