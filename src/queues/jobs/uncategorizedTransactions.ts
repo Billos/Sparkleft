@@ -38,6 +38,13 @@ export class UncategorizedTransactionsJob extends TransactionJob {
   override readonly startDelay = 10
 
   async run(id: string): Promise<void> {
+    logger.info("Checking that transaction %s exists", id)
+    try {
+      await TransactionsService.getTransaction({ client, path: { id } })
+    } catch (error) {
+      logger.error("Transaction %s does not exist: %s", id, error)
+      return
+    }
     logger.info("Creating a new message for uncategorized transaction with key %s", id)
     const {
       data: {
