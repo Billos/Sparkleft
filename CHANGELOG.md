@@ -1,3 +1,10 @@
+## [2.37.1](https://github.com/Billos/Sparkleft/compare/2.37.0...2.37.1) (2026-06-16)
+
+
+### Bug Fixes
+
+* Validate transaction ID existence in jobs ([d7543a0](https://github.com/Billos/Sparkleft/commit/d7543a0b65f4b2694ea4f7ec41653b64723a2920))
+
 # [2.37.0](https://github.com/Billos/Sparkleft/compare/2.36.1...2.37.0) (2026-06-13)
 
 
