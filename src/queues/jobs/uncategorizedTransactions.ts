@@ -42,7 +42,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
     try {
       await TransactionsService.getTransaction({ client, path: { id } })
     } catch (error) {
-      logger.error("Transaction %s does not exist: %s", id, error)
+      logger.error("Transaction %s does not exist", id)
       return
     }
     logger.info("Creating a new message for uncategorized transaction with key %s", id)

@@ -23,7 +23,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
     try {
       await TransactionsService.getTransaction({ client, path: { id } })
     } catch (error) {
-      logger.error("Transaction %s does not exist: %s", id, error)
+      logger.error("Transaction %s does not exist", id)
       return
     }
     logger.info("Creating a new message for unbudgeted transaction with key %s", id)
