@@ -3,21 +3,30 @@
 [![Coverage Report](https://img.shields.io/badge/coverage-report-blue)](https://billos.github.io/Sparkleft/)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-green)](LICENSE)
 
-Budget management assistant for [Firefly III](https://www.firefly-iii.org/). Automatically categorises transactions, manages budget limits, links PayPal transactions, and sends notifications via Discord or Gotify.
+Budget management assistant for [Firefly III](https://www.firefly-iii.org/).
+Automatically manages budget limits, links PayPal transactions, and sends notifications via Discord or Gotify.
 
 ## Features
 
-- **Transaction categorisation** — Notifies when new uncategorised withdrawals appear, with interactive buttons to assign a category
-- **Budget assignment** — Notifies when transactions need a budget, with buttons to assign one
+### Jobs
+
 - **Budget overspend detection** — Alerts when spending exceeds a budget limit
-- **Dynamic budget limits** — Auto-calculates the bills budget (sum of paid bills + max of unpaid bills) and the leftovers budget (income − all other budgets)
-- **PayPal linking** — Links PayPal transactions to Firefly III transactions across accounts
+- **Dynamic bills budget** — Automatically updates the bills budget limit (sum of paid bills + max of unpaid bills)
+- **Dynamic leftovers budget** — Automatically updates the leftovers budget limit (income − all other budgets)
+- **PayPal linking** — Links PayPal transactions to Firefly III transactions across 2 Firefly III accounts
 - **Auto-import** — Schedules or manually triggers transaction imports via the Firefly III Data Importer
-- **Budget sum-up** — Generates a monthly budget summary report
-- **Multi-channel notifications** — Discord webhook or Gotify support
-- **Web dashboard** — Control panel to trigger jobs, hide/show budgets and categories
-- **Cron scheduling** — Automatic job execution on a configurable schedule
+- **Budget sum-up** — Schedules or manually triggers a monthly budgets summary report
 - **Webhook integration** — Real-time triggers from Firefly III on transaction and budget events
+
+### Notification controlled (Discord / Gotify)
+
+- **Manual Transaction categorisation** — Notifies when new uncategorised withdrawals appear, with interactive buttons to assign a category
+- **Manual Transaction budget assignment** — Notifies when new unbudgeted withdrawals appear, with interactive buttons to assign a budget
+
+### Control UI
+
+- **Manual Import trigger** — Trigger a Firefly III Data Importer job on demand
+- **Manual Budget Sum-up trigger** — Trigger a budget summary job on demand
 - **Hidden items** — Hide unwanted budgets or categories from notification listings (persisted in Redis)
 
 ## Architecture
@@ -54,18 +63,18 @@ Sparkleft is split into three services communicating via a Redis-backed job queu
 
 ## Tech stack
 
-| Layer | Technology |
-|-------|------------|
-| Runtime | Node.js 26, TypeScript |
-| HTTP | Express 5 |
-| Job queue | BullMQ + ioredis |
-| Firefly III client | `@billos/firefly-iii-sdk` |
-| Templates | Pug (UI), Nunjucks (notifications) |
-| Logging | Pino |
-| Date handling | Luxon |
-| Testing | Vitest + v8 coverage |
-| CI/CD | Semantic Release, Docker Hub |
-| Package manager | Yarn 4 |
+| Layer              | Technology                         |
+| ------------------ | ---------------------------------- |
+| Runtime            | Node.js 26, TypeScript             |
+| HTTP               | Express 5                          |
+| Job queue          | BullMQ + ioredis                   |
+| Firefly III client | `@billos/firefly-iii-sdk`          |
+| Templates          | Pug (UI), Nunjucks (notifications) |
+| Logging            | Pino                               |
+| Date handling      | Luxon                              |
+| Testing            | Vitest + v8 coverage               |
+| CI/CD              | Semantic Release, Docker Hub       |
+| Package manager    | Yarn 4                             |
 
 ## Getting started
 
@@ -132,11 +141,11 @@ docker compose up -d
 
 This starts three services:
 
-| Service | Role | Port |
-|---------|------|------|
-| `redis` | Message queue broker | — |
-| `server` | HTTP API & web UI | 3000 |
-| `worker` | Background job processor | — |
+| Service  | Role                     | Port |
+| -------- | ------------------------ | ---- |
+| `redis`  | Message queue broker     | —    |
+| `server` | HTTP API & web UI        | 3000 |
+| `worker` | Background job processor | —    |
 
 **Development (with hot-reload):**
 
@@ -168,21 +177,21 @@ A Redis instance must be reachable at the URL specified in `REDIS_URL`.
 
 All endpoints are protected by the `API_TOKEN` when `USE_API_TOKEN` is enabled (default).
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/about` | Application info page |
-| `GET` | `/control` | Dashboard to trigger jobs and toggle hidden items |
-| `GET` | `/budget-sumup` | Budget summary page |
-| `POST` | `/budget-sumup` | Trigger a budget sum-up job |
-| `GET` | `/autoimport` | Auto-import page |
-| `POST` | `/autoimport` | Trigger an auto-import job |
-| `GET` | `/transaction/:id/categories` | Category selection UI for a transaction |
-| `GET` | `/transaction/:id/category/:categoryId` | Assign a category to a transaction |
-| `GET` | `/transaction/:id/newCategory?name=X` | Create and assign a new category |
-| `GET` | `/transaction/:id/budget/:budgetId` | Assign a budget to a transaction |
-| `GET` | `/hide-toggle/category/:name` | Toggle visibility of a category |
-| `GET` | `/hide-toggle/budget/:name` | Toggle visibility of a budget |
-| `POST` | `/webhook` | Firefly III webhook receiver (HMAC SHA3-256 verified) |
+| Method | Endpoint                                | Description                                           |
+| ------ | --------------------------------------- | ----------------------------------------------------- |
+| `GET`  | `/about`                                | Application info page                                 |
+| `GET`  | `/control`                              | Dashboard to trigger jobs and toggle hidden items     |
+| `GET`  | `/budget-sumup`                         | Budget summary page                                   |
+| `POST` | `/budget-sumup`                         | Trigger a budget sum-up job                           |
+| `GET`  | `/autoimport`                           | Auto-import page                                      |
+| `POST` | `/autoimport`                           | Trigger an auto-import job                            |
+| `GET`  | `/transaction/:id/categories`           | Category selection UI for a transaction               |
+| `GET`  | `/transaction/:id/category/:categoryId` | Assign a category to a transaction                    |
+| `GET`  | `/transaction/:id/newCategory?name=X`   | Create and assign a new category                      |
+| `GET`  | `/transaction/:id/budget/:budgetId`     | Assign a budget to a transaction                      |
+| `GET`  | `/hide-toggle/category/:name`           | Toggle visibility of a category                       |
+| `GET`  | `/hide-toggle/budget/:name`             | Toggle visibility of a budget                         |
+| `POST` | `/webhook`                              | Firefly III webhook receiver (HMAC SHA3-256 verified) |
 
 ## Webhook setup
 
@@ -252,12 +261,12 @@ Coverage reports are published to [GitHub Pages](https://billos.github.io/Sparkl
 
 ## CI/CD
 
-| Workflow | Trigger | Purpose |
-|----------|---------|---------|
-| `ci.yml` | Pull requests & non-main branches | Lint, format check, build, test |
-| `codeql.yml` | Push & schedule | CodeQL security analysis |
-| `coverage-pages.yml` | Push to main | Deploy coverage report to GitHub Pages |
-| `release.yml` | Push to main | Semantic release, Docker image build & push to Docker Hub |
+| Workflow             | Trigger                           | Purpose                                                   |
+| -------------------- | --------------------------------- | --------------------------------------------------------- |
+| `ci.yml`             | Pull requests & non-main branches | Lint, format check, build, test                           |
+| `codeql.yml`         | Push & schedule                   | CodeQL security analysis                                  |
+| `coverage-pages.yml` | Push to main                      | Deploy coverage report to GitHub Pages                    |
+| `release.yml`        | Push to main                      | Semantic release, Docker image build & push to Docker Hub |
 
 ## License
 
