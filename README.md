@@ -1,118 +1,273 @@
 # Sparkleft
 
 [![Coverage Report](https://img.shields.io/badge/coverage-report-blue)](https://billos.github.io/Sparkleft/)
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-green)](LICENSE)
 
-/!\ Read the state of the project section before using this project /!\
+Budget management assistant for [Firefly III](https://www.firefly-iii.org/).
+Automatically manages budget limits, links PayPal transactions, and sends notifications via Discord or Gotify.
 
-This project is a quick draft to handle 2 things:
+## Features
 
-- Updating a budget used to list the bills : Sum of paid bills + sum of maximum amounts of unpaid bills
-- Updating a budget used for what is left in the account : Sum of all revenues - sum of all budgets (excluding the leftovers budget obviously)
+### Jobs
 
-Names of the budget are defined in the environment variables, so you can use any name you want.
+- **Budget overspend detection** — Alerts when spending exceeds a budget limit
+- **Dynamic bills budget** — Automatically updates the bills budget limit (sum of paid bills + max of unpaid bills)
+- **Dynamic leftovers budget** — Automatically updates the leftovers budget limit (income − all other budgets)
+- **PayPal linking** — Links PayPal transactions to Firefly III transactions across 2 Firefly III accounts
+- **Auto-import** — Schedules or manually triggers transaction imports via the Firefly III Data Importer
+- **Budget sum-up** — Schedules or manually triggers a monthly budgets summary report
+- **Webhook integration** — Real-time triggers from Firefly III on transaction and budget events
 
-## Running
+### Notification controlled (Discord / Gotify)
 
-### Docker Compose (Recommended)
+- **Manual Transaction categorisation** — Notifies when new uncategorised withdrawals appear, with interactive buttons to assign a category
+- **Manual Transaction budget assignment** — Notifies when new unbudgeted withdrawals appear, with interactive buttons to assign a budget
 
-The easiest way to run the project is to use the provided `docker-compose.yml` file, which sets up separate server and worker services along with Redis.
+### Control UI
 
-The architecture is now split into:
+- **Manual Import trigger** — Trigger a Firefly III Data Importer job on demand
+- **Manual Budget Sum-up trigger** — Trigger a budget summary job on demand
+- **Hidden items** — Hide unwanted budgets or categories from notification listings (persisted in Redis)
 
-- **Server**: Handles HTTP endpoints and job creation
-- **Worker**: Processes jobs from the queue
-- **Redis**: Message queue broker
+## Architecture
 
-Provide the following environment variables in a `.env` file, in the stack.env in portainer, or in the docker-compose file itself.
+Sparkleft is split into three services communicating via a Redis-backed job queue ([BullMQ](https://docs.bullmq.io/)):
+
+```
+┌──────────────────────────────────┐
+│  Express Server (port 3000)      │
+│  HTTP API · Web UI · Job creator │
+└──────────────┬───────────────────┘
+               │  enqueue jobs
+               ▼
+       ┌───────────────┐
+       │     Redis      │
+       │  (BullMQ)      │
+       └───────┬───────┘
+               │  dequeue & process
+               ▼
+       ┌───────────────┐
+       │    Worker      │
+       │  Job processor │
+       └───────────────┘
+               │
+               ▼
+       ┌───────────────┐
+       │ Firefly III API│
+       └───────────────┘
+```
+
+- **Server** — Handles HTTP endpoints, serves the web UI, and enqueues jobs into Redis.
+- **Worker** — Processes jobs from the queue (budget calculations, notifications, imports, etc.).
+- **Redis** — Message broker between server and worker.
+
+## Tech stack
+
+| Layer              | Technology                         |
+| ------------------ | ---------------------------------- |
+| Runtime            | Node.js 26, TypeScript             |
+| HTTP               | Express 5                          |
+| Job queue          | BullMQ + ioredis                   |
+| Firefly III client | `@billos/firefly-iii-sdk`          |
+| Templates          | Pug (UI), Nunjucks (notifications) |
+| Logging            | Pino                               |
+| Date handling      | Luxon                              |
+| Testing            | Vitest + v8 coverage               |
+| CI/CD              | Semantic Release, Docker Hub       |
+| Package manager    | Yarn 4                             |
+
+## Getting started
+
+### Prerequisites
+
+- A running [Firefly III](https://www.firefly-iii.org/) instance with API access
+- Docker & Docker Compose **or** Node.js ≥ 26 with Yarn 4
+- A Redis instance (provided by Docker Compose or external)
+- The target budgets (bills, leftovers) must already exist in Firefly III with an initial limit set
+
+### Configuration
+
+Copy `.env.default` to `.env` and fill in the values:
 
 ```shell
-# The URL of the firefly iii instance including /api
-FIREFLY_III_URL=
-# The token to use to authenticate to the firefly iii instance
-FIREFLY_III_TOKEN=
-# The name of the bills budget
-BILLS_BUDGET=
-# The name of the leftovers budget
-LEFTOVERS_BUDGET=
-# The Discord webhook to send the results
-DISCORD_WEBHOOK=
-# The URL of the service, used to generate the links in the discord message
-SERVICE_URL=
-# The URL of the gotify instance
-GOTIFY_URL=
-# The token to use to send notifications to the gotify instance
-GOTIFY_TOKEN=
-# The user token to use to delete the notifications
-GOTIFY_USER_TOKEN=
-# The application id to use to send notifications to the gotify instance
-GOTIFY_APPLICATION_ID=
-# The token to use to authenticate to the account that handles the paypal transactions
-FIREFLY_III_PAYPAL_ACCOUNT_TOKEN=
-# The id of the asset account, used to compute
-ASSET_ACCOUNT_ID=
-# The URL of the service, used to generate the links in the notification message
-SERVICE_URL=
-# The URL of the Redis instance, used to manage the job queue (defaults to localhost, use 'redis' for docker-compose)
-REDIS_HOST=
-# The port of the Redis instance (6379 by default)
-REDIS_PORT=
-# The database number to use in the Redis instance (0 by default)
-REDIS_DB=
-# The password to use to authenticate to the Redis instance, if any
-REDIS_PASSWORD=
-# Comma-separated list of category names to hide from uncategorized transaction listings (optional)
-HIDDEN_CATEGORIES=
-# Cron expression used to automatically trigger budget sum-up (optional)
-BUDGET_SUM_UP_CRON=
+# ─── Firefly III ─────────────────────────────────────────
+FIREFLY_III_URL=              # Firefly III base URL including /api (e.g. https://firefly.example.com/api)
+FIREFLY_III_TOKEN=            # Personal Access Token for the main account
+FIREFLY_III_PAYPAL_ACCOUNT_TOKEN= # Token for the PayPal-linked account (optional)
+FIREFLY_III_WEBHOOK_SECRET=   # Webhook signature secret configured in Firefly III
+FIREFLY_III_CLI_TOKEN=        # CLI token used for triggering Firefly III cron jobs
+
+# ─── API security ────────────────────────────────────────
+API_TOKEN=                    # Token to protect Sparkleft endpoints
+USE_API_TOKEN=                # Set to 'false' to disable token protection (default: true)
+
+# ─── Budgets & accounts ─────────────────────────────────
+BILLS_BUDGET_ID=              # ID of the bills budget in Firefly III
+LEFTOVERS_BUDGET_ID=          # ID of the leftovers budget in Firefly III
+ASSET_ACCOUNT_ID=             # ID of the main asset account
+
+# ─── Notifications ───────────────────────────────────────
+# Configure at least one channel: Discord or Gotify
+DISCORD_WEBHOOK=              # Discord webhook URL
+GOTIFY_URL=                   # Gotify instance URL
+GOTIFY_APPLICATION_ID=        # Gotify application ID
+GOTIFY_TOKEN=                 # Gotify application token
+GOTIFY_USER_TOKEN=            # Gotify user token (for deleting messages)
+
+# ─── Auto-import ─────────────────────────────────────────
+IMPORTER_URL=                 # URL of the Firefly III Data Importer
+IMPORT_DIRECTORY=             # Path to the import configuration directory
+AUTO_IMPORT_SECRET=           # Secret for the auto-import endpoint
+AUTO_IMPORT_CRON=             # Cron expression for scheduled auto-imports (optional)
+
+# ─── Scheduling ──────────────────────────────────────────
+BUDGET_SUM_UP_CRON=           # Cron expression for scheduled budget sum-ups (optional)
+
+# ─── Redis ───────────────────────────────────────────────
+REDIS_URL=                    # Redis connection URL (e.g. redis://redis:6379)
+
+# ─── Other ───────────────────────────────────────────────
+SERVICE_URL=                  # Public URL of this Sparkleft instance (used in notification links)
+TZ=                           # Timezone (e.g. Europe/Paris)
 ```
 
-### Running Services
+### Running with Docker Compose (recommended)
 
-**With Docker Compose (Production):**
+**Production:**
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-This will start three services:
+This starts three services:
 
-- `redis`: Message queue broker
-- `server`: HTTP API server (port 3000)
-- `worker`: Background job processor
+| Service  | Role                     | Port |
+| -------- | ------------------------ | ---- |
+| `redis`  | Message queue broker     | —    |
+| `server` | HTTP API & web UI        | 3000 |
+| `worker` | Background job processor | —    |
 
-**With Docker Compose (Development):**
+**Development (with hot-reload):**
 
 ```bash
-docker-compose -f docker-compose.dev.yml up
+docker compose -f docker-compose.dev.yml up
 ```
 
-This enables hot-reload for both server and worker services during development.
+Source files are mounted as volumes — changes are picked up automatically.
 
-**Separate Server and Worker:**
-
-To run services separately:
+### Running without Docker
 
 ```bash
-# Server only
-npm run start:server
+# Install dependencies
+yarn install
 
-# Worker only
-npm run start:worker
+# Build
+yarn build
+
+# Start the server
+yarn start:server
+
+# Start the worker (in a separate terminal)
+yarn start:worker
 ```
 
-The budgets should already exist in the firefly iii, with a basic limit set.
+A Redis instance must be reachable at the URL specified in `REDIS_URL`.
 
-I might work late on something that will create the budgets / update the limits, but for now, you have to do it manually.
+## API endpoints
 
-## State of the project
+All endpoints are protected by the `API_TOKEN` when `USE_API_TOKEN` is enabled (default).
 
-The results I have right now, match what I am expecting, but I'm quite new with Fireflyy-iii, and I might have missed some edge cases.
+| Method | Endpoint                                | Description                                           |
+| ------ | --------------------------------------- | ----------------------------------------------------- |
+| `GET`  | `/about`                                | Application info page                                 |
+| `GET`  | `/control`                              | Dashboard to trigger jobs and toggle hidden items     |
+| `GET`  | `/budget-sumup`                         | Budget summary page                                   |
+| `POST` | `/budget-sumup`                         | Trigger a budget sum-up job                           |
+| `GET`  | `/autoimport`                           | Auto-import page                                      |
+| `POST` | `/autoimport`                           | Trigger an auto-import job                            |
+| `GET`  | `/transaction/:id/categories`           | Category selection UI for a transaction               |
+| `GET`  | `/transaction/:id/category/:categoryId` | Assign a category to a transaction                    |
+| `GET`  | `/transaction/:id/newCategory?name=X`   | Create and assign a new category                      |
+| `GET`  | `/transaction/:id/budget/:budgetId`     | Assign a budget to a transaction                      |
+| `GET`  | `/hide-toggle/category/:name`           | Toggle visibility of a category                       |
+| `GET`  | `/hide-toggle/budget/:name`             | Toggle visibility of a budget                         |
+| `POST` | `/webhook`                              | Firefly III webhook receiver (HMAC SHA3-256 verified) |
 
-I'm only updating the amount field of the budgets, or changing the budget of a transaction, so I'm quite confident that I'm not breaking anything.
-However, keep in mind that this project is a draft, and that I'm not responsible for any loss of data or money.
+## Webhook setup
 
-## Roadmap
+Configure a webhook in Firefly III pointing to `https://<SERVICE_URL>/webhook` with the secret matching `FIREFLY_III_WEBHOOK_SECRET`.
 
-Link a paypal transaction to a transaction in another account, update the transaction in main account, and run the rules to link the transaction to the budgets and bills.
+Supported triggers:
 
-Using the transaction update API should remove the related message in the discord webhook.
+- Transaction create / update / delete
+- Budget create / update / delete
+- Budget limit store / update
+
+When a webhook is received, Sparkleft enqueues the relevant jobs (uncategorised check, unbudgeted check, budget limit update, message cleanup, etc.).
+
+## Development
+
+### Available scripts
+
+```bash
+yarn dev:server          # Server with hot-reload + pretty logs
+yarn dev:worker          # Worker with hot-reload + pretty logs
+yarn build               # Compile TypeScript → build/
+yarn lint                # ESLint
+yarn format              # Prettier (write)
+yarn format-check        # Prettier (check)
+yarn type-check          # TypeScript type checking
+yarn test                # Run tests
+yarn test:coverage       # Run tests with coverage report
+yarn docker:build        # Build the Docker image locally
+yarn types:api:generate  # Regenerate Firefly III API types
+yarn release             # Semantic release
+yarn clean               # Remove build/ and node_modules/
+```
+
+### Project structure
+
+```
+src/
+├── server.ts              # Express server entry point
+├── worker.ts              # BullMQ worker entry point
+├── config.ts              # Environment variable configuration
+├── client.ts              # Firefly III SDK clients
+├── redis.ts               # Redis connection
+├── endpoints/             # HTTP route handlers
+├── queues/
+│   ├── jobs/              # Job implementations (11 job types)
+│   ├── queue.ts           # Queue initialisation
+│   ├── index.ts           # Worker initialisation
+│   ├── queueArgs.ts       # Job argument types
+│   └── utils.ts           # Queue utilities
+├── modules/notifiers/     # Notification adapters (Discord, Gotify)
+├── utils/                 # Shared utilities
+└── __tests__/             # Test files
+templates/                 # Pug (UI) & Nunjucks (notifications) templates
+public/                    # Static assets (CSS, favicon)
+```
+
+### Testing
+
+Tests are run with [Vitest](https://vitest.dev/):
+
+```bash
+yarn test                # Run all tests
+yarn test:coverage       # Generate coverage report (text + HTML)
+```
+
+Coverage reports are published to [GitHub Pages](https://billos.github.io/Sparkleft/).
+
+## CI/CD
+
+| Workflow             | Trigger                           | Purpose                                                   |
+| -------------------- | --------------------------------- | --------------------------------------------------------- |
+| `ci.yml`             | Pull requests & non-main branches | Lint, format check, build, test                           |
+| `codeql.yml`         | Push & schedule                   | CodeQL security analysis                                  |
+| `coverage-pages.yml` | Push to main                      | Deploy coverage report to GitHub Pages                    |
+| `release.yml`        | Push to main                      | Semantic release, Docker image build & push to Docker Hub |
+
+## License
+
+This project is licensed under the [GPL-3.0](LICENSE) license.
