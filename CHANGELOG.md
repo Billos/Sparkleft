@@ -1,3 +1,10 @@
+# [2.38.0](https://github.com/Billos/Sparkleft/compare/2.37.2...2.38.0) (2026-06-26)
+
+
+### Features
+
+* Add transfers to auto-import sum up notification ([#88](https://github.com/Billos/Sparkleft/issues/88)) ([9b6901c](https://github.com/Billos/Sparkleft/commit/9b6901cbd4c7696a715dec1071d74d782bab935f))
+
 ## [2.37.2](https://github.com/Billos/Sparkleft/compare/2.37.1...2.37.2) (2026-06-16)
 
 
