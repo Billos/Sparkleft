@@ -20,8 +20,10 @@ export type TemplateContext = {
   importDirectory?: string
   diffExpenses?: number
   diffDeposits?: number
+  diffTransfers?: number
   expenses?: TransactionRead[]
   deposits?: TransactionRead[]
+  transfers?: TransactionRead[]
   accountBalance?: string
   accountCurrency?: string
 }

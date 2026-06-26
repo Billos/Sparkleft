@@ -11,6 +11,7 @@ const logger = pino()
 interface AccountTransactions {
   expenses: TransactionRead[]
   deposits: TransactionRead[]
+  transfers: TransactionRead[]
 }
 
 export class AutoImportJob extends SimpleJob {
@@ -33,7 +34,8 @@ export class AutoImportJob extends SimpleJob {
     })
     const expenses = transactions.filter(({ attributes: { transactions } }) => transactions[0].type === TransactionTypeProperty.WITHDRAWAL)
     const deposits = transactions.filter(({ attributes: { transactions } }) => transactions[0].type === TransactionTypeProperty.DEPOSIT)
-    return { expenses, deposits }
+    const transfers = transactions.filter(({ attributes: { transactions } }) => transactions[0].type === TransactionTypeProperty.TRANSFER)
+    return { expenses, deposits, transfers }
   }
 
   async run(): Promise<void> {
@@ -45,7 +47,7 @@ export class AutoImportJob extends SimpleJob {
     const previousTransactions = await this.getExpensesAndIncome()
     logger.info(
       "Found %d transactions in the last 7 days for asset account",
-      previousTransactions.expenses.length + previousTransactions.deposits.length,
+      previousTransactions.expenses.length + previousTransactions.deposits.length + previousTransactions.transfers.length,
     )
 
     if (env.fireflyCliToken) {
@@ -73,13 +75,16 @@ export class AutoImportJob extends SimpleJob {
 
     const expenses = newTransactions.expenses.filter((newTx) => !previousTransactions.expenses.some((prevTx) => prevTx.id === newTx.id))
     const deposits = newTransactions.deposits.filter((newTx) => !previousTransactions.deposits.some((prevTx) => prevTx.id === newTx.id))
+    const transfers = newTransactions.transfers.filter((newTx) => !previousTransactions.transfers.some((prevTx) => prevTx.id === newTx.id))
     const diffExpenses = newTransactions.expenses.length - previousTransactions.expenses.length
     const diffDeposits = newTransactions.deposits.length - previousTransactions.deposits.length
+    const diffTransfers = newTransactions.transfers.length - previousTransactions.transfers.length
     logger.info(
-      "Found %d new transactions after auto-import (expenses: %d, income: %d)",
-      diffExpenses + diffDeposits,
+      "Found %d new transactions after auto-import (expenses: %d, income: %d, transfers: %d)",
+      diffExpenses + diffDeposits + diffTransfers,
       diffExpenses,
       diffDeposits,
+      diffTransfers,
     )
 
     const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
@@ -87,8 +92,10 @@ export class AutoImportJob extends SimpleJob {
     await this.sendUniqueNotification("Auto Import", "auto-import.njk", {
       diffExpenses,
       diffDeposits,
+      diffTransfers,
       expenses,
       deposits,
+      transfers,
       accountBalance: assetAccount.data.attributes.current_balance || "0",
       accountCurrency: assetAccount.data.attributes.currency_symbol || "€",
     })

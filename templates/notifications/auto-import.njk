@@ -18,6 +18,15 @@ Imported {{ diffDeposits }} deposits.
 No new deposits imported.
 {% endif %}
 
+{% if diffTransfers > 0 %}
+Imported {{ diffTransfers }} transfers.
+{% for transfer in transfers %}
+ - {{ transfer | TransactionSummary }}
+{% endfor %}
+{% else %}
+No new transfers imported.
+{% endif %}
+
 **Account balance:** {{ accountBalance }} {{ accountCurrency }}
 
 [View Transactions](<{{ "" | UrlFireflyTransactions }}>)
