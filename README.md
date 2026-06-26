@@ -213,7 +213,7 @@ When a webhook is received, Sparkleft enqueues the relevant jobs (uncategorised 
 yarn dev:server          # Server with hot-reload + pretty logs
 yarn dev:worker          # Worker with hot-reload + pretty logs
 yarn build               # Compile TypeScript → build/
-yarn lint                # ESLint
+yarn lint                # oxlint
 yarn format              # Prettier (write)
 yarn format-check        # Prettier (check)
 yarn type-check          # TypeScript type checking

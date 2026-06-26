@@ -59,8 +59,9 @@ gen-types/
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
+# Optional lint cache
 .eslintcache
+.oxlintcache
 
 # Optional stylelint cache
 .stylelintcache

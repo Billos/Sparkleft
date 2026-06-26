@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [
+    "src/types/**/*.ts",
+    "src/paypalTypes/**/*.ts",
+    "src/sdk/firefly/**/*.ts"
+  ],
+  "rules": {
+    "arrow-body-style": ["error", "as-needed"],
+    "object-shorthand": ["error", "always"],
+    "prefer-destructuring": ["error", { "array": true, "object": true }, {}],
+    "prefer-template": "error",
+    "no-useless-concat": "error",
+    "no-console": "error",
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsForRegex": [".*"] }],
+    "no-underscore-dangle": ["error", { "allowAfterThis": true, "allow": ["_id"] }]
+  },
+  "overrides": [
+    {
+      "files": ["src/__tests__/**/*.ts"],
+      "rules": {
+        "arrow-body-style": "off",
+        "object-shorthand": "off",
+        "prefer-destructuring": "off",
+        "no-console": "off",
+        "no-param-reassign": "off",
+        "no-underscore-dangle": "off",
+        "prefer-template": "error",
+        "no-useless-concat": "error"
+      }
+    }
+  ]
+}
