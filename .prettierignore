@@ -4,3 +4,4 @@ src/sdk/firefly
 CHANGELOG.md
 codeql.yml
 .yarn
+public/style.css
