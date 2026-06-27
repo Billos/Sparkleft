@@ -1,3 +1,10 @@
+## [2.38.1](https://github.com/Billos/Sparkleft/compare/2.38.0...2.38.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* Configure semantic-release for chore and build types ([eb45073](https://github.com/Billos/Sparkleft/commit/eb4507324bc7712c4ffd6d3d5b2e8f328f311dc2))
+
 # [2.38.0](https://github.com/Billos/Sparkleft/compare/2.37.2...2.38.0) (2026-06-26)
 
 
