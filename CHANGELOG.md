@@ -1,3 +1,10 @@
+# [2.39.0](https://github.com/Billos/Sparkleft/compare/2.38.1...2.39.0) (2026-06-27)
+
+
+### Features
+
+* Configure Budget ids through  Control Panel ([#91](https://github.com/Billos/Sparkleft/issues/91)) ([3835ed0](https://github.com/Billos/Sparkleft/commit/3835ed0cc1b20cdb682e27fc05275cce5c3edc6f))
+
 ## [2.38.1](https://github.com/Billos/Sparkleft/compare/2.38.0...2.38.1) (2026-06-27)
 
 
