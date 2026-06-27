@@ -6,15 +6,25 @@ import { Request, Response } from "express"
 
 import { client } from "../client"
 import { hiddenBudgetsKey, hiddenCategoriesKey, redis } from "../redis"
+import { BudgetRole, getBudgetRoleId } from "../utils/budgetConfig"
 
 const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf-8")) as { version: string }
 
 export async function controlPage(req: Request, res: Response) {
-  const [{ data: budgets }, { data: categories }, hiddenBudgets, hiddenCategories] = await Promise.all([
+  const [
+    { data: budgets },
+    { data: categories },
+    hiddenBudgets,
+    hiddenCategories,
+    billsBudgetId,
+    leftoversBudgetId,
+  ] = await Promise.all([
     BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } }),
     CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } }),
     redis.lrange(hiddenBudgetsKey, 0, -1),
     redis.lrange(hiddenCategoriesKey, 0, -1),
+    getBudgetRoleId(BudgetRole.Bills),
+    getBudgetRoleId(BudgetRole.Leftovers),
   ])
 
   res.render("control", {
@@ -24,5 +34,7 @@ export async function controlPage(req: Request, res: Response) {
     categories,
     hiddenBudgets,
     hiddenCategories,
+    billsBudgetId,
+    leftoversBudgetId,
   })
 }

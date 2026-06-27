@@ -2,8 +2,8 @@ import { BudgetLimitStoreWritable, BudgetRead, BudgetsService } from "@billos/fi
 import pino from "pino"
 
 import { client } from "../../client"
-import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
+import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue } from "../utils"
@@ -40,11 +40,13 @@ export class CheckBudgetLimitJob extends BudgetJob {
       return
     }
 
-    if (budget.id === env.billsBudgetId) {
+    const [billsBudgetId, leftoversBudgetId] = await Promise.all([getBudgetRoleId(BudgetRole.Bills), getBudgetRoleId(BudgetRole.Leftovers)])
+
+    if (budget.id === billsBudgetId) {
       logger.debug("Budget is Bills budget, skipping review of budget limit")
       return
     }
-    if (budget.id === env.leftoversBudgetId) {
+    if (budget.id === leftoversBudgetId) {
       logger.debug("Budget is Leftovers budget, skipping review of budget limit")
 
       return
@@ -92,8 +94,9 @@ export class CheckBudgetLimitJob extends BudgetJob {
     const start = getStartOfCurrentMonth()
     const end = getEndOfCurrentMonth()
     const { data: budgets } = await BudgetsService.listBudget({ client, query: { start, end, limit: 100 } })
+    const [billsBudgetId, leftoversBudgetId] = await Promise.all([getBudgetRoleId(BudgetRole.Bills), getBudgetRoleId(BudgetRole.Leftovers)])
     for (const budget of budgets) {
-      if (budget.id !== env.billsBudgetId && budget.id !== env.leftoversBudgetId) {
+      if (budget.id !== billsBudgetId && budget.id !== leftoversBudgetId) {
         await addBudgetJobToQueue(this, budget.id)
       }
     }

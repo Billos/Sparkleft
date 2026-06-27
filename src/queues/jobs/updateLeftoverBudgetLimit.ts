@@ -11,6 +11,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
+import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { getQueue } from "../queue"
 import { addJobToQueue } from "../utils"
@@ -91,8 +92,9 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
       BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
       BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
-    const leftoversBudget = allBudgets.data.find(({ id }) => id === env.leftoversBudgetId)
-    const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === env.leftoversBudgetId)
+    const leftoversBudgetId = await getBudgetRoleId(BudgetRole.Leftovers)
+    const leftoversBudget = allBudgets.data.find(({ id }) => id === leftoversBudgetId)
+    const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudgetId)
 
     if (!leftoversBudget) {
       logger.warn("Leftovers budget not found, skipping updateLeftoverBudgetLimit job")

@@ -41,6 +41,33 @@ html(lang="en")
         else
           p No budgets available
     .container
+      h1 Budget Roles
+      .subtitle Choose which budgets act as the Bills and Leftovers budgets
+      .items
+        if budgets && budgets.length > 0
+          each budget in budgets
+            - const roleBudgetName = budget.attributes && budget.attributes.name
+            - const isBills = budget.id === billsBudgetId
+            - const isLeftovers = budget.id === leftoversBudgetId
+            .role-row
+              span.role-name= roleBudgetName
+              button.role-button(
+                type="button",
+                data-token=token,
+                data-role="bills",
+                data-budget-id=budget.id,
+                class=isBills ? "selected-item" : "unselected-item"
+              )= isBills ? "Bills ✅" : "Bills"
+              button.role-button(
+                type="button",
+                data-token=token,
+                data-role="leftovers",
+                data-budget-id=budget.id,
+                class=isLeftovers ? "selected-item" : "unselected-item"
+              )= isLeftovers ? "Leftovers ✅" : "Leftovers"
+        else
+          p No budgets available
+    .container
       h1 Hide Toggle Categories
       .items
         if categories && categories.length > 0
@@ -157,6 +184,36 @@ html(lang="en")
               }
             } catch (e) {
               console.error('Hide toggle failed:', e)
+            } finally {
+              btn.disabled = false
+              console.log('Reloading page to reflect changes...')
+              window.location.reload()
+            }
+          })
+        })
+
+        const roleButtons = document.querySelectorAll('.role-button')
+        roleButtons.forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const token = btn.getAttribute('data-token')
+            const role = btn.getAttribute('data-role')
+            const budgetId = btn.getAttribute('data-budget-id')
+            if (role !== 'bills' && role !== 'leftovers') {
+              console.error('Invalid budget role:', role)
+              return
+            }
+            btn.disabled = true
+            try {
+              const params = new URLSearchParams({ api_token: token })
+              const res = await fetch(`/config/budget-role/${role}/${encodeURIComponent(budgetId)}?` + params.toString(), {
+                method: 'POST',
+              })
+              if (!res.ok) {
+                console.error('Set budget role failed with status:', res.status)
+                return
+              }
+            } catch (e) {
+              console.error('Set budget role failed:', e)
             } finally {
               btn.disabled = false
               console.log('Reloading page to reflect changes...')
