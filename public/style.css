@@ -231,6 +231,11 @@ input[type="text"]:focus {
   flex: 1 1 150px;
   font-weight: 500;
 }
+.role-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 .role-button {
   border: none;
   border-radius: 8px;
