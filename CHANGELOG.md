@@ -1,3 +1,10 @@
+## [2.39.2](https://github.com/Billos/Sparkleft/compare/2.39.1...2.39.2) (2026-06-27)
+
+
+### Bug Fixes
+
+* Move budget role labels above button rows in control UI ([3be18f5](https://github.com/Billos/Sparkleft/commit/3be18f542115b369a32c4afc32d2228ef10650b2))
+
 ## [2.39.1](https://github.com/Billos/Sparkleft/compare/2.39.0...2.39.1) (2026-06-27)
 
 
