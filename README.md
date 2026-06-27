@@ -212,7 +212,9 @@ When a webhook is received, Sparkleft enqueues the relevant jobs (uncategorised 
 ```bash
 yarn dev:server          # Server with hot-reload + pretty logs
 yarn dev:worker          # Worker with hot-reload + pretty logs
-yarn build               # Compile TypeScript → build/
+yarn dev:css             # Rebuild public/style.css from Tailwind on change
+yarn build               # Build Tailwind CSS + compile TypeScript → build/
+yarn build:css           # Build public/style.css from Tailwind sources
 yarn lint                # oxlint
 yarn format              # Prettier (write)
 yarn format-check        # Prettier (check)
@@ -242,10 +244,11 @@ src/
 │   ├── queueArgs.ts       # Job argument types
 │   └── utils.ts           # Queue utilities
 ├── modules/notifiers/     # Notification adapters (Discord, Gotify)
+├── styles/                # Tailwind CSS source (compiled to public/style.css)
 ├── utils/                 # Shared utilities
 └── __tests__/             # Test files
 templates/                 # Pug (UI) & Nunjucks (notifications) templates
-public/                    # Static assets (CSS, favicon)
+public/                    # Static assets (generated CSS, favicon)
 ```
 
 ### Testing

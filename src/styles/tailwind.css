@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* Brand design tokens used across the Sparkleft UI. */
+@theme {
+  --color-brand-start: #667eea;
+  --color-brand-end: #764ba2;
+  --color-brand-accent: #43cea2;
+  --color-brand-accent-end: #185a9d;
+
+  --gradient-brand: linear-gradient(135deg, var(--color-brand-start) 0%, var(--color-brand-end) 100%);
+  --gradient-muted: linear-gradient(135deg, #aaa 0%, #888 100%);
+  --gradient-accent: linear-gradient(135deg, var(--color-brand-accent) 0%, var(--color-brand-accent-end) 100%);
+}
+
+@layer base {
+  * {
+    @apply m-0 box-border p-0;
+  }
+
+  body {
+    @apply flex min-h-screen flex-row flex-wrap items-center justify-center gap-5 p-5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--gradient-brand);
+  }
+
+  h1 {
+    @apply mb-2.5 text-center text-[28px] text-[#333];
+  }
+
+  h2 {
+    @apply m-2.5;
+  }
+
+  input[type="text"] {
+    @apply mb-4 h-[60px] rounded-lg bg-[#f7f7fa] px-4 py-3 text-base text-[#333];
+    border: 2px solid var(--color-brand-end);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--color-brand-start);
+  }
+
+  button {
+    @apply h-[60px] cursor-pointer rounded-lg border-none px-5 py-4 text-left text-base font-medium text-white;
+    background: var(--gradient-brand);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+}
+
+@layer components {
+  .container {
+    @apply flex w-full max-w-[600px] flex-col items-center rounded-xl bg-white p-10;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .subtitle {
+    @apply mb-[30px] text-center text-sm text-[#666];
+  }
+
+  .subtitle a {
+    @apply text-brand-start no-underline;
+  }
+
+  .subtitle a:hover {
+    @apply underline;
+  }
+
+  .version {
+    @apply mb-5 text-center text-xs text-[#999];
+  }
+
+  .categories {
+    @apply mb-5 flex flex-wrap justify-between gap-3;
+  }
+
+  .items {
+    @apply mb-5 flex flex-wrap justify-between gap-3;
+  }
+
+  .category-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .category-btn:active {
+    transform: translateY(0);
+  }
+
+  .no-categories {
+    @apply px-5 py-10 text-center text-[#999];
+  }
+
+  .info-list {
+    @apply mt-5 flex w-full flex-col gap-3.5;
+  }
+
+  .info-row {
+    @apply flex items-center justify-between pb-2.5 text-[15px];
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .info-label {
+    @apply text-xs font-semibold uppercase text-[#888];
+    letter-spacing: 0.05em;
+  }
+
+  .info-value {
+    @apply text-[#333];
+  }
+
+  .info-value a {
+    @apply break-all text-brand-start no-underline;
+  }
+
+  .info-value a:hover {
+    @apply underline;
+  }
+
+  .status-message {
+    @apply mt-5 hidden w-full items-center gap-2.5 rounded-lg px-[18px] py-3.5 text-[15px] font-medium;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .status-message.visible {
+    @apply flex;
+  }
+
+  .status-message.success {
+    @apply bg-[#eafaf1] text-[#1a7a3e];
+    border: 1px solid #6fcf97;
+  }
+
+  .status-message.error {
+    @apply bg-[#fdf3f3] text-[#b91c1c];
+    border: 1px solid #eb5757;
+  }
+
+  .status-icon {
+    @apply shrink-0 text-xl;
+  }
+
+  .toggle-button {
+    @apply h-auto min-h-10 min-w-[150px] cursor-pointer rounded-lg border-none px-4 py-2.5 text-sm font-medium text-white;
+    background: var(--gradient-brand);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+
+  .toggle-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .toggle-button:disabled {
+    @apply opacity-60;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .toggle-button.hidden-item {
+    @apply opacity-70;
+    background: var(--gradient-muted);
+  }
+
+  .toggle-button.visible-item {
+    background: var(--gradient-brand);
+  }
+
+  .role-row {
+    @apply flex w-full flex-wrap items-center gap-3;
+  }
+
+  .role-name {
+    @apply font-medium;
+    flex: 1 1 150px;
+  }
+
+  .role-buttons {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .role-button {
+    @apply min-h-10 min-w-[110px] cursor-pointer rounded-lg border-none px-4 py-2.5 text-sm font-medium text-white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+
+  .role-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .role-button:disabled {
+    @apply opacity-60;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .role-button.unselected-item {
+    @apply opacity-70;
+    background: var(--gradient-muted);
+  }
+
+  .role-button.selected-item {
+    background: var(--gradient-accent);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    @apply px-5 py-[30px];
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
