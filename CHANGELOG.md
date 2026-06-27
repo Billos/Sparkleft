@@ -1,3 +1,5 @@
+## [2.39.3](https://github.com/Billos/Sparkleft/compare/2.39.2...2.39.3) (2026-06-27)
+
 ## [2.39.2](https://github.com/Billos/Sparkleft/compare/2.39.1...2.39.2) (2026-06-27)
 
 
