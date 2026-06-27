@@ -48,17 +48,18 @@ html(lang="en")
           - const roles = [{ key: "bills", label: "Bills", selectedId: billsBudgetId }, { key: "leftovers", label: "Leftovers", selectedId: leftoversBudgetId }]
           each role in roles
             .role-row
-              span.role-name= role.label
-              each budget in budgets
-                - const roleBudgetName = budget.attributes && budget.attributes.name
-                - const isSelected = budget.id === role.selectedId
-                button.role-button(
-                  type="button",
-                  data-token=token,
-                  data-role=role.key,
-                  data-budget-id=budget.id,
-                  class=isSelected ? "selected-item" : "unselected-item"
-                )= roleBudgetName + (isSelected ? " ✅" : "")
+              h2.role-name= role.label
+              .role-buttons
+                each budget in budgets
+                  - const roleBudgetName = budget.attributes && budget.attributes.name
+                  - const isSelected = budget.id === role.selectedId
+                  button.role-button(
+                    type="button",
+                    data-token=token,
+                    data-role=role.key,
+                    data-budget-id=budget.id,
+                    class=isSelected ? "selected-item" : "unselected-item"
+                  )= roleBudgetName + (isSelected ? " ✅" : "")
         else
           p No budgets available
     .container
@@ -147,7 +148,7 @@ html(lang="en")
           }
         }
 
-	
+        	
         const toggleButtons = document.querySelectorAll('.toggle-button')
         toggleButtons.forEach((btn) => {
           btn.addEventListener('click', async () => {
