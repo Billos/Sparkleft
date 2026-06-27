@@ -2,9 +2,9 @@ import { CategoriesService, TransactionRead, TransactionsService, TransactionTyp
 import pino from "pino"
 
 import { client } from "../../client"
-import { env } from "../../config"
 import { notifier } from "../../modules/notifiers"
 import { hiddenCategoriesKey, redis } from "../../redis"
+import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
 import { getBudgetName } from "../../utils/budgetName"
 import { getDateNow, getStartOfCurrentMonth } from "../../utils/date"
 import { bindTransactionToNotification } from "../../utils/notification"
@@ -70,7 +70,12 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       return
     }
 
-    const billsBudgetName = await getBudgetName(env.billsBudgetId)
+    const billsBudgetId = await getBudgetRoleId(BudgetRole.Bills)
+    if (!billsBudgetId) {
+      logger.error("Bills budget ID is not configured. Please set it in the environment variables or in Redis.")
+      return
+    }
+    const billsBudgetName = await getBudgetName(billsBudgetId)
     const { data: allCategories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
     const hiddenCategoriesSet = new Set(await redis.lrange(hiddenCategoriesKey, 0, -1))
     const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName && !hiddenCategoriesSet.has(name))

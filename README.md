@@ -28,6 +28,7 @@ Automatically manages budget limits, links PayPal transactions, and sends notifi
 - **Manual Import trigger** — Trigger a Firefly III Data Importer job on demand
 - **Manual Budget Sum-up trigger** — Trigger a budget summary job on demand
 - **Hidden items** — Hide unwanted budgets or categories from notification listings (persisted in Redis)
+- **Budget roles** — Designate which budget acts as the Bills and Leftovers budget (persisted in Redis)
 
 ## Architecture
 
@@ -102,8 +103,6 @@ API_TOKEN=                    # Token to protect Sparkleft endpoints
 USE_API_TOKEN=                # Set to 'false' to disable token protection (default: true)
 
 # ─── Budgets & accounts ─────────────────────────────────
-BILLS_BUDGET_ID=              # ID of the bills budget in Firefly III
-LEFTOVERS_BUDGET_ID=          # ID of the leftovers budget in Firefly III
 ASSET_ACCOUNT_ID=             # ID of the main asset account
 
 # ─── Notifications ───────────────────────────────────────
@@ -177,21 +176,22 @@ A Redis instance must be reachable at the URL specified in `REDIS_URL`.
 
 All endpoints are protected by the `API_TOKEN` when `USE_API_TOKEN` is enabled (default).
 
-| Method | Endpoint                                | Description                                           |
-| ------ | --------------------------------------- | ----------------------------------------------------- |
-| `GET`  | `/about`                                | Application info page                                 |
-| `GET`  | `/control`                              | Dashboard to trigger jobs and toggle hidden items     |
-| `GET`  | `/budget-sumup`                         | Budget summary page                                   |
-| `POST` | `/budget-sumup`                         | Trigger a budget sum-up job                           |
-| `GET`  | `/autoimport`                           | Auto-import page                                      |
-| `POST` | `/autoimport`                           | Trigger an auto-import job                            |
-| `GET`  | `/transaction/:id/categories`           | Category selection UI for a transaction               |
-| `GET`  | `/transaction/:id/category/:categoryId` | Assign a category to a transaction                    |
-| `GET`  | `/transaction/:id/newCategory?name=X`   | Create and assign a new category                      |
-| `GET`  | `/transaction/:id/budget/:budgetId`     | Assign a budget to a transaction                      |
-| `GET`  | `/hide-toggle/category/:name`           | Toggle visibility of a category                       |
-| `GET`  | `/hide-toggle/budget/:name`             | Toggle visibility of a budget                         |
-| `POST` | `/webhook`                              | Firefly III webhook receiver (HMAC SHA3-256 verified) |
+| Method | Endpoint                                | Description                                                               |
+| ------ | --------------------------------------- | ------------------------------------------------------------------------- |
+| `GET`  | `/about`                                | Application info page                                                     |
+| `GET`  | `/control`                              | Dashboard to trigger jobs and toggle hidden items                         |
+| `GET`  | `/budget-sumup`                         | Budget summary page                                                       |
+| `POST` | `/budget-sumup`                         | Trigger a budget sum-up job                                               |
+| `GET`  | `/autoimport`                           | Auto-import page                                                          |
+| `POST` | `/autoimport`                           | Trigger an auto-import job                                                |
+| `GET`  | `/transaction/:id/categories`           | Category selection UI for a transaction                                   |
+| `GET`  | `/transaction/:id/category/:categoryId` | Assign a category to a transaction                                        |
+| `GET`  | `/transaction/:id/newCategory?name=X`   | Create and assign a new category                                          |
+| `GET`  | `/transaction/:id/budget/:budgetId`     | Assign a budget to a transaction                                          |
+| `GET`  | `/hide-toggle/category/:name`           | Toggle visibility of a category                                           |
+| `GET`  | `/hide-toggle/budget/:name`             | Toggle visibility of a budget                                             |
+| `POST` | `/config/budget-role/:role/:budgetId`   | Set/clear the Bills or Leftovers budget (`role` = `bills` \| `leftovers`) |
+| `POST` | `/webhook`                              | Firefly III webhook receiver (HMAC SHA3-256 verified)                     |
 
 ## Webhook setup
 

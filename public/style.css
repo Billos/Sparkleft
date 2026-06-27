@@ -220,3 +220,43 @@ input[type="text"]:focus {
 .toggle-button.visible-item {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
+.role-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.role-name {
+  flex: 1 1 150px;
+  font-weight: 500;
+}
+.role-button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 40px;
+  min-width: 110px;
+}
+.role-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.role-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.role-button.unselected-item {
+  background: linear-gradient(135deg, #aaa 0%, #888 100%);
+  opacity: 0.7;
+}
+.role-button.selected-item {
+  background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+}

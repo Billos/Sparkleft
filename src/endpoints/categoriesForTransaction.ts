@@ -3,7 +3,7 @@ import { Request, Response } from "express"
 import pino from "pino"
 
 import { client } from "../client"
-import { env } from "../config"
+import { BudgetRole, getBudgetRoleId } from "../utils/budgetConfig"
 import { getBudgetName } from "../utils/budgetName"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
@@ -17,7 +17,11 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
   const { data: allCategories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
 
   // Filter out hidden categories
-  const billsBudgetName = await getBudgetName(env.billsBudgetId)
+  const billsBudgetId = await getBudgetRoleId(BudgetRole.Bills)
+  if (!billsBudgetId) {
+    throw new Error("Bills budget ID is not configured. Please set it in the environment variables or in Redis.")
+  }
+  const billsBudgetName = await getBudgetName(billsBudgetId)
   const categories = allCategories.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
   const {

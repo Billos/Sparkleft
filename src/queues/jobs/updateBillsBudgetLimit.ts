@@ -2,7 +2,7 @@ import { BillsService, BudgetLimitStore, BudgetsService } from "@billos/firefly-
 import pino from "pino"
 
 import { client } from "../../client"
-import { env } from "../../config"
+import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
@@ -45,8 +45,9 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
   override readonly startDelay = 15
 
   async run(): Promise<void> {
-    if (!env.billsBudgetId) {
-      logger.warn("Bills budget name is not set in environment variables, skipping updateBillsBudgetLimit job")
+    const billsBudgetId = await getBudgetRoleId(BudgetRole.Bills)
+    if (!billsBudgetId) {
+      logger.warn("Bills budget ID is not set, skipping updateBillsBudgetLimit job")
       return
     }
 
@@ -58,7 +59,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
     const { data: existingLimits } = await BudgetsService.listBudgetLimitByBudget({
       client,
-      path: { id: env.billsBudgetId },
+      path: { id: billsBudgetId },
       query: { start, end },
     })
 
@@ -68,7 +69,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
     const body: BudgetLimitStore = {
       amount: total.toString(),
-      budget_id: env.billsBudgetId,
+      budget_id: billsBudgetId,
       start,
       end,
       fire_webhooks: false,
@@ -76,7 +77,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
 
     if (existingLimits.length === 0) {
       logger.info("There are no limits for the bills budget, creating budget limit")
-      await BudgetsService.storeBudgetLimit({ client, path: { id: env.billsBudgetId }, body })
+      await BudgetsService.storeBudgetLimit({ client, path: { id: billsBudgetId }, body })
       return
     }
     const [limit] = existingLimits
@@ -87,7 +88,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
     }
 
     try {
-      await BudgetsService.updateBudgetLimit({ client, path: { id: env.billsBudgetId, limitId: limit.id }, body })
+      await BudgetsService.updateBudgetLimit({ client, path: { id: billsBudgetId, limitId: limit.id }, body })
     } catch (err) {
       logger.error({ err }, "Error updating bills budget limit:")
     }
