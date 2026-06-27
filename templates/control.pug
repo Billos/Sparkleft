@@ -45,26 +45,20 @@ html(lang="en")
       .subtitle Choose which budgets act as the Bills and Leftovers budgets
       .items
         if budgets && budgets.length > 0
-          each budget in budgets
-            - const roleBudgetName = budget.attributes && budget.attributes.name
-            - const isBills = budget.id === billsBudgetId
-            - const isLeftovers = budget.id === leftoversBudgetId
+          - const roles = [{ key: "bills", label: "Bills", selectedId: billsBudgetId }, { key: "leftovers", label: "Leftovers", selectedId: leftoversBudgetId }]
+          each role in roles
             .role-row
-              span.role-name= roleBudgetName
-              button.role-button(
-                type="button",
-                data-token=token,
-                data-role="bills",
-                data-budget-id=budget.id,
-                class=isBills ? "selected-item" : "unselected-item"
-              )= isBills ? "Bills ✅" : "Bills"
-              button.role-button(
-                type="button",
-                data-token=token,
-                data-role="leftovers",
-                data-budget-id=budget.id,
-                class=isLeftovers ? "selected-item" : "unselected-item"
-              )= isLeftovers ? "Leftovers ✅" : "Leftovers"
+              span.role-name= role.label
+              each budget in budgets
+                - const roleBudgetName = budget.attributes && budget.attributes.name
+                - const isSelected = budget.id === role.selectedId
+                button.role-button(
+                  type="button",
+                  data-token=token,
+                  data-role=role.key,
+                  data-budget-id=budget.id,
+                  class=isSelected ? "selected-item" : "unselected-item"
+                )= roleBudgetName + (isSelected ? " ✅" : "")
         else
           p No budgets available
     .container
