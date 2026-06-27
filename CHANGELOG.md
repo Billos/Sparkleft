@@ -1,3 +1,10 @@
+## [2.39.1](https://github.com/Billos/Sparkleft/compare/2.39.0...2.39.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* Review Budget Role UI ([#92](https://github.com/Billos/Sparkleft/issues/92)) ([2718676](https://github.com/Billos/Sparkleft/commit/2718676d92a8068fb759ea88bc91a3af4fee4113))
+
 # [2.39.0](https://github.com/Billos/Sparkleft/compare/2.38.1...2.39.0) (2026-06-27)
 
 
