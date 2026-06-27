@@ -24,7 +24,7 @@ export class SetBudgetForTransactionJob extends EndpointJob {
       const messageId = await notifier.getMessageId("BudgetMessageId", id)
       await unbindTransactionToNotification(id, "BudgetMessageId", messageId)
       await notifier.deleteMessage(messageId)
-    } catch (error) {
+    } catch {
       logger.error("No notifier message to delete for transaction %s", id)
     }
 

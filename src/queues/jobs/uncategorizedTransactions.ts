@@ -41,7 +41,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
     logger.info("Checking that transaction %s exists", id)
     try {
       await TransactionsService.getTransaction({ client, path: { id } })
-    } catch (error) {
+    } catch {
       logger.error("Transaction %s does not exist", id)
       return
     }
