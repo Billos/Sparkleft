@@ -6,7 +6,7 @@ import { redis as connection, hiddenBudgetsKey } from "../redis"
 const logger = pino()
 
 export async function hideBudget(req: Request<{ budgetName: string }>, res: Response) {
-  const { budgetName: budgetName } = req.params
+  const { budgetName } = req.params
   logger.info("=================================== Hiding toggle budget ===================================")
   const hiddenBudgets = await connection.lrange(hiddenBudgetsKey, 0, -1)
   const isBudgetHidden = hiddenBudgets.includes(budgetName)

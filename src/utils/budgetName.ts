@@ -6,7 +6,7 @@ export async function getBudgetName(id: string): Promise<string | null> {
   try {
     const { data: budget } = await BudgetsService.getBudget({ client, path: { id } })
     return budget.attributes.name
-  } catch (error) {
+  } catch {
     return null
   }
 }

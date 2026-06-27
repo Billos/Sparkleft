@@ -11,7 +11,7 @@ export async function AssertTransactionExistsMiddleware(req: Request<{ transacti
   const { transactionId } = req.params
   try {
     await TransactionsService.getTransaction({ client, path: { id: transactionId } })
-  } catch (err) {
+  } catch {
     logger.error("Transaction not found for ID %s", transactionId)
     return res.status(404).send("Transaction not found")
   }

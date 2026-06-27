@@ -24,7 +24,7 @@ export class SetCategoryForTransactionJob extends EndpointJob {
       const messageId = await notifier.getMessageId("CategoryMessageId", id)
       await unbindTransactionToNotification(id, "CategoryMessageId", messageId)
       await notifier.deleteMessage(messageId)
-    } catch (error) {
+    } catch {
       logger.error("No notifier message to delete for transaction %s", id)
     }
 
