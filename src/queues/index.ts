@@ -1,6 +1,5 @@
 import { AboutService } from "@billos/firefly-iii-sdk"
 import { DelayedError, Job, Worker } from "bullmq"
-import { DateTime } from "luxon"
 import pino from "pino"
 
 import { client } from "../client"
@@ -13,7 +12,7 @@ import { BudgetJobArgs, EndpointJobArgs, isBudgetJob, isEndpointJob, isTransacti
 
 const logger = pino()
 
-const startedAt = new Map<string, DateTime>()
+const startedAt = new Map<string, Date>()
 
 const iterable: [string, BaseJob][][] = [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => {
   if (j.cronPattern) {
@@ -32,9 +31,9 @@ let worker: Worker<QueueArgs> | null = null
 function logJobDuration(success: boolean, jobId: string, name: string) {
   const startTime = startedAt.get(jobId)
   const successStr = success ? "completed" : "failed"
-  const endTime = DateTime.now()
+  const endTime = Date.now()
   if (startTime) {
-    const duration = endTime.diff(startTime, "seconds").seconds
+    const duration = (endTime - startTime.getTime()) / 1000
     logger.info(
       "******************************************************************************** Job(%s) %s %s in %d seconds",
       jobId,
@@ -52,13 +51,14 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
   const retryCount = (job.data.retryCount || 0) + 1
   const jobInstance = jobMap.get(job.data.job)
   const delayMs = jobInstance ? jobInstance.getRetryDelay(retryCount) : retryCount * 60 * 1000
-  const delayed = DateTime.now().plus({ milliseconds: delayMs })
-  const timestamp = delayed.toMillis()
+  const delayed = new Date(Date.now() + delayMs)
+  const timestamp = delayed.getTime()
   const title = err.message
+  const [until] = delayed.toTimeString().split(" ")
   const message = [
     `Job **${job.data.job}** (${job.id}) failed with error ${err.message}.`,
     `Attempt: ${retryCount}`,
-    `Delaying until ${delayed.toISOTime()} with data ${JSON.stringify(job.data)}.`,
+    `Delaying until ${until} with data ${JSON.stringify(job.data)}.`,
   ].join("\n")
   const delayedMessageId = await notifier.sendMessage(title, message)
 
@@ -66,7 +66,7 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
     "Delaying job %s (%s) until %s - Attempt: %d - Error: %s",
     job.id,
     job.name,
-    delayed.toISO(),
+    delayed.toISOString(),
     retryCount,
     err?.message ?? "Unknown error",
   )
@@ -136,7 +136,7 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     }
 
     logger.info("******************************************************************************** Job(%s) %s started", id, name)
-    startedAt.set(id, DateTime.now())
+    startedAt.set(id, new Date())
     if (data.delayedMessageId) {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
       await notifier.deleteMessage(data.delayedMessageId)

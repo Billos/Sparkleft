@@ -72,7 +72,6 @@ Sparkleft is split into three services communicating via a Redis-backed job queu
 | Firefly III client | `@billos/firefly-iii-sdk`          |
 | Templates          | Pug (UI), Nunjucks (notifications) |
 | Logging            | Pino                               |
-| Date handling      | Luxon                              |
 | Testing            | Vitest + v8 coverage               |
 | CI/CD              | Semantic Release, Docker Hub       |
 | Package manager    | Yarn 4                             |

@@ -3,7 +3,7 @@ import { AccountsService, BudgetsService } from "@billos/firefly-iii-sdk"
 import { client } from "../../client"
 import { env } from "../../config"
 import { hiddenBudgetsKey, redis } from "../../redis"
-import { getDateNow, getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
+import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
 import { SimpleJob } from "./BaseJob"
 
@@ -27,8 +27,8 @@ export class BudgetSumUpJob extends SimpleJob {
       BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
 
-    const today = getDateNow().day
-    const lastDayOfMonth = getDateNow().endOf("month").day
+    const today = new Date().getDate()
+    const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
     const remainingDays = lastDayOfMonth - today + 1 // Include today in the count of remaining days
 
     const allInsights: BudgetSumUpData[] = []

@@ -3,7 +3,6 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import { getDateNow } from "../../utils/date"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
@@ -24,8 +23,9 @@ export class AutoImportJob extends SimpleJob {
   override readonly cronPattern = env.autoImportCron
 
   private async getExpensesAndIncome(): Promise<AccountTransactions> {
-    const start = getDateNow().minus({ days: 7 }).toISODate()!
-    const end = getDateNow().toISODate()!
+    const now = new Date()
+    const [start] = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7).toISOString().split("T")
+    const [end] = now.toISOString().split("T")
 
     const { data: transactions } = await AccountsService.listTransactionByAccount({
       client,
