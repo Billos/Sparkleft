@@ -2,7 +2,7 @@ import pino from "pino"
 
 import { notifier } from "../../modules/notifiers"
 import { redis } from "../../redis"
-import { renderTemplate, TemplateContext } from "../../utils/renderTemplate"
+import { renderTemplate, TemplateContextMap, TemplateName } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
 
 const logger = pino()
@@ -48,7 +48,7 @@ export abstract class BaseJob {
     }
   }
 
-  async sendUniqueNotification(title: string, template: string, data: TemplateContext): Promise<void> {
+  async sendUniqueNotification<T extends TemplateName>(title: string, template: T, data: TemplateContextMap[T]): Promise<void> {
     if (!this.uniqueNotificationKey) {
       throw new Error("uniqueNotificationKey is not set for this job")
     }

@@ -4,6 +4,7 @@ import { client } from "../../client"
 import { env } from "../../config"
 import DynamicConfig, { AConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
+import { TemplateName } from "../../utils/renderTemplate"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
 import { SimpleJob } from "./BaseJob"
 
@@ -65,6 +66,6 @@ export class BudgetSumUpJob extends SimpleJob {
     const accountBalance = assetAccount.data.attributes.current_balance || "0"
     const accountCurrency = assetAccount.data.attributes.currency_symbol || "€"
 
-    await this.sendUniqueNotification("Budgets Sum Up", "budget-sumup.njk", { insights, accountBalance, accountCurrency })
+    await this.sendUniqueNotification("Budgets Sum Up", TemplateName.BudgetSumUp, { insights, accountBalance, accountCurrency })
   }
 }

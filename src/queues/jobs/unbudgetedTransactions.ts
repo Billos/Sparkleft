@@ -6,7 +6,7 @@ import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { notifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
 import { bindTransactionToNotification } from "../../utils/notification"
-import { renderTemplate } from "../../utils/renderTemplate"
+import { renderTemplate, TemplateName } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue, addTransactionJobToQueue } from "../utils"
 import { TransactionJob } from "./BaseJob"
 import { CheckBudgetLimitJob } from "./checkBudgetLimit"
@@ -62,7 +62,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
     const { data: allBudgets } = await BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } })
     const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
-    const msg = renderTemplate("unbudgeted-transaction.njk", {
+    const msg = renderTemplate(TemplateName.UnbudgetedTransaction, {
       transaction,
       transactionId: id,
       budgets,

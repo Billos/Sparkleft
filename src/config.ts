@@ -1,25 +1,67 @@
 const env = {
-  port: process.env.PORT || 3000,
-  fireflyUrl: process.env.FIREFLY_III_URL,
-  fireflyToken: process.env.FIREFLY_III_TOKEN,
-  fireflyCliToken: process.env.FIREFLY_III_CLI_TOKEN,
-  fireflyPaypalAccountToken: process.env.FIREFLY_III_PAYPAL_ACCOUNT_TOKEN,
-  fireflyWebhookSecret: process.env.FIREFLY_III_WEBHOOK_SECRET,
-  apiToken: process.env.API_TOKEN,
-  useApiToken: process.env.USE_API_TOKEN !== "false",
-  assetAccountId: process.env.ASSET_ACCOUNT_ID || "",
-  discordWebhook: process.env.DISCORD_WEBHOOK,
-  gotifyUrl: process.env.GOTIFY_URL,
-  gotifyApplicationId: process.env.GOTIFY_APPLICATION_ID,
-  gotifyUserToken: process.env.GOTIFY_USER_TOKEN,
-  gotifyToken: process.env.GOTIFY_TOKEN || "",
-  serviceUrl: process.env.SERVICE_URL,
-  importerUrl: process.env.IMPORTER_URL,
-  importDirectory: process.env.IMPORT_DIRECTORY,
-  autoImportSecret: process.env.AUTO_IMPORT_SECRET,
-  autoImportCron: process.env.AUTO_IMPORT_CRON,
-  budgetSumUpCron: process.env.BUDGET_SUM_UP_CRON,
-  redisUrl: process.env.REDIS_URL || "",
+  get port() {
+    return process.env.PORT || 3000
+  },
+  get fireflyUrl() {
+    return process.env.FIREFLY_III_URL
+  },
+  get fireflyToken() {
+    return process.env.FIREFLY_III_TOKEN
+  },
+  get fireflyCliToken() {
+    return process.env.FIREFLY_III_CLI_TOKEN
+  },
+  get fireflyPaypalAccountToken() {
+    return process.env.FIREFLY_III_PAYPAL_ACCOUNT_TOKEN
+  },
+  get fireflyWebhookSecret() {
+    return process.env.FIREFLY_III_WEBHOOK_SECRET
+  },
+  get apiToken() {
+    return process.env.API_TOKEN
+  },
+  get useApiToken() {
+    return process.env.USE_API_TOKEN !== "false"
+  },
+  get assetAccountId() {
+    return process.env.ASSET_ACCOUNT_ID || ""
+  },
+  get discordWebhook() {
+    return process.env.DISCORD_WEBHOOK
+  },
+  get gotifyUrl() {
+    return process.env.GOTIFY_URL
+  },
+  get gotifyApplicationId() {
+    return process.env.GOTIFY_APPLICATION_ID
+  },
+  get gotifyUserToken() {
+    return process.env.GOTIFY_USER_TOKEN
+  },
+  get gotifyToken() {
+    return process.env.GOTIFY_TOKEN || ""
+  },
+  get serviceUrl() {
+    return process.env.SERVICE_URL
+  },
+  get importerUrl() {
+    return process.env.IMPORTER_URL
+  },
+  get importDirectory() {
+    return process.env.IMPORT_DIRECTORY
+  },
+  get autoImportSecret() {
+    return process.env.AUTO_IMPORT_SECRET
+  },
+  get autoImportCron() {
+    return process.env.AUTO_IMPORT_CRON
+  },
+  get budgetSumUpCron() {
+    return process.env.BUDGET_SUM_UP_CRON
+  },
+  get redisUrl() {
+    return process.env.REDIS_URL as string
+  },
 }
 
 if (!env.redisUrl) {

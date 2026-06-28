@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
+import { renderTemplate, TemplateName } from "../utils/renderTemplate.js"
+
 describe("renderTemplate auto-import.njk", () => {
   beforeEach(() => {
     vi.stubEnv("FIREFLY_III_URL", "http://firefly:8080")
@@ -13,16 +15,29 @@ describe("renderTemplate auto-import.njk", () => {
   })
 
   it("includes a link to the control page URL", async () => {
-    const { renderTemplate } = await import("../utils/renderTemplate.js")
-    const result = renderTemplate("auto-import.njk", { importDirectory: "/imports" })
+    const result = renderTemplate(TemplateName.AutoImport, {
+      accountBalance: "100.00",
+      accountCurrency: "€",
+      diffExpenses: 0,
+      diffDeposits: 0,
+      diffTransfers: 0,
+      deposits: [],
+      expenses: [],
+      transfers: [],
+    })
 
     expect(result).toContain("http://sparkleft:3000/control?api_token=myapitoken")
   })
 
   it("lists imported transfers when diffTransfers is positive", async () => {
-    const { renderTemplate } = await import("../utils/renderTemplate.js")
-    const result = renderTemplate("auto-import.njk", {
+    const result = renderTemplate(TemplateName.AutoImport, {
+      accountBalance: "100.00",
+      accountCurrency: "€",
+      diffExpenses: 0,
+      diffDeposits: 0,
       diffTransfers: 1,
+      deposits: [],
+      expenses: [],
       transfers: [
         {
           id: "1",
@@ -36,8 +51,16 @@ describe("renderTemplate auto-import.njk", () => {
   })
 
   it("shows no transfers message when diffTransfers is zero", async () => {
-    const { renderTemplate } = await import("../utils/renderTemplate.js")
-    const result = renderTemplate("auto-import.njk", { importDirectory: "/imports" })
+    const result = renderTemplate(TemplateName.AutoImport, {
+      accountBalance: "100.00",
+      accountCurrency: "€",
+      diffExpenses: 0,
+      diffDeposits: 0,
+      diffTransfers: 0,
+      deposits: [],
+      expenses: [],
+      transfers: [],
+    })
 
     expect(result).toContain("No new transfers imported.")
   })

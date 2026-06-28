@@ -23,6 +23,7 @@ vi.mock("../modules/notifiers", () => ({
 }))
 vi.mock("../utils/renderTemplate", () => ({
   renderTemplate: vi.fn().mockReturnValue("mock message"),
+  TemplateName: { AutoImport: "auto-import.njk" },
 }))
 vi.mock("../queues/queue", () => ({
   getQueue: vi.fn(),
