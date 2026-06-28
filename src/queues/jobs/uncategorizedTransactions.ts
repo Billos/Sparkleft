@@ -6,7 +6,7 @@ import { notifier } from "../../modules/notifiers"
 import { hiddenCategoriesKey, redis } from "../../redis"
 import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
 import { getBudgetName } from "../../utils/budgetName"
-import { getDateNow, getStartOfCurrentMonth } from "../../utils/date"
+import { getStartOfCurrentMonth } from "../../utils/date"
 import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate } from "../../utils/renderTemplate"
 import { addTransactionJobToQueue } from "../utils"
@@ -108,7 +108,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
     if (notifier) {
       const start = getStartOfCurrentMonth()
-      const end = getDateNow().toISODate()
+      const [end] = new Date().toISOString().split("T")
       if (!end) {
         logger.error("Failed to get current date in ISO format")
         return

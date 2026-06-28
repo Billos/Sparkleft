@@ -1,10 +1,8 @@
 import { TransactionsService, TransactionTypeProperty } from "@billos/firefly-iii-sdk"
-import { DateTime } from "luxon"
 import pino from "pino"
 
 import { client, paypalClient } from "../../client"
 import { env } from "../../config"
-import { getDateNow } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
 
@@ -21,8 +19,9 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
       return
     }
     // StartDate and EndDate are today - 20 days to today
-    const start = getDateNow().minus({ days: 20 }).toISODate()
-    const end = getDateNow().toISODate()
+    const now = new Date()
+    const [start] = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 20).toISOString().split("T")
+    const [end] = now.toISOString().split("T")
 
     if (!start || !end) {
       logger.error("Could not get start or end date for LinkPaypalTransactionsJob, skipping job")
@@ -76,9 +75,10 @@ export class LinkPaypalTransactionsJob extends SimpleJob {
         }
 
         // Date difference should be less than 5 days
-        const ffTransactionDate = DateTime.fromISO(ffTransaction.date)
-        const paypalTransactionDate = DateTime.fromISO(transaction.date)
-        if (ffTransactionDate.diff(paypalTransactionDate, "days").days > 5) {
+        const ffTransactionDate = new Date(ffTransaction.date).getTime()
+        const paypalTransactionDate = new Date(transaction.date).getTime()
+        const oneDay = 1000 * 60 * 60 * 24
+        if ((ffTransactionDate - paypalTransactionDate) / oneDay > 5) {
           continue
         }
 
