@@ -11,7 +11,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
+import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { getQueue } from "../queue"
 import { addJobToQueue } from "../utils"
@@ -92,7 +92,7 @@ export class UpdateLeftoverBudgetLimitJob extends SimpleJob {
       BudgetsService.listBudget({ client, query: { page: 1, limit: 50, start, end } }),
       BudgetsService.listBudgetLimit({ client, query: { start, end } }),
     ])
-    const leftoversBudgetId = await getBudgetRoleId(BudgetRole.Leftovers)
+    const leftoversBudgetId = await DynamicConfig.get(VConfig.RoleBudgetLeftoversId)
     const leftoversBudget = allBudgets.data.find(({ id }) => id === leftoversBudgetId)
     const leftOverLimit = allLimits.data.find(({ attributes: { budget_id } }) => budget_id === leftoversBudgetId)
 

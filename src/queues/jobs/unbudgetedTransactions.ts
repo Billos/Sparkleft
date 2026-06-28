@@ -2,8 +2,8 @@ import { BudgetsService, TransactionsService, TransactionTypeProperty } from "@b
 import pino from "pino"
 
 import { client } from "../../client"
+import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { notifier } from "../../modules/notifiers"
-import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
 import { getBudgetName } from "../../utils/budgetName"
 import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate } from "../../utils/renderTemplate"
@@ -53,7 +53,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
       return
     }
 
-    const billsBudgetId = await getBudgetRoleId(BudgetRole.Bills)
+    const billsBudgetId = await DynamicConfig.get(VConfig.RoleBudgetBillsId)
     if (!billsBudgetId) {
       logger.error("Bills budget ID is not configured. Please set it in the environment variables or in Redis.")
       return

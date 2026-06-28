@@ -3,7 +3,7 @@ import { Request, Response } from "express"
 import pino from "pino"
 
 import { client } from "../client"
-import { BudgetRole, getBudgetRoleId } from "../utils/budgetConfig"
+import DynamicConfig, { VConfig } from "../modules/config/dynamic"
 import { getBudgetName } from "../utils/budgetName"
 import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
@@ -17,7 +17,7 @@ export async function categoriesForTransaction(req: Request<{ transactionId: str
   const { data: allCategories } = await CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } })
 
   // Filter out hidden categories
-  const billsBudgetId = await getBudgetRoleId(BudgetRole.Bills)
+  const billsBudgetId = await DynamicConfig.get(VConfig.RoleBudgetBillsId)
   if (!billsBudgetId) {
     throw new Error("Bills budget ID is not configured. Please set it in the environment variables or in Redis.")
   }

@@ -5,8 +5,7 @@ import { BudgetsService, CategoriesService } from "@billos/firefly-iii-sdk"
 import { Request, Response } from "express"
 
 import { client } from "../client"
-import { hiddenBudgetsKey, hiddenCategoriesKey, redis } from "../redis"
-import { BudgetRole, getBudgetRoleId } from "../utils/budgetConfig"
+import DynamicConfig, { AConfig, VConfig } from "../modules/config/dynamic"
 
 const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf-8")) as { version: string }
 
@@ -21,10 +20,10 @@ export async function controlPage(req: Request, res: Response) {
   ] = await Promise.all([
     BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } }),
     CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } }),
-    redis.lrange(hiddenBudgetsKey, 0, -1),
-    redis.lrange(hiddenCategoriesKey, 0, -1),
-    getBudgetRoleId(BudgetRole.Bills),
-    getBudgetRoleId(BudgetRole.Leftovers),
+    DynamicConfig.lrange(AConfig.HiddenBudgets, 0, -1),
+    DynamicConfig.lrange(AConfig.HiddenCategories, 0, -1),
+    DynamicConfig.get(VConfig.RoleBudgetBillsId),
+    DynamicConfig.get(VConfig.RoleBudgetLeftoversId),
   ])
 
   res.render("control", {

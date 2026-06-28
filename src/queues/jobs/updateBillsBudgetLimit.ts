@@ -2,7 +2,7 @@ import { BillsService, BudgetLimitStore, BudgetsService } from "@billos/firefly-
 import pino from "pino"
 
 import { client } from "../../client"
-import { BudgetRole, getBudgetRoleId } from "../../utils/budgetConfig"
+import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { addJobToQueue } from "../utils"
 import { SimpleJob } from "./BaseJob"
@@ -45,7 +45,7 @@ export class UpdateBillsBudgetLimitJob extends SimpleJob {
   override readonly startDelay = 15
 
   async run(): Promise<void> {
-    const billsBudgetId = await getBudgetRoleId(BudgetRole.Bills)
+    const billsBudgetId = await DynamicConfig.get(VConfig.RoleBudgetBillsId)
     if (!billsBudgetId) {
       logger.warn("Bills budget ID is not set, skipping updateBillsBudgetLimit job")
       return
