@@ -7,7 +7,7 @@ import { notifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
 import { getStartOfCurrentMonth } from "../../utils/date"
 import { bindTransactionToNotification } from "../../utils/notification"
-import { renderTemplate } from "../../utils/renderTemplate"
+import { renderTemplate, TemplateName } from "../../utils/renderTemplate"
 import { addTransactionJobToQueue } from "../utils"
 import { TransactionJob } from "./BaseJob"
 
@@ -84,7 +84,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       categoriesGroups.push(categories.slice(i, i + groupSize))
     }
 
-    const msg = renderTemplate("uncategorized-transaction.njk", {
+    const msg = renderTemplate(TemplateName.UncategorizedTransaction, {
       transaction,
       transactionId: id,
       categories,

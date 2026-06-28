@@ -5,7 +5,7 @@ import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { notifier } from "../../modules/notifiers"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
-import { renderTemplate } from "../../utils/renderTemplate"
+import { renderTemplate, TemplateName } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue } from "../utils"
 import { BudgetJob } from "./BaseJob"
 
@@ -82,7 +82,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     }
 
     const title = "Warning"
-    const message = renderTemplate("budget-overspent.njk", {
+    const message = renderTemplate(TemplateName.BudgetOverspent, {
       budgetName: budget.attributes.name,
       spent,
       limit,

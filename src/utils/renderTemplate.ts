@@ -6,26 +6,63 @@ import nunjucks from "nunjucks"
 import { env } from "../config"
 import { BudgetSumUpData } from "./types/budgetSumUp"
 
-export type TemplateContext = {
-  insights?: BudgetSumUpData[]
-  transaction?: TransactionSplit
-  transactionId?: string
-  categories?: CategoryRead[]
-  categoriesGroups?: CategoryRead[][]
-  budgets?: BudgetRead[]
-  budgetName?: string
-  spent?: number
-  limit?: number
-  currencySymbol?: string
-  importDirectory?: string
-  diffExpenses?: number
-  diffDeposits?: number
-  diffTransfers?: number
-  expenses?: TransactionRead[]
-  deposits?: TransactionRead[]
-  transfers?: TransactionRead[]
-  accountBalance?: string
-  accountCurrency?: string
+// Available notification templates. Each value matches a file in
+// templates/notifications. Using an enum keeps template references type-safe
+// and avoids stringly-typed template names spread across the codebase.
+export enum TemplateName {
+  AutoImport = "auto-import.njk",
+  BudgetOverspent = "budget-overspent.njk",
+  BudgetSumUp = "budget-sumup.njk",
+  UnbudgetedTransaction = "unbudgeted-transaction.njk",
+  UncategorizedTransaction = "uncategorized-transaction.njk",
+}
+
+// Each template has its own context shape describing exactly the variables it
+// expects. The TemplateContextMap binds every TemplateName to its context, so
+// renderTemplate can enforce that callers pass the right data per template.
+export type AutoImportContext = {
+  diffExpenses: number
+  diffDeposits: number
+  diffTransfers: number
+  expenses: TransactionRead[]
+  deposits: TransactionRead[]
+  transfers: TransactionRead[]
+  accountBalance: string
+  accountCurrency: string
+}
+
+export type BudgetOverspentContext = {
+  budgetName: string
+  spent: number
+  limit: number
+  currencySymbol: string
+}
+
+export type BudgetSumUpContext = {
+  insights: BudgetSumUpData[]
+  accountBalance: string
+  accountCurrency: string
+}
+
+export type UnbudgetedTransactionContext = {
+  transaction: TransactionSplit
+  transactionId: string
+  budgets: BudgetRead[]
+}
+
+export type UncategorizedTransactionContext = {
+  transaction: TransactionSplit
+  transactionId: string
+  categories: CategoryRead[]
+  categoriesGroups: CategoryRead[][]
+}
+
+export type TemplateContextMap = {
+  [TemplateName.AutoImport]: AutoImportContext
+  [TemplateName.BudgetOverspent]: BudgetOverspentContext
+  [TemplateName.BudgetSumUp]: BudgetSumUpContext
+  [TemplateName.UnbudgetedTransaction]: UnbudgetedTransactionContext
+  [TemplateName.UncategorizedTransaction]: UncategorizedTransactionContext
 }
 
 // Resolve the templates/notifications directory relative to this source file.
@@ -47,11 +84,6 @@ const njkEnv = nunjucks.configure(templatesDir, {
 // Only values that templates legitimately need are included; sensitive credentials
 // (fireflyToken, webhookSecret, redis password, etc.) are intentionally excluded.
 // Templates can reference these values as {{ env.fireflyUrl }}, {{ env.apiToken }}, etc.
-njkEnv.addGlobal("env", {
-  fireflyUrl: env.fireflyUrl,
-  serviceUrl: env.serviceUrl,
-  apiToken: env.apiToken,
-})
 
 njkEnv.addFilter("toFixed", (value: number | string, decimals: number) => {
   const num = parseFloat(String(value))
@@ -105,6 +137,6 @@ njkEnv.addFilter("TransactionSummary", ({ attributes }: TransactionRead) => {
   }
 })
 
-export function renderTemplate(templateName: string, context: TemplateContext): string {
+export function renderTemplate<T extends TemplateName>(templateName: T, context: TemplateContextMap[T]): string {
   return njkEnv.render(templateName, context).trim()
 }

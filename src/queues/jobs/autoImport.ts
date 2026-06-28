@@ -3,6 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
+import { TemplateName } from "../../utils/renderTemplate"
 import { SimpleJob } from "./BaseJob"
 
 const logger = pino()
@@ -89,7 +90,7 @@ export class AutoImportJob extends SimpleJob {
 
     const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
 
-    await this.sendUniqueNotification("Auto Import", "auto-import.njk", {
+    await this.sendUniqueNotification("Auto Import", TemplateName.AutoImport, {
       diffExpenses,
       diffDeposits,
       diffTransfers,
