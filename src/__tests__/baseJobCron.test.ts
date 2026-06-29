@@ -145,6 +145,7 @@ describe("BaseJob - cron scheduler", () => {
 
     await new ConfigCronJob().rescheduleCronJob()
 
+    // Scheduler key matches the one used by scheduleCronJob/upsertJobScheduler ("<id>-repeat-repeat").
     expect(removeJobScheduler).toHaveBeenCalledWith("reschedule-job-empty-repeat-repeat")
     expect(upsertJobScheduler).not.toHaveBeenCalled()
   })

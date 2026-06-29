@@ -57,12 +57,21 @@ export abstract class BaseJob {
     }
   }
 
+  private get repeatJobId(): string {
+    return `${this.id}-repeat`
+  }
+
+  // The scheduler key BullMQ registers the repeatable job under.
+  private get schedulerId(): string {
+    return `${this.repeatJobId}-repeat`
+  }
+
   private async scheduleCronJob(pattern: string): Promise<void> {
     const queue = await getQueue()
-    const id = `${this.id}-repeat`
+    const id = this.repeatJobId
     logger.info("Setting up scheduler for %s with cron '%s'", id, pattern)
     try {
-      await queue.upsertJobScheduler(`${id}-repeat`, { pattern }, { name: id, data: { job: id } })
+      await queue.upsertJobScheduler(this.schedulerId, { pattern }, { name: id, data: { job: id } })
     } catch (err) {
       logger.error({ err }, "Failed to set up scheduler for job %s", id)
     }
@@ -70,10 +79,10 @@ export abstract class BaseJob {
 
   private async removeCronJob(): Promise<void> {
     const queue = await getQueue()
-    const id = `${this.id}-repeat`
+    const id = this.repeatJobId
     logger.info("Removing scheduler for %s", id)
     try {
-      await queue.removeJobScheduler(`${id}-repeat`)
+      await queue.removeJobScheduler(this.schedulerId)
     } catch (err) {
       logger.error({ err }, "Failed to remove scheduler for job %s", id)
     }
