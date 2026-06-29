@@ -116,10 +116,6 @@ GOTIFY_USER_TOKEN=            # Gotify user token (for deleting messages)
 IMPORTER_URL=                 # URL of the Firefly III Data Importer
 IMPORT_DIRECTORY=             # Path to the import configuration directory
 AUTO_IMPORT_SECRET=           # Secret for the auto-import endpoint
-AUTO_IMPORT_CRON=             # Cron expression for scheduled auto-imports (optional)
-
-# ─── Scheduling ──────────────────────────────────────────
-BUDGET_SUM_UP_CRON=           # Cron expression for scheduled budget sum-ups (optional)
 
 # ─── Redis ───────────────────────────────────────────────
 REDIS_URL=                    # Redis connection URL (e.g. redis://redis:6379)

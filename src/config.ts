@@ -53,12 +53,6 @@ const env = {
   get autoImportSecret() {
     return process.env.AUTO_IMPORT_SECRET
   },
-  get autoImportCron() {
-    return process.env.AUTO_IMPORT_CRON
-  },
-  get budgetSumUpCron() {
-    return process.env.BUDGET_SUM_UP_CRON
-  },
   get redisUrl() {
     return process.env.REDIS_URL as string
   },

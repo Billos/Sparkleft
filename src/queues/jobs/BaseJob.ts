@@ -1,6 +1,7 @@
 import pino from "pino"
 
 import { notifier } from "../../modules/notifiers"
+import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { redis } from "../../redis"
 import { renderTemplate, TemplateContextMap, TemplateName } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
@@ -20,6 +21,8 @@ export abstract class BaseJob {
 
   readonly cronPattern?: string
 
+  readonly cronConfigKey?: VConfig
+
   getStartDelay(asap: boolean = false): number {
     if (asap) {
       return 2000 // 2 seconds
@@ -31,9 +34,17 @@ export abstract class BaseJob {
     return retryCount * this.retryDelay * 1000
   }
 
+  async resolveCronPattern(): Promise<string | undefined> {
+    if (this.cronConfigKey) {
+      return (await DynamicConfig.get(this.cronConfigKey)) ?? undefined
+    }
+    return this.cronPattern
+  }
+
   async init(): Promise<void> {
-    if (this.cronPattern) {
-      await this.scheduleCronJob(this.cronPattern)
+    const pattern = await this.resolveCronPattern()
+    if (pattern) {
+      await this.scheduleCronJob(pattern)
     }
   }
 
