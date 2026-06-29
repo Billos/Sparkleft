@@ -2,7 +2,7 @@ import crypto from "crypto"
 
 import { describe, expect, it } from "vitest"
 
-import { verifyWebhookSignature } from "../utils/webhookSecret"
+import { verifyWebhookSignature } from "../middleware/webhookSecretMiddleware"
 
 function buildSignatureHeader(rawBody: string, secret: string, timestamp = "1234567890"): string {
   const signedPayload = `${timestamp}.${rawBody}`

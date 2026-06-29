@@ -16,12 +16,12 @@ import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTra
 import { triggerAutoImport } from "./endpoints/triggerAutoImport"
 import { triggerBudgetSumUp } from "./endpoints/triggerBudgetSumUp"
 import { webhook } from "./endpoints/webhook"
+import { AssertTransactionExistsMiddleware } from "./middleware/assertTransactionExistsMiddleware"
+import { ParseBodyMiddleware } from "./middleware/parseBodyMiddleware"
+import { TokenMiddleware } from "./middleware/tokenMiddleware"
+import { TransactionResultMiddleware } from "./middleware/transactionResultMiddleware"
+import { verifyWebhookMiddleware } from "./middleware/webhookSecretMiddleware"
 import { initializeJobs } from "./queues"
-import { AssertTransactionExistsMiddleware } from "./utils/assertTransactionExistsMiddleware"
-import { ParseBodyMiddleware } from "./utils/middleware"
-import { TokenMiddleware } from "./utils/tokenMiddleware"
-import { TransactionResultMiddleware } from "./utils/transactionResultMiddleware"
-import { verifyWebhookMiddleware } from "./utils/webhookSecret"
 
 const logger = pino()
 const app = express()

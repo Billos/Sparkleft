@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-import { getTransactionShowLink } from "./getTransactionShowLink"
+import { getTransactionShowLink } from "../utils/getTransactionShowLink"
 
 export async function TransactionResultMiddleware(req: Request<{ transactionId: string }>, res: Response) {
   // Redirect to the transaction link
