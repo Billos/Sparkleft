@@ -1,7 +1,7 @@
 import pino from "pino"
 
-import { notifier } from "../../modules/notifiers"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
+import { notifier } from "../../modules/notifiers"
 import { redis } from "../../redis"
 import { renderTemplate, TemplateContextMap, TemplateName } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
@@ -48,6 +48,15 @@ export abstract class BaseJob {
     }
   }
 
+  async rescheduleCronJob(): Promise<void> {
+    const pattern = await this.resolveCronPattern()
+    if (pattern) {
+      await this.scheduleCronJob(pattern)
+    } else {
+      await this.removeCronJob()
+    }
+  }
+
   private async scheduleCronJob(pattern: string): Promise<void> {
     const queue = await getQueue()
     const id = `${this.id}-repeat`
@@ -56,6 +65,17 @@ export abstract class BaseJob {
       await queue.upsertJobScheduler(`${id}-repeat`, { pattern }, { name: id, data: { job: id } })
     } catch (err) {
       logger.error({ err }, "Failed to set up scheduler for job %s", id)
+    }
+  }
+
+  private async removeCronJob(): Promise<void> {
+    const queue = await getQueue()
+    const id = `${this.id}-repeat`
+    logger.info("Removing scheduler for %s", id)
+    try {
+      await queue.removeJobScheduler(`${id}-repeat`)
+    } catch (err) {
+      logger.error({ err }, "Failed to remove scheduler for job %s", id)
     }
   }
 

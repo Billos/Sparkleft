@@ -17,6 +17,8 @@ export async function controlPage(req: Request, res: Response) {
     hiddenCategories,
     billsBudgetId,
     leftoversBudgetId,
+    autoImportCron,
+    budgetSumUpCron,
   ] = await Promise.all([
     BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } }),
     CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } }),
@@ -24,6 +26,8 @@ export async function controlPage(req: Request, res: Response) {
     DynamicConfig.lrange(AConfig.HiddenCategories, 0, -1),
     DynamicConfig.get(VConfig.RoleBudgetBillsId),
     DynamicConfig.get(VConfig.RoleBudgetLeftoversId),
+    DynamicConfig.get(VConfig.AutoImportCron),
+    DynamicConfig.get(VConfig.BudgetSumUpCron),
   ])
 
   res.render("control", {
@@ -35,5 +39,7 @@ export async function controlPage(req: Request, res: Response) {
     hiddenCategories,
     billsBudgetId,
     leftoversBudgetId,
+    autoImportCron,
+    budgetSumUpCron,
   })
 }

@@ -110,4 +110,42 @@ describe("BaseJob - cron scheduler", () => {
 
     expect(upsertJobScheduler).not.toHaveBeenCalled()
   })
+
+  it("upserts the scheduler when rescheduling with a configured pattern", async () => {
+    const upsertJobScheduler = vi.fn().mockResolvedValue(undefined)
+    const removeJobScheduler = vi.fn().mockResolvedValue(undefined)
+    vi.mocked(getQueue).mockResolvedValue({ upsertJobScheduler, removeJobScheduler } as never)
+    vi.mocked(DynamicConfig.get).mockResolvedValue("0 9 * * *")
+
+    const { SimpleJob } = await import("../queues/jobs/BaseJob.js")
+    class ConfigCronJob extends SimpleJob {
+      readonly id = "reschedule-job"
+      override readonly cronConfigKey = VConfig.AutoImportCron
+      async run(): Promise<void> {}
+    }
+
+    await new ConfigCronJob().rescheduleCronJob()
+
+    expect(upsertJobScheduler).toHaveBeenCalledOnce()
+    expect(removeJobScheduler).not.toHaveBeenCalled()
+  })
+
+  it("removes the scheduler when rescheduling with an empty pattern", async () => {
+    const upsertJobScheduler = vi.fn().mockResolvedValue(undefined)
+    const removeJobScheduler = vi.fn().mockResolvedValue(undefined)
+    vi.mocked(getQueue).mockResolvedValue({ upsertJobScheduler, removeJobScheduler } as never)
+    vi.mocked(DynamicConfig.get).mockResolvedValue(null)
+
+    const { SimpleJob } = await import("../queues/jobs/BaseJob.js")
+    class ConfigCronJob extends SimpleJob {
+      readonly id = "reschedule-job-empty"
+      override readonly cronConfigKey = VConfig.BudgetSumUpCron
+      async run(): Promise<void> {}
+    }
+
+    await new ConfigCronJob().rescheduleCronJob()
+
+    expect(removeJobScheduler).toHaveBeenCalledWith("reschedule-job-empty-repeat-repeat")
+    expect(upsertJobScheduler).not.toHaveBeenCalled()
+  })
 })

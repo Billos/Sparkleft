@@ -25,7 +25,28 @@ html(lang="en")
           span.status-icon
           span.status-text
     .container
-      h1 Hide Toggle Budgets
+      h1 Schedules
+      .subtitle Set cron expressions for the scheduled jobs (leave empty to disable)
+      .items
+        - const schedules = [{ key: "auto-import", label: "Auto Import", value: autoImportCron }, { key: "budget-sum-up", label: "Budget Sum Up", value: budgetSumUpCron }]
+        each schedule in schedules
+          .cron-row
+            h2.cron-name= schedule.label
+            input.cron-input(
+              type="text",
+              data-type=schedule.key,
+              placeholder="e.g. 0 7 * * *",
+              value=schedule.value || ""
+            )
+            button.cron-button(
+              type="button",
+              data-token=token,
+              data-type=schedule.key,
+              data-status-id=schedule.key + "-cron-status"
+            ) Save
+            .status-message(id=schedule.key + "-cron-status")
+              span.status-icon
+              span.status-text
       .items
         if budgets && budgets.length > 0
           each budget in budgets
@@ -213,6 +234,49 @@ html(lang="en")
               btn.disabled = false
               console.log('Reloading page to reflect changes...')
               window.location.reload()
+            }
+          })
+        })
+
+        const cronButtons = document.querySelectorAll('.cron-button')
+        cronButtons.forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const token = btn.getAttribute('data-token')
+            const type = btn.getAttribute('data-type')
+            const statusId = btn.getAttribute('data-status-id')
+            const status = document.getElementById(statusId)
+            const input = document.querySelector(`.cron-input[data-type="${type}"]`)
+            if (!status || !input) {
+              console.error('Missing status or input element for cron button:', type)
+              return
+            }
+            const statusIcon = status.querySelector('.status-icon')
+            const statusText = status.querySelector('.status-text')
+            btn.disabled = true
+            try {
+              const params = new URLSearchParams({ api_token: token })
+              const res = await fetch(`/config/cron/${type}?` + params.toString(), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cron: input.value }),
+              })
+              const data = await res.json()
+              if (res.ok) {
+                statusIcon.textContent = '✅'
+                statusText.textContent = data.cron ? 'Saved' : 'Disabled'
+                status.className = 'status-message success visible'
+              } else {
+                statusIcon.textContent = '❌'
+                statusText.textContent = data.message || 'An error occurred'
+                status.className = 'status-message error visible'
+              }
+            } catch (e) {
+              statusIcon.textContent = '❌'
+              statusText.textContent = 'An error occurred'
+              status.className = 'status-message error visible'
+              console.error('Set cron config failed:', e)
+            } finally {
+              btn.disabled = false
             }
           })
         })
