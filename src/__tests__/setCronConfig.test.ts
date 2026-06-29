@@ -88,13 +88,23 @@ describe("setCronConfig", () => {
   })
 
   it("rejects an invalid cron expression", async () => {
-    const req = { params: { type: "auto-import" }, body: { cron: "not-a-cron" } } as unknown as Request<{ type: string }>
+    const req = { params: { type: "auto-import" }, body: { cron: "a b c d e" } } as unknown as Request<{ type: string }>
     const res = buildResponse()
 
     await setCronConfig(req, res)
 
     expect(DynamicConfig.set).not.toHaveBeenCalled()
     expect(rescheduleAutoImport).not.toHaveBeenCalled()
+    expect(res.status).toHaveBeenCalledWith(400)
+  })
+
+  it("rejects a cron expression with the wrong number of fields", async () => {
+    const req = { params: { type: "auto-import" }, body: { cron: "0 7 *" } } as unknown as Request<{ type: string }>
+    const res = buildResponse()
+
+    await setCronConfig(req, res)
+
+    expect(DynamicConfig.set).not.toHaveBeenCalled()
     expect(res.status).toHaveBeenCalledWith(400)
   })
 })

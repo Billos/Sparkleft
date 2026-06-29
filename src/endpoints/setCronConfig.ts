@@ -23,9 +23,14 @@ function isCronType(value: string): value is CronType {
 }
 
 // Accepts standard 5-field cron expressions as well as the 6-field variant that includes seconds.
+// Each field may only contain digits and the cron operators (`*`, `/`, `,`, `-`).
 function isValidCron(value: string): boolean {
   const fields = value.trim().split(/\s+/)
-  return fields.length === 5 || fields.length === 6
+  if (fields.length !== 5 && fields.length !== 6) {
+    return false
+  }
+  const fieldPattern = /^[\d*/,-]+$/
+  return fields.every((field) => fieldPattern.test(field))
 }
 
 export async function setCronConfig(req: Request<{ type: string }, unknown, { cron?: string }>, res: Response) {
