@@ -26,7 +26,7 @@ html(lang="en")
           span.status-text
     .container
       h1 Schedules
-      .subtitle Set cron expressions for the scheduled jobs (leave empty to disable)
+      .subtitle Set cron expressions (format: minute hour day month weekday) for the scheduled jobs — leave empty to disable
       .items
         - const schedules = [{ key: "auto-import", label: "Auto Import", value: autoImportCron }, { key: "budget-sum-up", label: "Budget Sum Up", value: budgetSumUpCron }]
         each schedule in schedules
