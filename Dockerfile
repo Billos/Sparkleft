@@ -8,6 +8,7 @@ FROM base AS builder
 COPY . .
 RUN yarn
 RUN yarn build
+RUN yarn build:frontend
 
 # Final production image
 FROM base AS runtime

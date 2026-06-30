@@ -6,10 +6,10 @@ services:
     command: ["dev:server"]
     volumes:
       - .:/app
+    ports:
+      - "3000:3000"
     env_file:
       - .env
-    ports:
-      - "0.0.0.0:3000:3000"
     restart: unless-stopped
 
   worker:
@@ -21,6 +21,21 @@ services:
       - .:/app
     env_file:
       - .env
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dev:frontend"]
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
     restart: unless-stopped
 
 volumes:

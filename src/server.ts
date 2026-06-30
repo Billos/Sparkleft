@@ -6,6 +6,7 @@ import { about } from "./endpoints/about"
 import { autoImportPage } from "./endpoints/autoImportPage"
 import { budgetSumUpPage } from "./endpoints/budgetSumUpPage"
 import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
+import { configEndpoint } from "./endpoints/config"
 import { controlPage } from "./endpoints/controlPage"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { hideBudget } from "./endpoints/hideBudget"
@@ -66,6 +67,8 @@ app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.get("/budget-sumup", TokenMiddleware, budgetSumUpPage)
 app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
 app.get("/about", about)
+app.get("/config", TokenMiddleware, configEndpoint)
+app.get("/api/config", TokenMiddleware, configEndpoint)
 
 async function startServer() {
   try {
