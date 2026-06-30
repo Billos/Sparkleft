@@ -1,3 +1,11 @@
+## [2.40.1](https://github.com/Billos/Sparkleft/compare/2.40.0...2.40.1) (2026-06-30)
+
+
+### Bug Fixes
+
+* use Temporal polyfill ([f9b0481](https://github.com/Billos/Sparkleft/commit/f9b04819e644df953631c29d2aceb19b0cc68223))
+* Use Temporal rather than native Date ([fa3a108](https://github.com/Billos/Sparkleft/commit/fa3a1083b1edcba03e86d00247c7dbfb8f248610))
+
 # [2.40.0](https://github.com/Billos/Sparkleft/compare/2.39.8...2.40.0) (2026-06-30)
 
 
