@@ -1,3 +1,10 @@
+# [2.40.0](https://github.com/Billos/Sparkleft/compare/2.39.8...2.40.0) (2026-06-30)
+
+
+### Features
+
+*  AUTO_IMPORT_CRON and BUDGET_SUM_UP_CRON in DynamicConfig ([#98](https://github.com/Billos/Sparkleft/issues/98)) ([c79cc22](https://github.com/Billos/Sparkleft/commit/c79cc22f50ce51c5337b7def0762bde046b581b5))
+
 ## [2.39.8](https://github.com/Billos/Sparkleft/compare/2.39.7...2.39.8) (2026-06-29)
 
 ## [2.39.7](https://github.com/Billos/Sparkleft/compare/2.39.6...2.39.7) (2026-06-28)
