@@ -56,6 +56,9 @@ const env = {
   get redisUrl() {
     return process.env.REDIS_URL as string
   },
+  get timezone() {
+    return process.env.TZ || "Europe/Paris"
+  },
 }
 
 if (!env.redisUrl) {

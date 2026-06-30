@@ -2,6 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../utils/date"
 
+vi.mock("../config", () => ({
+  env: { timezone: "UTC" },
+}))
+
 describe("getStartOfCurrentMonth", () => {
   beforeEach(() => {
     vi.useFakeTimers()

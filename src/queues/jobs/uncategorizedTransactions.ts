@@ -1,11 +1,12 @@
 import { CategoriesService, TransactionRead, TransactionsService, TransactionTypeProperty } from "@billos/firefly-iii-sdk"
+import { Temporal } from "@js-temporal/polyfill"
 import pino from "pino"
 
 import { client } from "../../client"
+import { env } from "../../config"
 import DynamicConfig, { AConfig, VConfig } from "../../modules/config/dynamic"
 import { notifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
-import { getStartOfCurrentMonth } from "../../utils/date"
 import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate, TemplateName } from "../../utils/renderTemplate"
 import { addTransactionJobToQueue } from "../utils"
@@ -106,8 +107,10 @@ export class UncategorizedTransactionsJob extends TransactionJob {
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
     if (notifier) {
-      const start = getStartOfCurrentMonth()
-      const [end] = new Date().toISOString().split("T")
+      const startDate = Temporal.Now.zonedDateTimeISO(env.timezone).subtract({ months: 3 }).startOfDay()
+      const start = startDate.toPlainDate().toString()
+      const endDate = Temporal.Now.zonedDateTimeISO(env.timezone)
+      const end = endDate.toPlainDate().toString()
       if (!end) {
         logger.error("Failed to get current date in ISO format")
         return
