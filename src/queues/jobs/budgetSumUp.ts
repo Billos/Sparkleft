@@ -2,7 +2,7 @@ import { AccountsService, BudgetsService } from "@billos/firefly-iii-sdk"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import DynamicConfig, { AConfig } from "../../modules/config/dynamic"
+import DynamicConfig, { AConfig, VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { TemplateName } from "../../utils/renderTemplate"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
@@ -17,7 +17,7 @@ export class BudgetSumUpJob extends SimpleJob {
 
   override readonly uniqueNotificationKey = "sparkleft:notification:budget-sumup:id"
 
-  override readonly cronPattern = env.budgetSumUpCron
+  override readonly cronConfigKey = VConfig.BudgetSumUpCron
 
   async run(): Promise<void> {
     const start = getStartOfCurrentMonth()

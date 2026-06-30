@@ -3,6 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
+import { VConfig } from "../../modules/config/dynamic"
 import { TemplateName } from "../../utils/renderTemplate"
 import { SimpleJob } from "./BaseJob"
 
@@ -21,7 +22,7 @@ export class AutoImportJob extends SimpleJob {
 
   override readonly uniqueNotificationKey = "sparkleft:notification:autoimport:id"
 
-  override readonly cronPattern = env.autoImportCron
+  override readonly cronConfigKey = VConfig.AutoImportCron
 
   private async getExpensesAndIncome(): Promise<AccountTransactions> {
     const now = new Date()

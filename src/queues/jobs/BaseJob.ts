@@ -1,5 +1,6 @@
 import pino from "pino"
 
+import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { notifier } from "../../modules/notifiers"
 import { redis } from "../../redis"
 import { renderTemplate, TemplateContextMap, TemplateName } from "../../utils/renderTemplate"
@@ -20,6 +21,8 @@ export abstract class BaseJob {
 
   readonly cronPattern?: string
 
+  readonly cronConfigKey?: VConfig
+
   getStartDelay(asap: boolean = false): number {
     if (asap) {
       return 2000 // 2 seconds
@@ -31,20 +34,57 @@ export abstract class BaseJob {
     return retryCount * this.retryDelay * 1000
   }
 
-  async init(): Promise<void> {
-    if (this.cronPattern) {
-      await this.scheduleCronJob(this.cronPattern)
+  async resolveCronPattern(): Promise<string | undefined> {
+    if (this.cronConfigKey) {
+      return (await DynamicConfig.get(this.cronConfigKey)) ?? undefined
     }
+    return this.cronPattern
+  }
+
+  async init(): Promise<void> {
+    const pattern = await this.resolveCronPattern()
+    if (pattern) {
+      await this.scheduleCronJob(pattern)
+    }
+  }
+
+  async rescheduleCronJob(): Promise<void> {
+    const pattern = await this.resolveCronPattern()
+    if (pattern) {
+      await this.scheduleCronJob(pattern)
+    } else {
+      await this.removeCronJob()
+    }
+  }
+
+  private get repeatJobId(): string {
+    return `${this.id}-repeat`
+  }
+
+  // The scheduler key BullMQ registers the repeatable job under.
+  private get schedulerId(): string {
+    return `${this.repeatJobId}-repeat`
   }
 
   private async scheduleCronJob(pattern: string): Promise<void> {
     const queue = await getQueue()
-    const id = `${this.id}-repeat`
+    const id = this.repeatJobId
     logger.info("Setting up scheduler for %s with cron '%s'", id, pattern)
     try {
-      await queue.upsertJobScheduler(`${id}-repeat`, { pattern }, { name: id, data: { job: id } })
+      await queue.upsertJobScheduler(this.schedulerId, { pattern }, { name: id, data: { job: id } })
     } catch (err) {
       logger.error({ err }, "Failed to set up scheduler for job %s", id)
+    }
+  }
+
+  private async removeCronJob(): Promise<void> {
+    const queue = await getQueue()
+    const id = this.repeatJobId
+    logger.info("Removing scheduler for %s", id)
+    try {
+      await queue.removeJobScheduler(this.schedulerId)
+    } catch (err) {
+      logger.error({ err }, "Failed to remove scheduler for job %s", id)
     }
   }
 

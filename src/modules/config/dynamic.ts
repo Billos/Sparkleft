@@ -5,6 +5,8 @@ import { redis } from "../../redis"
 export enum VConfig {
   RoleBudgetBillsId = "role-budget-bills-id",
   RoleBudgetLeftoversId = "role-budget-leftovers-id",
+  AutoImportCron = "auto-import-cron",
+  BudgetSumUpCron = "budget-sum-up-cron",
 }
 
 export enum AConfig {

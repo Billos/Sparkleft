@@ -15,7 +15,7 @@ const logger = pino()
 const startedAt = new Map<string, Date>()
 
 const iterable: [string, BaseJob][][] = [...simpleJobs, ...transactionJobs, ...endpointJobs, ...budgetJobs].map((j) => {
-  if (j.cronPattern) {
+  if (j.cronPattern || j.cronConfigKey) {
     return [
       [`${j.id}-repeat`, j],
       [j.id, j],
