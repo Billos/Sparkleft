@@ -49,13 +49,7 @@ app.get(
   settingCategoryForTransaction,
   TransactionResultMiddleware,
 )
-app.get("/hide-toggle/category/:categoryName", TokenMiddleware, hideCategory)
-app.get("/hide-toggle/budget/:budgetName", TokenMiddleware, hideBudget)
-app.post("/config/budget-role/:role/:budgetId", TokenMiddleware, setBudgetRole)
-app.post("/config/cron/:type", TokenMiddleware, setCronConfig)
 app.post("/webhook", verifyWebhookMiddleware, webhook)
-app.post("/autoimport", TokenMiddleware, triggerAutoImport)
-app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
 
 app.get(
   "/api/transaction/:transactionId/newCategory",
