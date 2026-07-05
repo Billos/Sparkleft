@@ -1,7 +1,15 @@
 import { readFileSync } from "fs"
 import { join } from "path"
 
-import { BudgetRead, BudgetsService, CategoriesService, CategoryRead } from "@billos/firefly-iii-sdk"
+import {
+  AccountRead,
+  AccountsService,
+  AccountTypeFilter,
+  BudgetRead,
+  BudgetsService,
+  CategoriesService,
+  CategoryRead,
+} from "@billos/firefly-iii-sdk"
 import { Request, Response } from "express"
 import pino from "pino"
 
@@ -20,8 +28,8 @@ export interface About {
 export interface Config {
   about: About
   token?: string
-  assetsAccounts: AccountRead[]
-  assetsAccountId: string | null
+  assetAccounts: AccountRead[]
+  currentAccountId: string | null
   budgets?: BudgetRead[]
   categories?: CategoryRead[]
   hiddenBudgets?: string[]
@@ -54,8 +62,10 @@ export async function configEndpoint(_req: Request, res: Response) {
   const [
     { data: budgets },
     { data: categories },
+    { data: assetAccounts },
     hiddenBudgets,
     hiddenCategories,
+    currentAccountId,
     billsBudgetId,
     leftoversBudgetId,
     autoImportCron,
@@ -63,8 +73,10 @@ export async function configEndpoint(_req: Request, res: Response) {
   ] = await Promise.all([
     BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } }),
     CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } }),
+    AccountsService.listAccount({ client, query: { type: AccountTypeFilter.ASSET } }),
     DynamicConfig.lrange(AConfig.HiddenBudgets, 0, -1),
     DynamicConfig.lrange(AConfig.HiddenCategories, 0, -1),
+    DynamicConfig.get(VConfig.CurrentAccountId),
     DynamicConfig.get(VConfig.RoleBudgetBillsId),
     DynamicConfig.get(VConfig.RoleBudgetLeftoversId),
     DynamicConfig.get(VConfig.AutoImportCron),
@@ -80,6 +92,8 @@ export async function configEndpoint(_req: Request, res: Response) {
       license: pkg.license,
       repository: repositoryUrl(pkg.repository) || "",
     },
+    assetAccounts,
+    currentAccountId,
     token: process.env.TOKEN,
     budgets,
     categories,

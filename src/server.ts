@@ -6,6 +6,7 @@ import { configEndpoint } from "./endpoints/config"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { hideBudget } from "./endpoints/hideBudget"
 import { hideCategory } from "./endpoints/hideCategory"
+import { setCurrentAccount } from "./endpoints/setAssetAccount"
 import { setBudgetRole } from "./endpoints/setBudgetRole"
 import { setCronConfig } from "./endpoints/setCronConfig"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
@@ -59,6 +60,7 @@ app.get(
   TransactionResultMiddleware,
 )
 app.post("/api/budget-role/:role/:budgetId", TokenMiddleware, setBudgetRole)
+app.post("/api/current-account/:accountId", TokenMiddleware, setCurrentAccount)
 app.post("/api/hide-toggle/category/:categoryName", TokenMiddleware, hideCategory)
 app.post("/api/hide-toggle/budget/:budgetName", TokenMiddleware, hideBudget)
 app.post("/api/budget-sumup", TokenMiddleware, triggerBudgetSumUp)

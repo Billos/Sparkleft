@@ -3,6 +3,7 @@ import Redis from "ioredis"
 import { redis } from "../../redis"
 
 export enum VConfig {
+  CurrentAccountId = "current-account-id",
   RoleBudgetBillsId = "role-budget-bills-id",
   RoleBudgetLeftoversId = "role-budget-leftovers-id",
   AutoImportCron = "auto-import-cron",
