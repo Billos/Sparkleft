@@ -34,6 +34,18 @@ vi.mock("../redis", () => ({
     set: vi.fn().mockResolvedValue("OK"),
   },
 }))
+vi.mock("../modules/config/dynamic", () => ({
+  default: {
+    get: vi.fn().mockResolvedValue("99"),
+  },
+  VConfig: {
+    CurrentAccountId: "current-account-id",
+    RoleBudgetBillsId: "role-budget-bills-id",
+    RoleBudgetLeftoversId: "role-budget-leftovers-id",
+    AutoImportCron: "auto-import-cron",
+    BudgetSumUpCron: "budget-sum-up-cron",
+  },
+}))
 
 describe("AutoImportJob", () => {
   beforeEach(() => {
