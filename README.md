@@ -101,9 +101,6 @@ FIREFLY_III_CLI_TOKEN=        # CLI token used for triggering Firefly III cron j
 API_TOKEN=                    # Token to protect Sparkleft endpoints
 USE_API_TOKEN=                # Set to 'false' to disable token protection (default: true)
 
-# ─── Budgets & accounts ─────────────────────────────────
-ASSET_ACCOUNT_ID=             # ID of the main asset account
-
 # ─── Notifications ───────────────────────────────────────
 # Configure at least one channel: Discord or Gotify
 DISCORD_WEBHOOK=              # Discord webhook URL

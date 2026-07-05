@@ -3,7 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import { env } from "../../config"
-import { VConfig } from "../../modules/config/dynamic"
+import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { TemplateName } from "../../utils/renderTemplate"
 import { SimpleJob } from "./BaseJob"
 
@@ -24,14 +24,14 @@ export class AutoImportJob extends SimpleJob {
 
   override readonly cronConfigKey = VConfig.AutoImportCron
 
-  private async getExpensesAndIncome(): Promise<AccountTransactions> {
+  private async getExpensesAndIncome(currentAccountId: string): Promise<AccountTransactions> {
     const now = new Date()
     const [start] = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7).toISOString().split("T")
     const [end] = now.toISOString().split("T")
 
     const { data: transactions } = await AccountsService.listTransactionByAccount({
       client,
-      path: { id: env.assetAccountId },
+      path: { id: currentAccountId },
       query: { start, end },
     })
     const expenses = transactions.filter(({ attributes: { transactions } }) => transactions[0].type === TransactionTypeProperty.WITHDRAWAL)
@@ -46,7 +46,12 @@ export class AutoImportJob extends SimpleJob {
       return
     }
 
-    const previousTransactions = await this.getExpensesAndIncome()
+    const currentAccountId = await DynamicConfig.get(VConfig.CurrentAccountId)
+    if (!currentAccountId) {
+      throw new Error("Current account ID is not set in the configuration")
+    }
+
+    const previousTransactions = await this.getExpensesAndIncome(currentAccountId)
     logger.info(
       "Found %d transactions in the last 7 days for asset account",
       previousTransactions.expenses.length + previousTransactions.deposits.length + previousTransactions.transfers.length,
@@ -73,7 +78,7 @@ export class AutoImportJob extends SimpleJob {
     }
     logger.info("Auto-import triggered successfully")
 
-    const newTransactions = await this.getExpensesAndIncome()
+    const newTransactions = await this.getExpensesAndIncome(currentAccountId)
 
     const expenses = newTransactions.expenses.filter((newTx) => !previousTransactions.expenses.some((prevTx) => prevTx.id === newTx.id))
     const deposits = newTransactions.deposits.filter((newTx) => !previousTransactions.deposits.some((prevTx) => prevTx.id === newTx.id))
@@ -89,7 +94,7 @@ export class AutoImportJob extends SimpleJob {
       diffTransfers,
     )
 
-    const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
+    const assetAccount = await AccountsService.getAccount({ client, path: { id: currentAccountId } })
 
     await this.sendUniqueNotification("Auto Import", TemplateName.AutoImport, {
       diffExpenses,

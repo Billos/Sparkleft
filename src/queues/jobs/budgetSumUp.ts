@@ -1,7 +1,6 @@
 import { AccountsService, BudgetsService } from "@billos/firefly-iii-sdk"
 
 import { client } from "../../client"
-import { env } from "../../config"
 import DynamicConfig, { AConfig, VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { TemplateName } from "../../utils/renderTemplate"
@@ -62,9 +61,13 @@ export class BudgetSumUpJob extends SimpleJob {
     const hiddenBudgets = await DynamicConfig.lrange(AConfig.HiddenBudgets, 0, -1)
     const insights = allInsights.filter(({ name }) => !hiddenBudgets.includes(name))
 
-    const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
-    const accountBalance = assetAccount.data.attributes.current_balance || "0"
-    const accountCurrency = assetAccount.data.attributes.currency_symbol || "€"
+    const currentAccountId = await DynamicConfig.get(VConfig.CurrentAccountId)
+    if (!currentAccountId) {
+      throw new Error("Current account ID is not set in the configuration")
+    }
+    const currentAccount = await AccountsService.getAccount({ client, path: { id: currentAccountId } })
+    const accountBalance = currentAccount.data.attributes.current_balance || "0"
+    const accountCurrency = currentAccount.data.attributes.currency_symbol || "€"
 
     await this.sendUniqueNotification("Budgets Sum Up", TemplateName.BudgetSumUp, { insights, accountBalance, accountCurrency })
   }

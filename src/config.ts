@@ -23,9 +23,6 @@ const env = {
   get useApiToken() {
     return process.env.USE_API_TOKEN !== "false"
   },
-  get assetAccountId() {
-    return process.env.ASSET_ACCOUNT_ID || ""
-  },
   get discordWebhook() {
     return process.env.DISCORD_WEBHOOK
   },

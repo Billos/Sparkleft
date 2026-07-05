@@ -10,7 +10,6 @@ import {
 import pino from "pino"
 
 import { client } from "../../client"
-import { env } from "../../config"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { getQueue } from "../queue"
@@ -27,7 +26,11 @@ async function getSumWithoutLeftovers(
   start: string,
   end: string,
 ): Promise<number> {
-  const assetAccount = await AccountsService.getAccount({ client, path: { id: env.assetAccountId } })
+  const currentAccountId = await DynamicConfig.get(VConfig.CurrentAccountId)
+  if (!currentAccountId) {
+    throw new Error("Current account ID is not set in the configuration")
+  }
+  const assetAccount = await AccountsService.getAccount({ client, path: { id: currentAccountId } })
   if (!assetAccount || !assetAccount.data || !assetAccount.data) {
     throw new Error("Asset account not found")
   }
