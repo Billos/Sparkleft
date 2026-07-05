@@ -1,3 +1,16 @@
+# [2.42.0](https://github.com/Billos/Sparkleft/compare/2.41.0...2.42.0) (2026-07-05)
+
+
+### Bug Fixes
+
+* Quick test repair ([597e8c7](https://github.com/Billos/Sparkleft/commit/597e8c7576b8ef00c3851bf643c3a22c33a3c96d))
+
+
+### Features
+
+* Current Account selection through new UI ([08d8803](https://github.com/Billos/Sparkleft/commit/08d8803717bad024f265715a5883df0b8b406603))
+* Use dynamic configuration for asset account ID ([49d7c3f](https://github.com/Billos/Sparkleft/commit/49d7c3f92107b1a505e86b44904b75d5e312a158))
+
 # [2.41.0](https://github.com/Billos/Sparkleft/compare/2.40.2...2.41.0) (2026-07-05)
 
 
