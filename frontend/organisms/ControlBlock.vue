@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Config } from "../types/config.ts"
 import BlockContainer from "../molecules/BlockContainer.vue"
 import ActionButton from "../atoms/ActionButton.vue"
 import { Method } from "../types/method.ts"
+import { Config } from "../../src/endpoints/config.ts"
 
 const props = defineProps<{
   config?: Config

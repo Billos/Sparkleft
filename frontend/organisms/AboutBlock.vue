@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { About } from "../types/config.ts"
 import BlockContainer from "../molecules/BlockContainer.vue"
 import LabeledValue from "../atoms/LabeledValue.vue"
+import { About } from "../../src/endpoints/config.ts"
 
 const props = defineProps<{ about?: About }>()
 

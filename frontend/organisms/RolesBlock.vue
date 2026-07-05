@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Budget, Config } from "../types/config.ts"
 import BlockContainer from "../molecules/BlockContainer.vue"
 import ActionButton from "../atoms/ActionButton.vue"
 import { Method } from "../types/method.ts"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
+import { BudgetRead } from "@billos/firefly-iii-sdk"
+import { Config } from "../../src/endpoints/config.ts"
 
 const props = defineProps<{
   config?: Config
@@ -28,7 +29,7 @@ function label(budgetName: string | undefined, budgetId: string, roleKey: string
   return isSelected(budgetId, roleKey) ? `${budgetName} ✅` : budgetName
 }
 
-const background = (value: Budget, roleKey: string) => {
+const background = (value: BudgetRead, roleKey: string) => {
   if (!value.attributes?.name) {
     return greyBg
   }

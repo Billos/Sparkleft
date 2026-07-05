@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { Budget, Config } from "../types/config.ts"
 import BlockContainer from "../molecules/BlockContainer.vue"
 import CronInput from "../molecules/CronInput.vue"
 import ActionButton from "../atoms/ActionButton.vue"
 import { Method } from "../types/method.ts"
 import { greyBg } from "../types/btnBg.ts"
+import { BudgetRead } from "@billos/firefly-iii-sdk"
+import { Config } from "../../src/endpoints/config.ts"
+import { computed } from "vue"
 
 const props = defineProps<{
   config?: Config
@@ -14,7 +16,7 @@ const emit = defineEmits<{
   "update:config": []
 }>()
 
-const label = (value: Budget) => {
+const label = (value: BudgetRead) => {
   if (!value.attributes?.name) {
     return "Unknown budget"
   }
@@ -23,7 +25,7 @@ const label = (value: Budget) => {
   return `${value.attributes.name} ${icon}`
 }
 
-const background = (value: Budget) => {
+const background = (value: BudgetRead) => {
   if (!value.attributes?.name) {
     return greyBg
   }

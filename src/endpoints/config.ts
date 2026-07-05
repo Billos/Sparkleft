@@ -8,26 +8,28 @@ import pino from "pino"
 import { client } from "../client"
 import DynamicConfig, { AConfig, VConfig } from "../modules/config/dynamic"
 
-interface About {
-  name?: string
-  version?: string
-  description?: string
-  author?: string
-  license?: string
-  repository?: string
+export interface About {
+  name: string
+  version: string
+  description: string
+  author: string
+  license: string
+  repository: string
 }
 
-interface Config {
+export interface Config {
   about: About
   token?: string
+  assetsAccounts: AccountRead[]
+  assetsAccountId: string | null
   budgets?: BudgetRead[]
   categories?: CategoryRead[]
   hiddenBudgets?: string[]
   hiddenCategories?: string[]
   billsBudgetId: string | null
   leftoversBudgetId: string | null
-  autoImportCron: string | null
-  budgetSumUpCron: string | null
+  autoImportCron?: string
+  budgetSumUpCron?: string
 }
 
 const logger = pino()
@@ -73,10 +75,10 @@ export async function configEndpoint(_req: Request, res: Response) {
     about: {
       name: pkg.name,
       version: pkg.version,
-      description: pkg.description,
+      description: pkg.description || "",
       author: pkg.author,
       license: pkg.license,
-      repository: repositoryUrl(pkg.repository),
+      repository: repositoryUrl(pkg.repository) || "",
     },
     token: process.env.TOKEN,
     budgets,
@@ -85,8 +87,8 @@ export async function configEndpoint(_req: Request, res: Response) {
     hiddenCategories,
     billsBudgetId,
     leftoversBudgetId,
-    autoImportCron,
-    budgetSumUpCron,
+    autoImportCron: autoImportCron ?? undefined,
+    budgetSumUpCron: budgetSumUpCron ?? undefined,
   }
 
   return res.json(result).status(200)

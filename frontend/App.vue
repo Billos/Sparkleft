@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import ControlBlock from "./organisms/ControlBlock.vue"
-import { Config } from "./types/config.ts"
 import SchedulesBlock from "./organisms/SchedulesBlock.vue"
 import RolesBlock from "./organisms/RolesBlock.vue"
 import CategoryBlock from "./organisms/CategoryBlock.vue"
 import AboutBlock from "./organisms/AboutBlock.vue"
+import { Config } from "../src/endpoints/config.ts"
 
 const config = ref<Config | undefined>()
 

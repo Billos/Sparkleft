@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Budget, Config } from "../types/config.ts"
 import BlockContainer from "../molecules/BlockContainer.vue"
 import ActionButton from "../atoms/ActionButton.vue"
 import { Method } from "../types/method.ts"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
+import { BudgetRead } from "@billos/firefly-iii-sdk"
+import { Config } from "../../src/endpoints/config.ts"
 
 const props = defineProps<{
   config?: Config
@@ -18,7 +19,7 @@ function isSelected(categoryId: string): boolean {
   return hiddenCategories.includes(categoryId)
 }
 
-const background = (value: Budget) => {
+const background = (value: BudgetRead) => {
   if (!value.attributes?.name) {
     return greyBg
   }
