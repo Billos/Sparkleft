@@ -23,5 +23,23 @@ services:
       - .env
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: ["dev:frontend"]
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+    restart: unless-stopped
+
 volumes:
   redis-data:
+  frontend_node_modules:
