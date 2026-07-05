@@ -1,4 +1,4 @@
-# Sparkleft v3
+# Sparkleft - v3
 
 [![Coverage Report](https://img.shields.io/badge/coverage-report-blue)](https://billos.github.io/Sparkleft/)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-green)](LICENSE)
