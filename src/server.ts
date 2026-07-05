@@ -24,7 +24,6 @@ const app = express()
 
 app.use("/public", express.static("public"))
 app.set("views", "templates")
-app.set("view engine", "pug")
 
 app.use(ParseBodyMiddleware)
 
@@ -56,7 +55,6 @@ app.post("/config/cron/:type", TokenMiddleware, setCronConfig)
 app.post("/webhook", verifyWebhookMiddleware, webhook)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
-
 
 async function startServer() {
   try {
