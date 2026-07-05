@@ -56,6 +56,8 @@ app.post("/webhook", verifyWebhookMiddleware, webhook)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
 
+app.use("/control", express.static("dist/frontend"))
+
 async function startServer() {
   try {
     await new Promise<void>((resolve) => {

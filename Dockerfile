@@ -9,6 +9,17 @@ COPY . .
 RUN yarn
 RUN yarn build
 
+# Stage 1: Build frontend
+FROM base AS frontend-builder
+COPY . .
+RUN yarn install
+RUN yarn build:frontend
+
+FROM base AS development
+COPY . .
+RUN yarn
+ENTRYPOINT [ "yarn", "run" ]
+
 # Final production image
 FROM base AS runtime
 RUN apk update && apk add tzdata
@@ -21,10 +32,14 @@ COPY .yarn ./.yarn
 
 RUN yarn workspaces focus --all --production
 COPY --from=builder /app/build ./build
-COPY --from=builder /app/public ./public
+COPY --from=frontend-builder /app/dist/frontend ./dist/frontend
 COPY --from=builder /app/templates ./templates
 
 EXPOSE 3000
+
+# Use non-root user for security
+RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+USER nextjs
 
 ENTRYPOINT [ "npm", "run" ]
 # Default to running both server and worker (backward compatible)
