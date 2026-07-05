@@ -2,11 +2,6 @@ import express from "express"
 import pino from "pino"
 
 import { env } from "./config"
-import { about } from "./endpoints/about"
-import { autoImportPage } from "./endpoints/autoImportPage"
-import { budgetSumUpPage } from "./endpoints/budgetSumUpPage"
-import { categoriesForTransaction } from "./endpoints/categoriesForTransaction"
-import { controlPage } from "./endpoints/controlPage"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { hideBudget } from "./endpoints/hideBudget"
 import { hideCategory } from "./endpoints/hideCategory"
@@ -40,7 +35,6 @@ app.get(
   settingBudgetForTransaction,
   TransactionResultMiddleware,
 )
-app.get("/transaction/:transactionId/categories", TokenMiddleware, AssertTransactionExistsMiddleware, categoriesForTransaction)
 app.get(
   "/transaction/:transactionId/category/:category_id",
   TokenMiddleware,
@@ -60,12 +54,9 @@ app.get("/hide-toggle/budget/:budgetName", TokenMiddleware, hideBudget)
 app.post("/config/budget-role/:role/:budgetId", TokenMiddleware, setBudgetRole)
 app.post("/config/cron/:type", TokenMiddleware, setCronConfig)
 app.post("/webhook", verifyWebhookMiddleware, webhook)
-app.get("/control", TokenMiddleware, controlPage)
-app.get("/autoimport", TokenMiddleware, autoImportPage)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
-app.get("/budget-sumup", TokenMiddleware, budgetSumUpPage)
 app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
-app.get("/about", about)
+
 
 async function startServer() {
   try {
