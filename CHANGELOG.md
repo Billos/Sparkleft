@@ -1,3 +1,13 @@
+# [3.0.0](https://github.com/Billos/Sparkleft/compare/2.42.0...3.0.0) (2026-07-05)
+
+
+* feat!: Declare v3 ([5fcc5d1](https://github.com/Billos/Sparkleft/commit/5fcc5d1590fc528380a8ec46b0ca4b14b76a7673))
+
+
+### BREAKING CHANGES
+
+* Introduce Vue Web UI
+
 # [2.42.0](https://github.com/Billos/Sparkleft/compare/2.41.0...2.42.0) (2026-07-05)
 
 
