@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import BlockContainer from "../molecules/BlockContainer.vue"
 import CronInput from "../molecules/CronInput.vue"
-import ActionButton from "../atoms/ActionButton.vue"
-import { Method } from "../types/method.ts"
+import ButtonList from "../molecules/ButtonList.vue"
 import { greyBg } from "../types/btnBg.ts"
+import { ButtonListItem } from "../types/buttonListItem.ts"
 import { BudgetRead } from "@billos/firefly-iii-sdk"
 import { Config } from "../../src/endpoints/config.ts"
 import { computed } from "vue"
@@ -35,6 +35,15 @@ const background = (value: BudgetRead) => {
   }
   return null
 }
+
+const items = computed<ButtonListItem[]>(() =>
+  (props.config?.budgets ?? []).map((value) => ({
+    key: value.attributes?.name ?? "",
+    label: label(value),
+    action: `hide-toggle/budget/${value.attributes?.name}`,
+    backgroundColor: background(value),
+  })),
+)
 </script>
 
 <template>
@@ -62,19 +71,12 @@ const background = (value: BudgetRead) => {
         />
         <!-- List of budgets to hide / display them in the Sumup -->
 
-        <div class="w-full flex flex-row flex-wrap gap-2 justify-center">
-          <ActionButton
-            v-for="value in props.config.budgets"
-            class="flex-1 min-w-48 max-w-48"
-            :key="value.attributes?.name"
-            :token="props.config.token"
-            :method="Method.POST"
-            :label="label(value)"
-            :action="`hide-toggle/budget/${value.attributes?.name}`"
-            :background-color="background(value)"
-            @action:done="emit('update:config')"
-          />
-        </div>
+        <ButtonList
+          :items="items"
+          :token="props.config.token"
+          wrapper-class="w-full flex flex-row flex-wrap gap-2 justify-center"
+          @action:done="emit('update:config')"
+        />
       </template>
     </BlockContainer>
   </template>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import BlockContainer from "../molecules/BlockContainer.vue"
-import ActionButton from "../atoms/ActionButton.vue"
-import { Method } from "../types/method.ts"
+import ButtonList from "../molecules/ButtonList.vue"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
+import { ButtonListItem } from "../types/buttonListItem.ts"
 import { BudgetRead } from "@billos/firefly-iii-sdk"
 import { Config } from "../../src/endpoints/config.ts"
+import { computed } from "vue"
 
 const props = defineProps<{
   config?: Config
@@ -30,6 +31,16 @@ const background = (value: BudgetRead) => {
   }
   return greyBg
 }
+
+const items = computed<ButtonListItem[]>(() =>
+  (props.config?.categories ?? []).map((category) => ({
+    key: category.id,
+    label: category.attributes?.name || "Unknown category",
+    action: `hide-toggle/category/${category.id}`,
+    backgroundColor: background(category),
+    rightIcon: isSelected(category.id) ? "✅" : "",
+  })),
+)
 </script>
 
 <template>
@@ -37,20 +48,7 @@ const background = (value: BudgetRead) => {
     <BlockContainer>
       <template #header>Hide Toggle Categories</template>
       <template #default>
-        <div class="flex flex-1 flex-row flex-wrap gap-2">
-          <ActionButton
-            v-for="category in props.config.categories"
-            class="flex-1 min-w-48 max-w-48"
-            :key="category.id"
-            :token="props.config.token"
-            :method="Method.POST"
-            :label="category.attributes?.name || 'Unknown category'"
-            :right-icon="isSelected(category.id) ? '✅' : ''"
-            :background-color="background(category)"
-            :action="`hide-toggle/category/${category.id}`"
-            @action:done="emit('update:config')"
-          />
-        </div>
+        <ButtonList :items="items" :token="props.config.token" @action:done="emit('update:config')" />
       </template>
     </BlockContainer>
   </template>
