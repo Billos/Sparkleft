@@ -56,6 +56,20 @@ app.post("/config/cron/:type", TokenMiddleware, setCronConfig)
 app.post("/webhook", verifyWebhookMiddleware, webhook)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
+
+app.get(
+  "/api/transaction/:transactionId/newCategory",
+  TokenMiddleware,
+  createNewCategory,
+  settingCategoryForTransaction,
+  TransactionResultMiddleware,
+)
+app.post("/api/budget-role/:role/:budgetId", TokenMiddleware, setBudgetRole)
+app.post("/api/hide-toggle/category/:categoryName", TokenMiddleware, hideCategory)
+app.post("/api/hide-toggle/budget/:budgetName", TokenMiddleware, hideBudget)
+app.post("/api/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
+app.post("/api/auto-import", TokenMiddleware, triggerAutoImport)
+app.post("/api/cron/:type", TokenMiddleware, setCronConfig)
 app.get("/api/config", TokenMiddleware, configEndpoint)
 
 app.use("/control", express.static("dist/frontend"))
