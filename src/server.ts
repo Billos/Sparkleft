@@ -2,6 +2,7 @@ import express from "express"
 import pino from "pino"
 
 import { env } from "./config"
+import { configEndpoint } from "./endpoints/config"
 import { createNewCategory } from "./endpoints/createNewCategory"
 import { hideBudget } from "./endpoints/hideBudget"
 import { hideCategory } from "./endpoints/hideCategory"
@@ -55,6 +56,7 @@ app.post("/config/cron/:type", TokenMiddleware, setCronConfig)
 app.post("/webhook", verifyWebhookMiddleware, webhook)
 app.post("/autoimport", TokenMiddleware, triggerAutoImport)
 app.post("/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
+app.get("/api/config", TokenMiddleware, configEndpoint)
 
 app.use("/control", express.static("dist/frontend"))
 
