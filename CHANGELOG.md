@@ -1,3 +1,26 @@
+# [2.41.0](https://github.com/Billos/Sparkleft/compare/2.40.2...2.41.0) (2026-07-05)
+
+
+### Bug Fixes
+
+* tests ([726ce84](https://github.com/Billos/Sparkleft/commit/726ce84073c8c948a16c03a358e04e93c9baa3f7))
+
+
+### Features
+
+* Add endpoint for application configuration ([e390527](https://github.com/Billos/Sparkleft/commit/e3905275e3a1bc608131d4ce5d9931e6e9a42306))
+* Implement control panel UI with Vue.js ([ea7378f](https://github.com/Billos/Sparkleft/commit/ea7378f11b76e6e3a204d629acc707620522409a))
+* Initialize Vue.js application structure ([2311b27](https://github.com/Billos/Sparkleft/commit/2311b270e3d9c8d587e2b4e092be2a4ab958f94f))
+* remove old APIs and update doc ([acdde21](https://github.com/Billos/Sparkleft/commit/acdde21507ea5dcef2a8271e7cec801a06797b81))
+* Remove pug ([a1bd969](https://github.com/Billos/Sparkleft/commit/a1bd96938bbe842f579400e432336355c6c624d6))
+* Remove templated UI pages ([e8e3eb4](https://github.com/Billos/Sparkleft/commit/e8e3eb4db14a180cffe63424ab4ef5f6b0d5073a))
+
+
+### BREAKING CHANGES
+
+* Removed API
+* Vue frontend rather than
+
 ## [2.40.2](https://github.com/Billos/Sparkleft/compare/2.40.1...2.40.2) (2026-06-30)
 
 ## [2.40.1](https://github.com/Billos/Sparkleft/compare/2.40.0...2.40.1) (2026-06-30)
