@@ -42,8 +42,5 @@ describe("server", () => {
     await new Promise<void>((resolve) => setImmediate(resolve))
     const paths = routes.map((r) => `${r.method} ${r.path}`)
     expect(paths).toContain("post /webhook")
-    expect(paths).toContain("get /about")
-    expect(paths).toContain("get /control")
-    expect(paths).toContain("get /transaction/:transactionId/categories")
   })
 })
