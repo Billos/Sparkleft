@@ -5,6 +5,7 @@ import { Method } from "../types/method.ts"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
 import { BudgetRead } from "@billos/firefly-iii-sdk"
 import { Config } from "../../src/endpoints/config.ts"
+import ButtonList from "../molecules/ButtonList.vue"
 
 const props = defineProps<{
   config?: Config
@@ -50,7 +51,7 @@ const background = (value: BudgetRead, roleKey: string) => {
       <template #default>
         <div class="flex flex-row gap-4 justify-start items-center flex-wrap">
           <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">Bills</h2>
-          <div class="flex flex-1 flex-row flex-wrap gap-2">
+          <ButtonList>
             <ActionButton
               v-for="budget in props.config.budgets"
               class="flex-1 min-w-48 max-w-48"
@@ -62,11 +63,11 @@ const background = (value: BudgetRead, roleKey: string) => {
               :action="`budget-role/bills/${budget.id}`"
               @action:done="emit('update:config')"
             />
-          </div>
+          </ButtonList>
         </div>
         <div class="flex flex-row gap-4 justify-start items-center flex-wrap">
           <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">Leftovers</h2>
-          <div class="flex flex-1 flex-row flex-wrap gap-2">
+          <ButtonList>
             <ActionButton
               v-for="budget in props.config.budgets"
               class="flex-1 min-w-48 max-w-48"
@@ -78,7 +79,7 @@ const background = (value: BudgetRead, roleKey: string) => {
               :action="`budget-role/leftovers/${budget.id}`"
               @action:done="emit('update:config')"
             />
-          </div>
+          </ButtonList>
         </div>
       </template>
     </BlockContainer>

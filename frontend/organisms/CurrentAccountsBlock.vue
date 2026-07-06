@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BlockContainer from "../molecules/BlockContainer.vue"
+import ButtonList from "../molecules/ButtonList.vue"
 import ActionButton from "../atoms/ActionButton.vue"
 import { Method } from "../types/method.ts"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
@@ -38,7 +39,7 @@ const background = (value: AccountRead) => {
       <template #default>
         <div class="flex flex-row gap-4 justify-start items-center flex-wrap">
           <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">Current account</h2>
-          <div class="flex flex-1 flex-row flex-wrap gap-2">
+          <ButtonList>
             <ActionButton
               v-for="account in props.config.assetAccounts"
               class="flex-1 min-w-48 max-w-48"
@@ -50,7 +51,7 @@ const background = (value: AccountRead) => {
               :action="`current-account/${account.id}`"
               @action:done="emit('update:config')"
             />
-          </div>
+          </ButtonList>
         </div>
       </template>
     </BlockContainer>
