@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BlockContainer from "../molecules/BlockContainer.vue"
+import ButtonList from "../molecules/ButtonList.vue"
 import ActionButton from "../atoms/ActionButton.vue"
 import { Method } from "../types/method.ts"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
@@ -37,7 +38,7 @@ const background = (value: BudgetRead) => {
     <BlockContainer>
       <template #header>Hide Toggle Categories</template>
       <template #default>
-        <div class="flex flex-1 flex-row flex-wrap gap-2">
+        <ButtonList>
           <ActionButton
             v-for="category in props.config.categories"
             class="flex-1 min-w-48 max-w-48"
@@ -50,7 +51,7 @@ const background = (value: BudgetRead) => {
             :action="`hide-toggle/category/${category.id}`"
             @action:done="emit('update:config')"
           />
-        </div>
+        </ButtonList>
       </template>
     </BlockContainer>
   </template>
