@@ -46,7 +46,7 @@ const background = (value: BudgetRead) => {
       <template #header>{{ $t("title_schedules") }}</template>
       <template #subtitle>{{ $t("desc_schedules") }}</template>
       <template #default>
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2 items-center">
           <CronInput
             :token="props.config.token"
             :label="$t('action_bank_operation_import')"

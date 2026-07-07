@@ -25,29 +25,19 @@ const disabled = computed(() => {
 </script>
 
 <template>
-  <div class="flex items-center gap-4">
-    <!-- Label -->
-    <div class="flex-1 text-2xl font-medium text-gray-700 w-32">
+  <div class="flex flex-row flex-wrap items-center justify-center gap-2">
+    <div class="text-2xl font-medium text-gray-700 w-50">
       {{ label }}
     </div>
 
-    <!-- Text Input -->
     <input
       type="text"
       v-model="model"
       :placeholder
-      class="flex-1 px-4 py-2 rounded-lg border-2 border-purple-400 bg-gray-100 text-gray-700 outline-none focus:border-purple-600 transition-colors duration-200"
+      class="px-2 py-2 rounded-lg border-2 border-purple-400 bg-gray-100 text-gray-700 outline-none focus:border-purple-600"
     />
 
     <!-- Action Button -->
-    <ActionButton
-      class="flex-1"
-      :label="$t('action_update')"
-      :token="token"
-      :action="action"
-      :body="{ cron: model }"
-      :disabled
-      @click="$emit('update:config')"
-    />
+    <ActionButton :label="$t('action_update')" :token :action :body="{ cron: model }" :disabled @click="$emit('update:config')" />
   </div>
 </template>
