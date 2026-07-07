@@ -17,7 +17,13 @@
   "desc_budget_roles": "Choisissez quels budgets agissent comme les budgets des factures et des restes",
   "label_bills_budget": "Factures",
   "label_leftovers_budget": "Restes",
+  "title_notifiers": "Notificateurs",
+  "desc_notifiers": "Configurez les variables de notification (Discord ou Gotify)",
   "title_schedules": "Actions planifiées",
   "desc_schedules": "Gérez vos actions planifiées",
-  "action_update": "Mettre à jour"
+  "action_update": "Mettre à jour",
+  "label_gotify_url": "URL",
+  "label_gotify_token": "Token",
+  "label_gotify_user_token": "Token utilisateur",
+  "label_gotify_application_id": "ID de l'application"
 }

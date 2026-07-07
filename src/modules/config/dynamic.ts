@@ -8,6 +8,12 @@ export enum VConfig {
   RoleBudgetLeftoversId = "role-budget-leftovers-id",
   AutoImportCron = "auto-import-cron",
   BudgetSumUpCron = "budget-sum-up-cron",
+  Notifier = "notifier",
+  NotifierDiscordWebhook = "discord-webhook",
+  NotifierGotifyUrl = "gotify-url",
+  NotifierGotifyToken = "gotify-token",
+  NotifierGotifyUserToken = "gotify-user-token",
+  NotifierGotifyApplicationId = "gotify-application-id",
 }
 
 export enum AConfig {
