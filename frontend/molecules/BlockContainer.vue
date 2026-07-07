@@ -7,7 +7,7 @@ const slots = defineSlots<{
 }>()
 </script>
 <template>
-  <div class="bg-white rounded-lg p-10 flex flex-col shadow-xl justify-center items-center w-[45%]">
+  <div class="bg-white rounded-lg p-6 sm:p-10 flex flex-col shadow-xl justify-center items-center w-full sm:w-[45%]">
     <h1 class="mb-2 text-indigo-700 text-2xl font-bold">
       <slot name="header" />
     </h1>

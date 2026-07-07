@@ -21,7 +21,7 @@ updateConfig()
 <template>
   <div class="app">
     <main class="main">
-      <div class="flex flex-row flex-wrap gap-10 m-10">
+      <div class="flex flex-row flex-wrap gap-6 sm:gap-10 m-4 sm:m-10">
         <AboutBlock :about="config?.about" />
         <ControlBlock :config @update:config="updateConfig" />
         <CategoryBlock :config @update:config="updateConfig" />
