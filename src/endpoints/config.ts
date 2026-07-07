@@ -15,6 +15,7 @@ import pino from "pino"
 
 import { client } from "../client"
 import DynamicConfig, { AConfig, VConfig } from "../modules/config/dynamic"
+import { Notifiers } from "../modules/notifiers/types"
 
 export interface About {
   name: string
@@ -23,6 +24,14 @@ export interface About {
   author: string
   license: string
   repository: string
+}
+
+export interface NotifierConfig {
+  discordWebhook: string | null
+  gotifyUrl: string | null
+  gotifyToken: string | null
+  gotifyUserToken: string | null
+  gotifyApplicationId: string | null
 }
 
 export interface Config {
@@ -38,6 +47,8 @@ export interface Config {
   leftoversBudgetId: string | null
   autoImportCron?: string
   budgetSumUpCron?: string
+  notifier: Notifiers
+  notifierConfig: NotifierConfig
 }
 
 const logger = pino()
@@ -70,6 +81,12 @@ export async function configEndpoint(_req: Request, res: Response) {
     leftoversBudgetId,
     autoImportCron,
     budgetSumUpCron,
+    notifier,
+    notifierDiscordWebhook,
+    notifierGotifyUrl,
+    notifierGotifyToken,
+    notifierGotifyUserToken,
+    notifierGotifyApplicationId,
   ] = await Promise.all([
     BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } }),
     CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } }),
@@ -81,6 +98,12 @@ export async function configEndpoint(_req: Request, res: Response) {
     DynamicConfig.get(VConfig.RoleBudgetLeftoversId),
     DynamicConfig.get(VConfig.AutoImportCron),
     DynamicConfig.get(VConfig.BudgetSumUpCron),
+    DynamicConfig.get(VConfig.Notifier),
+    DynamicConfig.get(VConfig.NotifierDiscordWebhook),
+    DynamicConfig.get(VConfig.NotifierGotifyUrl),
+    DynamicConfig.get(VConfig.NotifierGotifyToken),
+    DynamicConfig.get(VConfig.NotifierGotifyUserToken),
+    DynamicConfig.get(VConfig.NotifierGotifyApplicationId),
   ])
 
   const result: Config = {
@@ -103,6 +126,14 @@ export async function configEndpoint(_req: Request, res: Response) {
     leftoversBudgetId,
     autoImportCron: autoImportCron ?? undefined,
     budgetSumUpCron: budgetSumUpCron ?? undefined,
+    notifier: notifier as Notifiers,
+    notifierConfig: {
+      discordWebhook: notifierDiscordWebhook,
+      gotifyUrl: notifierGotifyUrl,
+      gotifyToken: notifierGotifyToken,
+      gotifyUserToken: notifierGotifyUserToken,
+      gotifyApplicationId: notifierGotifyApplicationId,
+    },
   }
 
   return res.json(result).status(200)

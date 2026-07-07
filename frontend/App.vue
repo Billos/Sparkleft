@@ -5,6 +5,7 @@ import SchedulesBlock from "./organisms/SchedulesBlock.vue"
 import RolesBlock from "./organisms/RolesBlock.vue"
 import CategoryBlock from "./organisms/CategoryBlock.vue"
 import AboutBlock from "./organisms/AboutBlock.vue"
+import NotifiersBlock from "./organisms/NotifiersBlock.vue"
 import { Config } from "../src/endpoints/config.ts"
 import CurrentAccountsBlock from "./organisms/CurrentAccountsBlock.vue"
 
@@ -22,12 +23,13 @@ updateConfig()
   <div class="app">
     <main class="main">
       <div class="flex flex-row flex-wrap justify-center gap-6 sm:gap-10 m-4 sm:m-10">
-        <AboutBlock :about="config?.about" />
+        <NotifiersBlock :config @update:config="updateConfig" />
         <ControlBlock :config @update:config="updateConfig" />
         <CategoryBlock :config @update:config="updateConfig" />
         <SchedulesBlock :config @update:config="updateConfig" />
         <RolesBlock :config @update:config="updateConfig" />
         <CurrentAccountsBlock :config @update:config="updateConfig" />
+        <AboutBlock :about="config?.about" />
       </div>
     </main>
   </div>

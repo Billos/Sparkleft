@@ -9,6 +9,8 @@ import { hideCategory } from "./endpoints/hideCategory"
 import { setCurrentAccount } from "./endpoints/setAssetAccount"
 import { setBudgetRole } from "./endpoints/setBudgetRole"
 import { setCronConfig } from "./endpoints/setCronConfig"
+import { setNotifier } from "./endpoints/setNotifier"
+import { setNotifierField } from "./endpoints/setNotifierField"
 import { settingBudgetForTransaction } from "./endpoints/settingBudgetForTransaction"
 import { settingCategoryForTransaction } from "./endpoints/settingCategoryForTransaction"
 import { triggerAutoImport } from "./endpoints/triggerAutoImport"
@@ -66,6 +68,8 @@ app.post("/api/hide-toggle/budget/:budgetName", TokenMiddleware, hideBudget)
 app.post("/api/budget-sumup", TokenMiddleware, triggerBudgetSumUp)
 app.post("/api/auto-import", TokenMiddleware, triggerAutoImport)
 app.post("/api/cron/:type", TokenMiddleware, setCronConfig)
+app.post("/api/notifier/:notifier", TokenMiddleware, setNotifier)
+app.post("/api/notifier-field/:field", TokenMiddleware, setNotifierField)
 app.get("/api/config", TokenMiddleware, configEndpoint)
 
 app.use("/control", express.static("dist/frontend"))
