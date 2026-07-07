@@ -1,0 +1,23 @@
+{
+  "title_about": "À propos",
+  "name": "Nom",
+  "version": "Version",
+  "author": "Auteur",
+  "license": "Licence",
+  "repository": "Dépôt",
+  "actions": "Actions",
+  "action_budget_sumup": "Résumé du budget",
+  "action_bank_operation_import": "Importation des opérations bancaires",
+  "title_show_hide_categories": "Afficher / Masquer les catégories",
+  "desc_show_hide_categories": "Choisissez quelles catégories sont visibles dans l'interface utilisateur",
+  "title_current_account": "Compte courant",
+  "desc_current_account": "Choisissez quel compte d'actif utiliser comme compte courant",
+  "label_current_account": "Compte courant",
+  "title_budget_roles": "Rôles des budgets",
+  "desc_budget_roles": "Choisissez quels budgets agissent comme les budgets des factures et des restes",
+  "label_bills_budget": "Factures",
+  "label_leftovers_budget": "Restes",
+  "title_schedules": "Actions planifiées",
+  "desc_schedules": "Gérez vos actions planifiées",
+  "action_update": "Mettre à jour"
+}

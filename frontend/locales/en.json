@@ -1,0 +1,23 @@
+{
+  "title_about": "About",
+  "name": "Name",
+  "version": "Version",
+  "author": "Author",
+  "license": "License",
+  "repository": "Repository",
+  "actions": "Actions",
+  "action_budget_sumup": "Budget Sumup",
+  "action_bank_operation_import": "Bank operations import",
+  "title_show_hide_categories": "Show / Hide Categories",
+  "desc_show_hide_categories": "Choose which categories are visible in the UI",
+  "title_current_account": "Current Account",
+  "desc_current_account": "Choose which asset account to use as the current account",
+  "label_current_account": "Current Account",
+  "title_budget_roles": "Budget Roles",
+  "desc_budget_roles": "Choose which budgets act as the Bills and Leftovers budgets",
+  "label_bills_budget": "Bills",
+  "label_leftovers_budget": "Leftovers",
+  "title_schedules": "Scheduled Actions",
+  "desc_schedules": "Set cron expressions (format: minute hour day month weekday) for the scheduled jobs",
+  "action_update": "Update"
+}

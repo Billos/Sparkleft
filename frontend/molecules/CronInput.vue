@@ -42,7 +42,7 @@ const disabled = computed(() => {
     <!-- Action Button -->
     <ActionButton
       class="flex-1"
-      label="Update Cron"
+      :label="$t('action_update')"
       :token="token"
       :action="action"
       :body="{ cron: model }"

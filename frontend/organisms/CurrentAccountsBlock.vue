@@ -34,11 +34,11 @@ const background = (value: AccountRead) => {
 <template>
   <template v-if="props.config">
     <BlockContainer>
-      <template #header>Current Account</template>
-      <template #subtitle>Choose which asset account to use as the current account</template>
+      <template #header>{{ $t("title_current_account") }}</template>
+      <template #subtitle>{{ $t("desc_current_account") }}</template>
       <template #default>
         <div class="flex flex-row gap-4 justify-start items-center flex-wrap">
-          <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">Current account</h2>
+          <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">{{ $t("label_current_account") }}</h2>
           <ButtonList>
             <ActionButton
               v-for="account in props.config.assetAccounts"
