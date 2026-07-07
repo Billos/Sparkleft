@@ -16,21 +16,19 @@ defineEmits<{
 
 <template>
   <template v-if="props.config">
-    <!-- Control Actions -->
     <BlockContainer>
-      <template #header>Control UI</template>
-      <template #subtitle>Trigger Sparkleft control jobs</template>
+      <template #header>{{ $t("actions") }}</template>
       <template #default>
         <ButtonList>
           <ActionButton
-            label="Budget Sum Up"
+            :label="$t('action_budget_sumup')"
             :token="props.config.token"
             action="budget-sumup"
             :method="Method.POST"
             @action:done="$emit('update:config')"
           />
           <ActionButton
-            label="Auto import"
+            :label="$t('action_bank_operation_import')"
             :token="props.config.token"
             action="auto-import"
             :method="Method.POST"

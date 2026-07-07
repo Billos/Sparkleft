@@ -17,12 +17,14 @@ const emit = defineEmits<{
 }>()
 
 const label = (value: BudgetRead) => {
-  if (!value.attributes?.name) {
-    return "Unknown budget"
-  }
   const isHidden = props.config?.hiddenBudgets?.includes(value.attributes.name)
   const icon = isHidden ? "🙈" : "👁️"
   return `${value.attributes.name} ${icon}`
+}
+
+function isHidden(name: string): boolean {
+  const hiddenBudgets = props.config?.hiddenBudgets || []
+  return hiddenBudgets.includes(name)
 }
 
 const background = (value: BudgetRead) => {
@@ -41,22 +43,20 @@ const background = (value: BudgetRead) => {
   <template v-if="props.config">
     <!-- Control Actions -->
     <BlockContainer>
-      <template #header>Schedules</template>
-      <template #subtitle
-        >Set cron expressions (format: minute hour day month weekday) for the scheduled jobs — leave empty to disable</template
-      >
+      <template #header>{{ $t("title_schedules") }}</template>
+      <template #subtitle>{{ $t("desc_schedules") }}</template>
       <template #default>
         <div class="flex flex-col gap-4">
           <CronInput
             :token="props.config.token"
-            label="Auto Import"
+            :label="$t('action_bank_operation_import')"
             placeholder="20 9 * * *"
             action="cron/auto-import"
             v-model="props.config.autoImportCron"
           />
           <CronInput
             :token="props.config.token"
-            label="Sum Up"
+            :label="$t('action_budget_sumup')"
             placeholder="5 0 * * *"
             action="cron/budget-sum-up"
             v-model="props.config.budgetSumUpCron"
@@ -70,7 +70,8 @@ const background = (value: BudgetRead) => {
               :key="value.attributes?.name"
               :token="props.config.token"
               :method="Method.POST"
-              :label="label(value)"
+              :label="value.attributes.name"
+              :right-icon="isHidden(value.attributes.name) ? '🙈' : '👁️'"
               :action="`hide-toggle/budget/${value.attributes?.name}`"
               :background-color="background(value)"
               @action:done="emit('update:config')"

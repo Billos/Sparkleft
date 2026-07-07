@@ -25,11 +25,6 @@ function isSelected(budgetId: string, roleKey: string): boolean {
   return false
 }
 
-function label(budgetName: string | undefined, budgetId: string, roleKey: string): string {
-  if (!budgetName) return "Unknown budget"
-  return isSelected(budgetId, roleKey) ? `${budgetName} ✅` : budgetName
-}
-
 const background = (value: BudgetRead, roleKey: string) => {
   if (!value.attributes?.name) {
     return greyBg
@@ -46,11 +41,11 @@ const background = (value: BudgetRead, roleKey: string) => {
 <template>
   <template v-if="props.config">
     <BlockContainer>
-      <template #header>Budget Roles</template>
-      <template #subtitle>Choose which budgets act as the Bills and Leftovers budgets</template>
+      <template #header>{{ $t("title_budget_roles") }}</template>
+      <template #subtitle>{{ $t("desc_budget_roles") }}</template>
       <template #default>
         <div class="flex flex-row gap-4 justify-start items-center flex-wrap">
-          <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">Bills</h2>
+          <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">{{ $t("label_bills_budget") }}</h2>
           <ButtonList>
             <ActionButton
               v-for="budget in props.config.budgets"
@@ -58,7 +53,8 @@ const background = (value: BudgetRead, roleKey: string) => {
               :key="budget.id"
               :token="props.config.token"
               :method="Method.POST"
-              :label="label(budget.attributes?.name, budget.id, 'bills')"
+              :label="budget.attributes?.name"
+              :right-icon="budget.id === props.config.billsBudgetId ? '✅' : ''"
               :background-color="background(budget, 'bills')"
               :action="`budget-role/bills/${budget.id}`"
               @action:done="emit('update:config')"
@@ -66,7 +62,7 @@ const background = (value: BudgetRead, roleKey: string) => {
           </ButtonList>
         </div>
         <div class="flex flex-row gap-4 justify-start items-center flex-wrap">
-          <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">Leftovers</h2>
+          <h2 class="text-xl font-semibold text-gray-700 w-28 shrink-0">{{ $t("label_leftovers_budget") }}</h2>
           <ButtonList>
             <ActionButton
               v-for="budget in props.config.budgets"
@@ -74,7 +70,8 @@ const background = (value: BudgetRead, roleKey: string) => {
               :key="budget.id"
               :token="props.config.token"
               :method="Method.POST"
-              :label="label(budget.attributes?.name, budget.id, 'leftovers')"
+              :label="budget.attributes.name"
+              :right-icon="budget.id === props.config.leftoversBudgetId ? '✅' : ''"
               :background-color="background(budget, 'leftovers')"
               :action="`budget-role/leftovers/${budget.id}`"
               @action:done="emit('update:config')"

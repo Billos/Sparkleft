@@ -36,7 +36,8 @@ const background = (value: BudgetRead) => {
 <template>
   <template v-if="props.config">
     <BlockContainer>
-      <template #header>Hide Toggle Categories</template>
+      <template #header>{{ $t("title_show_hide_categories") }}</template>
+      <template #subtitle>{{ $t("desc_show_hide_categories") }}</template>
       <template #default>
         <ButtonList>
           <ActionButton
@@ -45,7 +46,7 @@ const background = (value: BudgetRead) => {
             :key="category.id"
             :token="props.config.token"
             :method="Method.POST"
-            :label="category.attributes?.name || 'Unknown category'"
+            :label="category.attributes?.name"
             :right-icon="isSelected(category.id) ? '✅' : ''"
             :background-color="background(category)"
             :action="`hide-toggle/category/${category.id}`"
