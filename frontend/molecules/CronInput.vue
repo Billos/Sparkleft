@@ -25,7 +25,7 @@ const disabled = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+  <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
     <!-- Label -->
     <div class="flex-1 text-2xl font-medium text-gray-700 w-32">
       {{ label }}
