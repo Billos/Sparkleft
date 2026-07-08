@@ -101,14 +101,6 @@ FIREFLY_III_CLI_TOKEN=        # CLI token used for triggering Firefly III cron j
 API_TOKEN=                    # Token to protect Sparkleft endpoints
 USE_API_TOKEN=                # Set to 'false' to disable token protection (default: true)
 
-# ─── Notifications ───────────────────────────────────────
-# Configure at least one channel: Discord or Gotify
-DISCORD_WEBHOOK=              # Discord webhook URL
-GOTIFY_URL=                   # Gotify instance URL
-GOTIFY_APPLICATION_ID=        # Gotify application ID
-GOTIFY_TOKEN=                 # Gotify application token
-GOTIFY_USER_TOKEN=            # Gotify user token (for deleting messages)
-
 # ─── Auto-import ─────────────────────────────────────────
 IMPORTER_URL=                 # URL of the Firefly III Data Importer
 IMPORT_DIRECTORY=             # Path to the import configuration directory
