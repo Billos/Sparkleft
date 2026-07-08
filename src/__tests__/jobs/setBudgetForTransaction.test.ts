@@ -11,11 +11,14 @@ vi.mock("@billos/firefly-iii-sdk", () => ({
 vi.mock("../../client", () => ({
   client: {},
 }))
-vi.mock("../../modules/notifiers", () => ({
-  notifier: {
+const { mockNotifier } = vi.hoisted(() => ({
+  mockNotifier: {
     getMessageId: vi.fn().mockResolvedValue("message-id-123"),
     deleteMessage: vi.fn().mockResolvedValue(undefined),
   },
+}))
+vi.mock("../../modules/notifiers", () => ({
+  getNotifier: vi.fn().mockResolvedValue(mockNotifier),
 }))
 vi.mock("../../utils/notification", () => ({
   unbindTransactionToNotification: vi.fn().mockResolvedValue(undefined),
@@ -41,21 +44,19 @@ describe("SetBudgetForTransactionJob", () => {
     )
   })
   it("deletes the existing budget notifier message before updating", async () => {
-    const { notifier } = await import("../../modules/notifiers")
     const { unbindTransactionToNotification } = await import("../../utils/notification")
     const job = new SetBudgetForTransactionJob()
     await job.run("42", { budget_id: "7" })
-    expect(notifier.getMessageId).toHaveBeenCalledWith("BudgetMessageId", "42")
+    expect(mockNotifier.getMessageId).toHaveBeenCalledWith("BudgetMessageId", "42")
     expect(unbindTransactionToNotification).toHaveBeenCalledWith("42", "BudgetMessageId", "message-id-123")
-    expect(notifier.deleteMessage).toHaveBeenCalledWith("message-id-123")
+    expect(mockNotifier.deleteMessage).toHaveBeenCalledWith("message-id-123")
     expect(TransactionsService.updateTransaction).toHaveBeenCalledOnce()
   })
   it("still updates the transaction when there is no notifier message to delete", async () => {
-    const { notifier } = await import("../../modules/notifiers")
-    vi.mocked(notifier.getMessageId).mockRejectedValueOnce(new Error("not found"))
+    vi.mocked(mockNotifier.getMessageId).mockRejectedValueOnce(new Error("not found"))
     const job = new SetBudgetForTransactionJob()
     await job.run("42", { budget_id: "7" })
-    expect(notifier.deleteMessage).not.toHaveBeenCalled()
+    expect(mockNotifier.deleteMessage).not.toHaveBeenCalled()
     expect(TransactionsService.updateTransaction).toHaveBeenCalledOnce()
   })
 })
