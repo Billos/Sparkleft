@@ -3,7 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
-import { notifier } from "../../modules/notifiers"
+import { getNotifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
 import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate, TemplateName } from "../../utils/renderTemplate"
@@ -67,6 +67,12 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
       transactionId: id,
       budgets,
     })
+
+    const notifier = await getNotifier()
+    if (!notifier) {
+      logger.warn("No notifier configured, skipping message creation for unbudgeted transaction %s", id)
+      return
+    }
     const messageId = await notifier.getMessageId("BudgetMessageId", id)
     if (messageId) {
       const messageExists = await notifier.hasMessageId(messageId)
@@ -82,6 +88,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
 
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
+    const notifier = await getNotifier()
     if (notifier) {
       const { data } = await BudgetsService.listTransactionWithoutBudget({ client, query: { page: 1, limit: 50 } })
       for (const { id: transactionId } of data) {

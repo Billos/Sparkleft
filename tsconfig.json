@@ -8,7 +8,7 @@
     "moduleResolution": "NodeNext",
     "moduleDetection": "force",
     "esModuleInterop": true,
-    // "strict": true,
+    "strict": true,
     "allowJs": true,
     "lib": ["ES2023", "DOM"],
     "skipLibCheck": true,

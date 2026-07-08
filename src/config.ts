@@ -23,21 +23,6 @@ const env = {
   get useApiToken() {
     return process.env.USE_API_TOKEN !== "false"
   },
-  get discordWebhook() {
-    return process.env.DISCORD_WEBHOOK
-  },
-  get gotifyUrl() {
-    return process.env.GOTIFY_URL
-  },
-  get gotifyApplicationId() {
-    return process.env.GOTIFY_APPLICATION_ID
-  },
-  get gotifyUserToken() {
-    return process.env.GOTIFY_USER_TOKEN
-  },
-  get gotifyToken() {
-    return process.env.GOTIFY_TOKEN || ""
-  },
   get serviceUrl() {
     return process.env.SERVICE_URL
   },
