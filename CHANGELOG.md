@@ -1,3 +1,19 @@
+# [3.1.0](https://github.com/Billos/Sparkleft/compare/3.0.0...3.1.0) (2026-07-08)
+
+
+### Bug Fixes
+
+* update tests to mock getNotifier instead of removed notifier export ([ff07bb1](https://github.com/Billos/Sparkleft/commit/ff07bb1cc152298684e4e971461cc516bb5e9a16))
+* update yarn lock ([6883f12](https://github.com/Billos/Sparkleft/commit/6883f124734f705e42544d11b78bc56763eeb8f9))
+
+
+### Features
+
+* dynamically configure and instantiate notifiers ([3568a81](https://github.com/Billos/Sparkleft/commit/3568a817d78dc4dabfed2e8d23e0f1b7bcb7d447))
+* make layout responsive for mobile ([964ec33](https://github.com/Billos/Sparkleft/commit/964ec33714e054a1b217406f0570448bb304e54f))
+* UI to define Notifier and its configuration ([b6f2b3a](https://github.com/Billos/Sparkleft/commit/b6f2b3aafa4fd911b67de5150d2296e5b4f62fb1))
+* vue i18n ([7eef860](https://github.com/Billos/Sparkleft/commit/7eef860cf85b791d032082abf9520f0c51912777))
+
 # [3.0.0](https://github.com/Billos/Sparkleft/compare/2.42.0...3.0.0) (2026-07-05)
 
 
