@@ -23,11 +23,11 @@ updateConfig()
   <div class="app">
     <main class="main">
       <div class="flex flex-row flex-wrap justify-center gap-6 sm:gap-10 m-4 sm:m-10">
-        <NotifiersBlock :config @update:config="updateConfig" />
         <ControlBlock :config @update:config="updateConfig" />
         <CategoryBlock :config @update:config="updateConfig" />
         <SchedulesBlock :config @update:config="updateConfig" />
         <RolesBlock :config @update:config="updateConfig" />
+        <NotifiersBlock :config @update:config="updateConfig" />
         <CurrentAccountsBlock :config @update:config="updateConfig" />
         <AboutBlock :about="config?.about" />
       </div>
