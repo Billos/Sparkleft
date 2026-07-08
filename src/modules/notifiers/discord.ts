@@ -1,13 +1,12 @@
-import { env } from "../../config"
 import { AbstractNotifier } from "./notifier"
 
 export class DiscordNotifier extends AbstractNotifier {
-  constructor() {
+  constructor(private readonly webhook: string) {
     super()
   }
 
   override async sendMessage(content: string): Promise<string> {
-    const result = await fetch(`${env.discordWebhook}?wait=true`, {
+    const result = await fetch(`${this.webhook}?wait=true`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
@@ -20,7 +19,7 @@ export class DiscordNotifier extends AbstractNotifier {
   }
 
   override async deleteMessage(id: string): Promise<void> {
-    const result = await fetch(`${env.discordWebhook}/messages/${id}`, { method: "DELETE" })
+    const result = await fetch(`${this.webhook}/messages/${id}`, { method: "DELETE" })
     if (!result.ok) {
       throw new Error(`Failed to delete message with ID ${id} from Discord webhook: ${result.status} ${result.statusText}`)
     }

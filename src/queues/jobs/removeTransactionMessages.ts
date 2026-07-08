@@ -2,7 +2,7 @@ import { TransactionsService } from "@billos/firefly-iii-sdk"
 import pino from "pino"
 
 import { client } from "../../client"
-import { notifier } from "../../modules/notifiers"
+import { getNotifier } from "../../modules/notifiers"
 import { unbindTransactionToNotification } from "../../utils/notification"
 import { TransactionJob } from "./BaseJob"
 
@@ -30,6 +30,10 @@ export class RemoveTransactionMessagesJob extends TransactionJob {
       },
     } = await TransactionsService.getTransaction({ client, path: { id } })
 
+    const notifier = await getNotifier()
+    if (!notifier) {
+      return
+    }
     if (transaction.category_id) {
       const categoryMessageId = await notifier.getMessageId("CategoryMessageId", id)
       if (categoryMessageId) {

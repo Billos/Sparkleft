@@ -3,7 +3,7 @@ import pino from "pino"
 
 import { client } from "../../client"
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
-import { notifier } from "../../modules/notifiers"
+import { getNotifier } from "../../modules/notifiers"
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
 import { renderTemplate, TemplateName } from "../../utils/renderTemplate"
 import { addBudgetJobToQueue } from "../utils"
@@ -88,8 +88,10 @@ export class CheckBudgetLimitJob extends BudgetJob {
       limit,
       currencySymbol,
     })
-    await notifier.sendMessage(title, message)
-    return
+    const notifier = await getNotifier()
+    if (notifier) {
+      await notifier.sendMessage(title, message)
+    }
   }
 
   override async init(): Promise<void> {

@@ -3,7 +3,7 @@ import { DelayedError, Job, Worker } from "bullmq"
 import pino from "pino"
 
 import { client } from "../client"
-import { notifier } from "../modules/notifiers"
+import { getNotifier } from "../modules/notifiers"
 import { redis as connection } from "../redis"
 import { BaseJob, SimpleJob } from "./jobs/BaseJob"
 import { budgetJobs, endpointJobs, simpleJobs, transactionJobs } from "./jobs/index"
@@ -60,7 +60,12 @@ async function delayJob(job: Job<QueueArgs>, err: Error): Promise<void> {
     `Attempt: ${retryCount}`,
     `Delaying until ${until} with data ${JSON.stringify(job.data)}.`,
   ].join("\n")
-  const delayedMessageId = await notifier.sendMessage(title, message)
+
+  const notifier = await getNotifier()
+  let delayedMessageId: string | undefined
+  if (notifier) {
+    delayedMessageId = await notifier.sendMessage(title, message)
+  }
 
   logger.info(
     "Delaying job %s (%s) until %s - Attempt: %d - Error: %s",
@@ -139,6 +144,11 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
     startedAt.set(id, new Date())
     if (data.delayedMessageId) {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
+      const notifier = await getNotifier()
+      if (!notifier) {
+        logger.warn("No notifier configured, skipping message deletion for job %s (%s)", id, name)
+        return
+      }
       await notifier.deleteMessage(data.delayedMessageId)
     }
   })
@@ -146,21 +156,31 @@ async function initializeWorker(): Promise<Worker<QueueArgs>> {
   worker.on("completed", async ({ id, name, data }) => {
     if (data.delayedMessageId) {
       logger.info("Deleting delayed message %s for job %s (%s)", data.delayedMessageId, id, name)
+      const notifier = await getNotifier()
+      if (!notifier) {
+        logger.warn("No notifier configured, skipping message deletion for job %s (%s)", id, name)
+        return
+      }
       await notifier.deleteMessage(data.delayedMessageId)
     }
     logJobDuration(true, id ?? "unknown", name ?? "unknown")
   })
 
-  worker.on("failed", (job, err) => {
+  worker.on("failed", async (job, err) => {
     if (!job) {
       logger.error({ err }, "A job failed without job context: %s", err?.message ?? "Unknown error")
       return
     }
     logger.error({ err }, "Job %s failed with error %s", job.id, err.message)
-    notifier.sendMessage(
-      "Job Failed",
-      `Job **${job.data.job}** (${job.id}) failed with error ${err.message} and data ${JSON.stringify(job.data)}`,
-    )
+    const notifier = await getNotifier()
+    if (notifier) {
+      notifier.sendMessage(
+        "Job Failed",
+        `Job **${job.data.job}** (${job.id}) failed with error ${err.message} and data ${JSON.stringify(job.data)}`,
+      )
+    } else {
+      logger.warn("No notifier configured, skipping failure notification for job %s (%s)", job.id, job.name)
+    }
 
     logJobDuration(false, job.id ?? "unknown", job.name ?? "unknown")
   })

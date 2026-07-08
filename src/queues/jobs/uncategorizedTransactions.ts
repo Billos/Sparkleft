@@ -5,7 +5,7 @@ import pino from "pino"
 import { client } from "../../client"
 import { env } from "../../config"
 import DynamicConfig, { AConfig, VConfig } from "../../modules/config/dynamic"
-import { notifier } from "../../modules/notifiers"
+import { getNotifier } from "../../modules/notifiers"
 import { getBudgetName } from "../../utils/budgetName"
 import { bindTransactionToNotification } from "../../utils/notification"
 import { renderTemplate, TemplateName } from "../../utils/renderTemplate"
@@ -85,6 +85,11 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       categoriesGroups.push(categories.slice(i, i + groupSize))
     }
 
+    const notifier = await getNotifier()
+    if (!notifier) {
+      logger.warn("No notifier configured, skipping message creation for transaction %s", id)
+      return
+    }
     const msg = renderTemplate(TemplateName.UncategorizedTransaction, {
       transaction,
       transactionId: id,
@@ -100,12 +105,14 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       }
       logger.info("Category message defined but not found in notifier for transaction %s", id)
     }
+
     const newMessageId = await notifier.sendMessage("Uncategorized Transaction", msg)
     await bindTransactionToNotification(id, "CategoryMessageId", newMessageId)
   }
 
   override async init(): Promise<void> {
     logger.info("Initializing UnbudgetedTransactions jobs for all unbudgeted transactions")
+    const notifier = await getNotifier()
     if (notifier) {
       const startDate = Temporal.Now.zonedDateTimeISO(env.timezone).subtract({ months: 3 }).startOfDay()
       const start = startDate.toPlainDate().toString()

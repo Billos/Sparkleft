@@ -1,7 +1,7 @@
 import pino from "pino"
 
 import DynamicConfig, { VConfig } from "../../modules/config/dynamic"
-import { notifier } from "../../modules/notifiers"
+import { getNotifier } from "../../modules/notifiers"
 import { redis } from "../../redis"
 import { renderTemplate, TemplateContextMap, TemplateName } from "../../utils/renderTemplate"
 import { getQueue } from "../queue"
@@ -91,6 +91,11 @@ export abstract class BaseJob {
   async sendUniqueNotification<T extends TemplateName>(title: string, template: T, data: TemplateContextMap[T]): Promise<void> {
     if (!this.uniqueNotificationKey) {
       throw new Error("uniqueNotificationKey is not set for this job")
+    }
+    const notifier = await getNotifier()
+    if (!notifier) {
+      logger.warn("No notifier configured, skipping notification for job %s", this.id)
+      return
     }
     const previousNotificationId = await redis.get(this.uniqueNotificationKey)
     if (previousNotificationId) {
