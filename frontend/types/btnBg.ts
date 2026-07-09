@@ -1,5 +1,6 @@
 export const activeBg = "bg-linear-to-br from-[#77db65] to-[#1ba761]"
 export const loadingBg = "bg-linear-to-br from-[#f5f5f5] to-[#e0e0e0]"
+export const errorBg = "bg-linear-to-br from-[#a3000e] to-[#b60fc2]"
 export const disabledBg = "bg-linear-to-br from-[#a3000e] to-[#b60fc2]"
 export const greyBg = "bg-linear-to-br from-[#817c7c43] to-[#414145]"
 export const blueishBg = "bg-linear-to-br from-[#43cea2] to-[#185a9d]"

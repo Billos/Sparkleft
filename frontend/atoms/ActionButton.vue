@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { Method } from "../types/method"
-import { activeBg, disabledBg, loadingBg } from "../types/btnBg"
+import { activeBg, disabledBg, errorBg, loadingBg } from "../types/btnBg"
 
 const {
   method = Method.POST,
@@ -11,6 +11,7 @@ const {
   body,
   disabled = false,
   rightIcon,
+  style,
 } = defineProps<{
   method?: Method
   label: string
@@ -19,7 +20,7 @@ const {
   body?: Record<string, unknown>
   disabled?: boolean
   rightIcon?: string
-  backgroundColor?: string | null
+  style?: string | null
 }>()
 
 enum Status {
@@ -48,6 +49,7 @@ const icon = computed(() => {
 })
 
 const isLoading = computed(() => status.value === Status.Loading)
+const isError = computed(() => status.value === Status.Error)
 
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -91,9 +93,10 @@ async function click() {
       'border-none rounded-lg shadow-md',
       'text-base cursor-pointer text-white text-center font-medium',
       { [loadingBg]: isLoading },
-      { [activeBg]: !disabled && !isLoading && !backgroundColor },
-      { [disabledBg]: disabled && !isLoading && !backgroundColor },
-      { [backgroundColor ?? '']: backgroundColor },
+      { [errorBg]: isError },
+      { [style ?? '']: style && !isLoading && !isError },
+      { [activeBg]: !disabled && !isLoading && !isError && !style },
+      { [disabledBg]: disabled && !isLoading && !isError && !style },
     ]"
     @click="click"
   >
