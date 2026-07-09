@@ -15,9 +15,8 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="flex items-center gap-4">
-    <!-- Label -->
-    <div class="flex-1 text-2xl font-medium text-gray-700 w-40">
+  <div class="flex flex-row flex-wrap items-center justify-center gap-2">
+    <div class="text-2xl font-medium text-gray-700 w-50">
       {{ label }}
     </div>
 
