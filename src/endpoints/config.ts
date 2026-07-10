@@ -49,6 +49,8 @@ export interface Config {
   budgetSumUpCron?: string
   notifier: Notifiers
   notifierConfig: NotifierConfig
+  availableLocales: string[]
+  userLocale?: string
 }
 
 const logger = pino()
@@ -87,6 +89,7 @@ export async function configEndpoint(_req: Request, res: Response) {
     notifierGotifyToken,
     notifierGotifyUserToken,
     notifierGotifyApplicationId,
+    userLocale,
   ] = await Promise.all([
     BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } }),
     CategoriesService.listCategory({ client, query: { page: 1, limit: 50 } }),
@@ -104,6 +107,7 @@ export async function configEndpoint(_req: Request, res: Response) {
     DynamicConfig.get(VConfig.NotifierGotifyToken),
     DynamicConfig.get(VConfig.NotifierGotifyUserToken),
     DynamicConfig.get(VConfig.NotifierGotifyApplicationId),
+    DynamicConfig.get(VConfig.Locale),
   ])
 
   const result: Config = {
@@ -134,6 +138,8 @@ export async function configEndpoint(_req: Request, res: Response) {
       gotifyUserToken: notifierGotifyUserToken,
       gotifyApplicationId: notifierGotifyApplicationId,
     },
+    availableLocales: ["fr-FR", "en"],
+    userLocale: userLocale ?? undefined,
   }
 
   return res.json(result).status(200)

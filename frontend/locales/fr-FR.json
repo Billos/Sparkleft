@@ -25,5 +25,9 @@
   "label_gotify_url": "URL",
   "label_gotify_token": "Token",
   "label_gotify_user_token": "Token utilisateur",
-  "label_gotify_application_id": "ID de l'application"
+  "label_gotify_application_id": "ID de l'application",
+  "title_user_locale": "Langue de l'utilisateur",
+  "desc_user_locale": "Choisissez la langue pour les notifications de l'utilisateur",
+  "label_locale_fr-FR": "Français de France",
+  "label_locale_en": "Anglais"
 }
