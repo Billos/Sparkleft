@@ -14,6 +14,7 @@ export enum VConfig {
   NotifierGotifyToken = "gotify-token",
   NotifierGotifyUserToken = "gotify-user-token",
   NotifierGotifyApplicationId = "gotify-application-id",
+  Locale = "locale",
 }
 
 export enum AConfig {
