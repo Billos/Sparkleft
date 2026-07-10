@@ -8,6 +8,7 @@ import AboutBlock from "./organisms/AboutBlock.vue"
 import NotifiersBlock from "./organisms/NotifiersBlock.vue"
 import { Config } from "../src/endpoints/config.ts"
 import CurrentAccountsBlock from "./organisms/CurrentAccountsBlock.vue"
+import UserLocaleBlock from "./organisms/UserLocaleBlock.vue"
 
 const config = ref<Config | undefined>()
 
@@ -28,6 +29,7 @@ updateConfig()
         <SchedulesBlock :config @update:config="updateConfig" />
         <RolesBlock :config @update:config="updateConfig" />
         <NotifiersBlock :config @update:config="updateConfig" />
+        <UserLocaleBlock :config @update:config="updateConfig" />
         <CurrentAccountsBlock :config @update:config="updateConfig" />
         <AboutBlock :about="config?.about" />
       </div>
