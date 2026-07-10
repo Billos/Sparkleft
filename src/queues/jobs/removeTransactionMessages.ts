@@ -32,6 +32,7 @@ export class RemoveTransactionMessagesJob extends TransactionJob {
 
     const notifier = await getNotifier()
     if (!notifier) {
+      logger.warn("No notifier configured, skipping message removal for transaction %s", id)
       return
     }
     if (transaction.category_id) {
