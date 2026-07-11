@@ -23,6 +23,7 @@ import { TokenMiddleware } from "./middleware/tokenMiddleware"
 import { TransactionResultMiddleware } from "./middleware/transactionResultMiddleware"
 import { verifyWebhookMiddleware } from "./middleware/webhookSecretMiddleware"
 import { initializeJobs } from "./queues"
+import { initializeI18N } from "./utils/i18n"
 
 const logger = pino()
 const app = express()
@@ -77,6 +78,7 @@ app.get("/api/config", TokenMiddleware, configEndpoint)
 app.use("/control", express.static("dist/frontend"))
 
 async function startServer() {
+  await initializeI18N()
   try {
     await new Promise<void>((resolve) => {
       app.listen(env.port, () => {
