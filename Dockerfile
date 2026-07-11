@@ -10,14 +10,13 @@ RUN yarn
 RUN yarn build
 
 # Stage 1: Build frontend
-FROM base AS frontend-builder
-COPY . .
-RUN yarn install
-RUN yarn build:frontend
-
-FROM base AS development
+FROM builder AS frontend-builder
 COPY . .
 RUN yarn
+RUN yarn build:frontend
+
+FROM builder AS development
+COPY . .
 ENTRYPOINT [ "yarn", "run" ]
 
 # Final production image
@@ -30,7 +29,7 @@ COPY .yarnrc.yml ./.yarnrc.yml
 COPY tsconfig.json ./tsconfig.json
 COPY .yarn ./.yarn
 
-RUN yarn workspaces focus --all --production
+RUN yarn workspaces focus --production
 COPY --from=builder /app/build ./build
 COPY --from=frontend-builder /app/dist/frontend ./dist/frontend
 COPY --from=builder /app/templates ./templates
