@@ -47,6 +47,9 @@ jobs:
       - name: Format code
         run: npm run format
 
+      - name: Build Docker image
+        run: npm run docker:build
+
       - name: Semantic Release
         id: semantic
         uses: cycjimmy/semantic-release-action@v4
