@@ -1,3 +1,19 @@
+# [3.2.0](https://github.com/Billos/Sparkleft/compare/3.1.0...3.2.0) (2026-07-11)
+
+
+### Bug Fixes
+
+* fixed bullmq version ([3060712](https://github.com/Billos/Sparkleft/commit/30607121c9141daabbef702b57a6105816b0000f))
+* localize the pre colon space ([94a6aa4](https://github.com/Billos/Sparkleft/commit/94a6aa4a998a3e3f1fd5436a59851e75a3f22adf))
+* repair build ([04a1c5c](https://github.com/Billos/Sparkleft/commit/04a1c5c393c7d60c30639c61895630507d22fb15))
+
+
+### Features
+
+* Add UI block for locale selection ([d9b6740](https://github.com/Billos/Sparkleft/commit/d9b674098d506e705067258705d59524071d6966))
+* Allow dynamic configuration of application locale ([b497521](https://github.com/Billos/Sparkleft/commit/b4975210b1acc4d98386ec6414f00b822b023b41))
+* Introduce internationalization (i18n) for templates ([206accb](https://github.com/Billos/Sparkleft/commit/206accbfd9f65e0f5114acb077c34a018ed936bd))
+
 # [3.1.0](https://github.com/Billos/Sparkleft/compare/3.0.0...3.1.0) (2026-07-08)
 
 
