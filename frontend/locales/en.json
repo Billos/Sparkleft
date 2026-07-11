@@ -42,5 +42,6 @@
   "notif_account_balance": "Account balance",
   "notif_transaction": "Transaction",
   "notif_rules": "Rules",
-  "notif_new_rule": "New rule"
+  "notif_new_rule": "New rule",
+  "notif_select_category": "Select category"
 }
