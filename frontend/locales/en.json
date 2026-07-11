@@ -51,5 +51,6 @@
   "notif_autoimport_successful": "Auto-import completed successfully.",
   "notif_autoimport_imported_expenses": "Imported {{ diffExpenses }} expenses.",
   "notif_autoimport_imported_deposits": "Imported {{ diffDeposits }} deposits.",
-  "notif_autoimport_imported_transfers": "Imported {{ diffTransfers }} transfers."
+  "notif_autoimport_imported_transfers": "Imported {{ diffTransfers }} transfers.",
+  "precolon": ""
 }
