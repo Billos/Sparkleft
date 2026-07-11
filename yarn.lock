@@ -3876,6 +3876,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"i18next@npm:^26.3.6":
+  version: 26.3.6
+  resolution: "i18next@npm:26.3.6"
+  peerDependencies:
+    typescript: ^5 || ^6 || ^7
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/5920ac8fb6b647a2bdd439d121de04e5297246e52c4d95d13f5faae0824fd45b2faeb66038bcd61fc62362daa815f9c32fb992d6faa3787607d1dfe768e9a8b1
+  languageName: node
+  linkType: hard
+
 "iconv-lite@npm:^0.7.2, iconv-lite@npm:~0.7.0":
   version: 0.7.3
   resolution: "iconv-lite@npm:0.7.3"
@@ -6652,6 +6664,7 @@ __metadata:
     "@vitest/ui": "npm:^4.1.10"
     bullmq: "npm:^5.79.3"
     express: "npm:^5.2.1"
+    i18next: "npm:^26.3.6"
     ioredis: "npm:5.10.1"
     nunjucks: "npm:^3.2.4"
     oxlint: "npm:^1.73.0"

@@ -1,9 +1,11 @@
 import path from "path"
 
 import { BudgetRead, CategoryRead, TransactionRead, TransactionSplit } from "@billos/firefly-iii-sdk"
+import i18next from "i18next"
 import nunjucks from "nunjucks"
 
 import { env } from "../config"
+import DynamicConfig, { VConfig } from "../modules/config/dynamic"
 import { BudgetSumUpData } from "./types/budgetSumUp"
 
 // Available notification templates. Each value matches a file in
@@ -142,6 +144,14 @@ njkEnv.addFilter("TransactionSummary", ({ attributes }: TransactionRead) => {
   }
 })
 
+njkEnv.addFilter("i18n", function (this: { ctx: object }, str: string) {
+  const translated = i18next.t(str)
+  return njkEnv.renderString(translated, this.ctx)
+})
+
 export async function renderTemplate<T extends TemplateName>(templateName: T, context: TemplateContextMap[T]): Promise<string> {
+  const locale = await DynamicConfig.get(VConfig.Locale)
+
+  i18next.changeLanguage(locale || "en")
   return njkEnv.render(templateName, context).trim()
 }

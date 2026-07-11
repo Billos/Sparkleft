@@ -1,8 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
+import DynamicConfig, { VConfig } from "../modules/config/dynamic"
+import { initializeI18N } from "../utils/i18n.js"
 import { renderTemplate, TemplateName } from "../utils/renderTemplate.js"
 
 describe("renderTemplate auto-import.njk", () => {
+  beforeAll(async () => {
+    await initializeI18N()
+  })
+
   beforeEach(() => {
     vi.stubEnv("FIREFLY_III_URL", "http://firefly:8080")
     vi.stubEnv("SERVICE_URL", "http://sparkleft:3000")
@@ -12,6 +18,14 @@ describe("renderTemplate auto-import.njk", () => {
   afterEach(() => {
     vi.resetModules()
     vi.unstubAllEnvs()
+  })
+
+  vi.mock("../modules/config/dynamic", async () => {
+    const actual = await vi.importActual<typeof import("../modules/config/dynamic")>("../modules/config/dynamic")
+    return {
+      ...actual,
+      default: { get: vi.fn() },
+    }
   })
 
   it("includes a link to the control page URL", async () => {
@@ -26,6 +40,7 @@ describe("renderTemplate auto-import.njk", () => {
       transfers: [],
     })
 
+    expect(DynamicConfig.get).toHaveBeenCalledWith(VConfig.Locale)
     expect(result).toContain("http://sparkleft:3000/control?api_token=myapitoken")
   })
 
@@ -46,6 +61,7 @@ describe("renderTemplate auto-import.njk", () => {
       ] as never,
     })
 
+    expect(DynamicConfig.get).toHaveBeenCalledWith(VConfig.Locale)
     expect(result).toContain("Imported 1 transfers.")
     expect(result).toContain("Savings")
   })
@@ -62,6 +78,7 @@ describe("renderTemplate auto-import.njk", () => {
       transfers: [],
     })
 
+    expect(DynamicConfig.get).toHaveBeenCalledWith(VConfig.Locale)
     expect(result).toContain("No new transfers imported.")
   })
 })
