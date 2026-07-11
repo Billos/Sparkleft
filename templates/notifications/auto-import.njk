@@ -1,34 +1,34 @@
-Auto-import completed successfully.
+{{ "notif_autoimport_successful" | i18n }}
 
 {% if diffExpenses > 0 %}
-Imported {{ diffExpenses }} expenses.
+{{ "notif_autoimport_imported_expenses" | i18n }}
 {% for expense in expenses %}
  - {{ expense | TransactionSummary }}
 {% endfor %}
 {% else %}
-No new expenses imported.
+{{ "notif_no_new_expenses" | i18n }}
 {% endif %}
 
 {% if diffDeposits > 0 %}
-Imported {{ diffDeposits }} deposits.
+{{ "notif_autoimport_imported_deposits" | i18n }}
 {% for deposit in deposits %}
  - {{ deposit | TransactionSummary }}
 {% endfor %}
 {% else %}
-No new deposits imported.
+{{ "notif_no_new_deposits" | i18n }}
 {% endif %}
 
 {% if diffTransfers > 0 %}
-Imported {{ diffTransfers }} transfers.
+{{ "notif_autoimport_imported_transfers" | i18n }}
 {% for transfer in transfers %}
  - {{ transfer | TransactionSummary }}
 {% endfor %}
 {% else %}
-No new transfers imported.
+{{ "notif_no_new_transfers" | i18n }}
 {% endif %}
 
-**Account balance:** {{ accountBalance }} {{ accountCurrency }}
+**{{ "notif_account_balance" | i18n }}:** {{ accountBalance }} {{ accountCurrency }}
 
-[View Transactions](<{{ "" | UrlFireflyTransactions }}>)
+[{{ "notif_view_transactions" | i18n }}](<{{ "" | UrlFireflyTransactions }}>)
 
-[Control Page](<{{ "" | UrlSparkleftControlPage }}>)
+[{{ "notif_webui" | i18n }}](<{{ "" | UrlSparkleftControlPage }}>)
