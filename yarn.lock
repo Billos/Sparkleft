@@ -2438,7 +2438,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bullmq@npm:^5.79.3":
+"bullmq@npm:5.79.3":
   version: 5.79.3
   resolution: "bullmq@npm:5.79.3"
   dependencies:
@@ -6662,7 +6662,7 @@ __metadata:
     "@vitejs/plugin-vue": "npm:^6.0.7"
     "@vitest/coverage-v8": "npm:^4.1.10"
     "@vitest/ui": "npm:^4.1.10"
-    bullmq: "npm:^5.79.3"
+    bullmq: "npm:5.79.3"
     express: "npm:^5.2.1"
     i18next: "npm:^26.3.6"
     ioredis: "npm:5.10.1"
