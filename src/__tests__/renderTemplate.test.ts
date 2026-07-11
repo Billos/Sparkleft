@@ -15,7 +15,7 @@ describe("renderTemplate auto-import.njk", () => {
   })
 
   it("includes a link to the control page URL", async () => {
-    const result = renderTemplate(TemplateName.AutoImport, {
+    const result = await renderTemplate(TemplateName.AutoImport, {
       accountBalance: "100.00",
       accountCurrency: "€",
       diffExpenses: 0,
@@ -30,7 +30,7 @@ describe("renderTemplate auto-import.njk", () => {
   })
 
   it("lists imported transfers when diffTransfers is positive", async () => {
-    const result = renderTemplate(TemplateName.AutoImport, {
+    const result = await renderTemplate(TemplateName.AutoImport, {
       accountBalance: "100.00",
       accountCurrency: "€",
       diffExpenses: 0,
@@ -51,7 +51,7 @@ describe("renderTemplate auto-import.njk", () => {
   })
 
   it("shows no transfers message when diffTransfers is zero", async () => {
-    const result = renderTemplate(TemplateName.AutoImport, {
+    const result = await renderTemplate(TemplateName.AutoImport, {
       accountBalance: "100.00",
       accountCurrency: "€",
       diffExpenses: 0,

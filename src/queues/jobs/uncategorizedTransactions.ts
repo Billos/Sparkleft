@@ -90,7 +90,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       logger.warn("No notifier configured, skipping message creation for transaction %s", id)
       return
     }
-    const msg = renderTemplate(TemplateName.UncategorizedTransaction, {
+    const msg = await renderTemplate(TemplateName.UncategorizedTransaction, {
       transaction,
       transactionId: id,
       categories,

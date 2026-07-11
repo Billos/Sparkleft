@@ -62,7 +62,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
     const { data: allBudgets } = await BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } })
     const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
-    const msg = renderTemplate(TemplateName.UnbudgetedTransaction, {
+    const msg = await renderTemplate(TemplateName.UnbudgetedTransaction, {
       transaction,
       transactionId: id,
       budgets,
