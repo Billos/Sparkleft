@@ -31,6 +31,7 @@
   "label_locale_fr-FR": "French of France",
   "label_locale_en": "English",
   "notif_view_budgets": "View Budgets",
+  "notif_view_transactions": "View transactions",
   "notif_webui": "WebUI",
   "notif_spent": "Spent",
   "notif_limit": "Limit",
@@ -43,5 +44,12 @@
   "notif_transaction": "Transaction",
   "notif_rules": "Rules",
   "notif_new_rule": "New rule",
-  "notif_select_category": "Select category"
+  "notif_select_category": "Select category",
+  "notif_no_new_expenses": "No new expenses imported.",
+  "notif_no_new_deposits": "No new deposits imported.",
+  "notif_no_new_transfers": "No new transfers imported.",
+  "notif_autoimport_successful": "Auto-import completed successfully.",
+  "notif_autoimport_imported_expenses": "Imported {{ diffExpenses }} expenses.",
+  "notif_autoimport_imported_deposits": "Imported {{ diffDeposits }} deposits.",
+  "notif_autoimport_imported_transfers": "Imported {{ diffTransfers }} transfers."
 }

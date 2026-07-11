@@ -31,6 +31,7 @@
   "label_locale_fr-FR": "Français de France",
   "label_locale_en": "Anglais",
   "notif_view_budgets": "Voir les budgets",
+  "notif_view_transactions": "Voir les transactions",
   "notif_webui": "WebUI",
   "notif_spent": "Dépensé",
   "notif_limit": "Limite",
@@ -43,5 +44,12 @@
   "notif_transaction": "Transaction",
   "notif_rules": "Règles",
   "notif_new_rule": "Nouvelle règle",
-  "notif_select_category": "Choisir la catégorie"
+  "notif_select_category": "Choisir la catégorie",
+  "notif_no_new_expenses": "Pas de dépense importée.",
+  "notif_no_new_deposits": "Pas de dépôt importé.",
+  "notif_no_new_transfers": "Pas de transfert importé.",
+  "notif_autoimport_successful": "Importation des données bancaires terminée.",
+  "notif_autoimport_imported_expenses": "Import de {{ diffExpenses }} dépense(s).",
+  "notif_autoimport_imported_deposits": "Import de {{ diffDeposits }} dépôt(s).",
+  "notif_autoimport_imported_transfers": "Import de {{ diffTransfers }} transfert(s)."
 }
