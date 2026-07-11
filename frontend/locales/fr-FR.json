@@ -29,5 +29,10 @@
   "title_user_locale": "Langue de l'utilisateur",
   "desc_user_locale": "Choisissez la langue pour les notifications de l'utilisateur",
   "label_locale_fr-FR": "Français de France",
-  "label_locale_en": "Anglais"
+  "label_locale_en": "Anglais",
+  "notif_view_budgets": "Voir les budgets",
+  "notif_spent": "Dépensé",
+  "notif_limit": "Limite",
+  "notif_overspent_new_limit": "Nouvelle limite",
+  "notif_overspent_head_line": "Le budget **{{ budgetName }}** est dépassé !"
 }

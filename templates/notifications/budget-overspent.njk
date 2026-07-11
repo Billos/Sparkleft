@@ -1,9 +1,9 @@
-Budget **{{ budgetName }}** is overspent!
+{{ "notif_overspent_head_line" | i18n }}
 
-Spent: `{{ spent }} {{ currencySymbol }}`
+{{ "notif_spent" | i18n }}: `{{ spent }} {{ currencySymbol }}`
 
-Limit: `{{ limit }} {{ currencySymbol }}`
+{{ "notif_limit" | i18n }}: `{{ limit }} {{ currencySymbol }}`
 
-New limit set to `{{ spent }} {{ currencySymbol }}`
+{{ "notif_overspent_new_limit" | i18n }}: `{{ spent }} {{ currencySymbol }}`
 
-[View Budgets](<{{ "" | UrlFireflyBudgets }}>)
+[{{ "notif_view_budgets" | i18n }}](<{{ "" | UrlFireflyBudgets }}>)
