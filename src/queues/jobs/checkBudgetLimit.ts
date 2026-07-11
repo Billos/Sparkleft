@@ -82,7 +82,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     }
 
     const title = "Warning"
-    const message = renderTemplate(TemplateName.BudgetOverspent, {
+    const message = await renderTemplate(TemplateName.BudgetOverspent, {
       budgetName: budget.attributes.name,
       spent,
       limit,

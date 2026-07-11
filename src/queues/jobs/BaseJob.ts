@@ -107,7 +107,7 @@ export abstract class BaseJob {
       }
     }
 
-    const msg = renderTemplate(template, data)
+    const msg = await renderTemplate(template, data)
     const notificationId = await notifier.sendMessage(title, msg)
     await redis.set(this.uniqueNotificationKey, notificationId)
   }

@@ -142,6 +142,6 @@ njkEnv.addFilter("TransactionSummary", ({ attributes }: TransactionRead) => {
   }
 })
 
-export function renderTemplate<T extends TemplateName>(templateName: T, context: TemplateContextMap[T]): string {
+export async function renderTemplate<T extends TemplateName>(templateName: T, context: TemplateContextMap[T]): Promise<string> {
   return njkEnv.render(templateName, context).trim()
 }
