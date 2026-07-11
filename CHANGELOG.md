@@ -1,3 +1,11 @@
+## [3.2.1](https://github.com/Billos/Sparkleft/compare/3.2.0...3.2.1) (2026-07-11)
+
+
+### Bug Fixes
+
+* Copying the locales to the docker ([3e490a1](https://github.com/Billos/Sparkleft/commit/3e490a1dffff8723cd1abd1ea0e12ffdebd9a481))
+* move locales to common folder ([1a0a90d](https://github.com/Billos/Sparkleft/commit/1a0a90da2ae963c3813d4186e3a2a8c0ab4772ad))
+
 # [3.2.0](https://github.com/Billos/Sparkleft/compare/3.1.0...3.2.0) (2026-07-11)
 
 
