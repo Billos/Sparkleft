@@ -51,5 +51,6 @@
   "notif_autoimport_successful": "Importation des données bancaires terminée.",
   "notif_autoimport_imported_expenses": "Import de {{ diffExpenses }} dépense(s).",
   "notif_autoimport_imported_deposits": "Import de {{ diffDeposits }} dépôt(s).",
-  "notif_autoimport_imported_transfers": "Import de {{ diffTransfers }} transfert(s)."
+  "notif_autoimport_imported_transfers": "Import de {{ diffTransfers }} transfert(s).",
+  "precolon": " "
 }
