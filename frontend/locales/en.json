@@ -29,5 +29,10 @@
   "title_user_locale": "User language",
   "desc_user_locale": "Chose the language used for the notifications",
   "label_locale_fr-FR": "French of France",
-  "label_locale_en": "English"
+  "label_locale_en": "English",
+  "notif_view_budgets": "View Budgets",
+  "notif_spent": "Spent",
+  "notif_limit": "Limit",
+  "notif_overspent_new_limit": "New limit",
+  "notif_overspent_head_line": "Budget **{{ budgetName }}** is overspent!"
 }
