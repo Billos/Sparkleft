@@ -31,6 +31,7 @@ COPY .yarn ./.yarn
 
 RUN yarn workspaces focus --production
 COPY --from=builder /app/build ./build
+COPY --from=builder /app/locales ./locales
 COPY --from=frontend-builder /app/dist/frontend ./dist/frontend
 COPY --from=builder /app/templates ./templates
 
