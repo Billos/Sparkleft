@@ -31,8 +31,13 @@
   "label_locale_fr-FR": "French of France",
   "label_locale_en": "English",
   "notif_view_budgets": "View Budgets",
+  "notif_webui": "WebUI",
   "notif_spent": "Spent",
   "notif_limit": "Limit",
   "notif_overspent_new_limit": "New limit",
-  "notif_overspent_head_line": "Budget **{{ budgetName }}** is overspent!"
+  "notif_overspent_head_line": "Budget **{{ budgetName }}** is overspent!",
+  "notif_account": "Account",
+  "notif_name": "Name",
+  "notif_left": "Left (per day)",
+  "notif_account_balance": "Account balance"
 }
