@@ -1,10 +1,10 @@
 `{{ transaction.amount | toFixed(transaction.currency_decimal_places) }} {{ transaction.currency_symbol }}` {{ transaction.description }}
 
-[Transaction](<{{ transactionId | UrlFireflyTransactionShow }}>)
+[{{ "notif_transaction" | i18n }}](<{{ transactionId | UrlFireflyTransactionShow }}>)
 
-[New rule](<{{ transaction | UrlFireflyNewRule }}>)
+[{{ "notif_new_rule" | i18n  }}](<{{ transaction | UrlFireflyNewRule }}>)
 
-[Rules](<{{ "" | UrlFireflyRules }}>)
+[{{ "notif_rules" | i18n }}](<{{ "" | UrlFireflyRules }}>)
 
 {% for budget in budgets %}
 - [`{{ budget.attributes.name }}`](<{{ transactionId | UrlSparkleftBudgetSet(budget.id) }}>)

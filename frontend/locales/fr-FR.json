@@ -39,5 +39,8 @@
   "notif_account": "Compte",
   "notif_name": "Nom",
   "notif_left": "Reste (par jour)",
-  "notif_account_balance": "Solde du compte"
+  "notif_account_balance": "Solde du compte",
+  "notif_transaction": "Transaction",
+  "notif_rules": "Règles",
+  "notif_new_rule": "Nouvelle règle"
 }

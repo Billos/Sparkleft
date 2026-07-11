@@ -39,5 +39,8 @@
   "notif_account": "Account",
   "notif_name": "Name",
   "notif_left": "Left (per day)",
-  "notif_account_balance": "Account balance"
+  "notif_account_balance": "Account balance",
+  "notif_transaction": "Transaction",
+  "notif_rules": "Rules",
+  "notif_new_rule": "New rule"
 }
