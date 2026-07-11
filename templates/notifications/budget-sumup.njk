@@ -1,11 +1,11 @@
-| Name | Limit | Spent | Left (left per day) |
+| {{ "notif_name" | i18n }} | {{ "notif_limit" | i18n }} | {{ "notif_spent" | i18n }} | {{ "notif_left" | i18n }} |
 |-----|-------|-------|----------|
 {% for budget in insights %}
 | {{ budget.name }} | {{ budget.budgetLimit }} {{ budget.currency }} | {{ budget.spent }} {{ budget.currency }} | {{ budget.leftover }} {{ budget.currency }} ({{ budget.leftPerDay }} {{ budget.currency }}) |
 {% endfor %}
 
-**Account balance:** {{ accountBalance }} {{ accountCurrency }}
+**{{ "notif_account_balance" | i18n }}:** {{ accountBalance }} {{ accountCurrency }}
 
-[View Budgets](<{{ "" | UrlFireflyBudgets }}>)
+[{{ "notif_view_budgets" | i18n }}](<{{ "" | UrlFireflyBudgets }}>)
 
-[Control Page](<{{ "" | UrlSparkleftControlPage }}>)
+[{{ "notif_webui" | i18n  }}](<{{ "" | UrlSparkleftControlPage }}>)

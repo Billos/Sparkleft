@@ -31,8 +31,13 @@
   "label_locale_fr-FR": "Français de France",
   "label_locale_en": "Anglais",
   "notif_view_budgets": "Voir les budgets",
+  "notif_webui": "WebUI",
   "notif_spent": "Dépensé",
   "notif_limit": "Limite",
   "notif_overspent_new_limit": "Nouvelle limite",
-  "notif_overspent_head_line": "Le budget **{{ budgetName }}** est dépassé !"
+  "notif_overspent_head_line": "Le budget **{{ budgetName }}** est dépassé !",
+  "notif_account": "Compte",
+  "notif_name": "Nom",
+  "notif_left": "Reste (par jour)",
+  "notif_account_balance": "Solde du compte"
 }
