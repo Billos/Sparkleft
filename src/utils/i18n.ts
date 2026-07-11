@@ -1,7 +1,7 @@
 import i18next from "i18next"
 
-import en from "../../frontend/locales/en.json"
-import frFR from "../../frontend/locales/fr-FR.json"
+import en from "../../locales/en.json"
+import frFR from "../../locales/fr-FR.json"
 
 export async function initializeI18N() {
   await i18next.init({
