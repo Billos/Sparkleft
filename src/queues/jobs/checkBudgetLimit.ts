@@ -81,8 +81,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
       await BudgetsService.updateBudgetLimit({ client, path: { id: budget.id, limitId: existingLimits.id }, body })
     }
 
-    const title = "Warning"
-    const message = await renderTemplate(TemplateName.BudgetOverspent, {
+    const { title, content } = await renderTemplate(TemplateName.BudgetOverspent, {
       budgetName: budget.attributes.name,
       spent,
       limit,
@@ -90,7 +89,7 @@ export class CheckBudgetLimitJob extends BudgetJob {
     })
     const notifier = await getNotifier()
     if (notifier) {
-      await notifier.sendMessage(title, message)
+      await notifier.sendMessage(title, content)
     }
   }
 

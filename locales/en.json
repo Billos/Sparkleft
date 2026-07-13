@@ -52,5 +52,10 @@
   "notif_autoimport_imported_expenses": "Imported {{ diffExpenses }} expenses.",
   "notif_autoimport_imported_deposits": "Imported {{ diffDeposits }} deposits.",
   "notif_autoimport_imported_transfers": "Imported {{ diffTransfers }} transfers.",
+  "notif_title_auto_import": "Auto Import",
+  "notif_title_budget_overspent": "Warning",
+  "notif_title_budget_sumup": "Budgets Sum Up",
+  "notif_title_unbudgeted_transaction": "Unbudgeted Transaction",
+  "notif_title_uncategorized_transaction": "Uncategorized Transaction",
   "precolon": ""
 }

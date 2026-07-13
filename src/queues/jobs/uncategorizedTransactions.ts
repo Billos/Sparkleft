@@ -90,7 +90,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       logger.warn("No notifier configured, skipping message creation for transaction %s", id)
       return
     }
-    const msg = await renderTemplate(TemplateName.UncategorizedTransaction, {
+    const { title, content } = await renderTemplate(TemplateName.UncategorizedTransaction, {
       transaction,
       transactionId: id,
       categories,
@@ -106,7 +106,7 @@ export class UncategorizedTransactionsJob extends TransactionJob {
       logger.info("Category message defined but not found in notifier for transaction %s", id)
     }
 
-    const newMessageId = await notifier.sendMessage("Uncategorized Transaction", msg)
+    const newMessageId = await notifier.sendMessage(title, content)
     await bindTransactionToNotification(id, "CategoryMessageId", newMessageId)
   }
 

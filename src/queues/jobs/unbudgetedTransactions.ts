@@ -62,7 +62,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
     const { data: allBudgets } = await BudgetsService.listBudget({ client, query: { page: 1, limit: 50 } })
     const budgets = allBudgets.filter(({ attributes: { name } }) => name !== billsBudgetName)
 
-    const msg = await renderTemplate(TemplateName.UnbudgetedTransaction, {
+    const { title, content } = await renderTemplate(TemplateName.UnbudgetedTransaction, {
       transaction,
       transactionId: id,
       budgets,
@@ -82,7 +82,7 @@ export class UnbudgetedTransactionsJob extends TransactionJob {
       }
       logger.info("Budget message defined but not found in notifier for transaction %s", id)
     }
-    const newMessageId = await notifier.sendMessage("Unbudgeted Transaction", msg)
+    const newMessageId = await notifier.sendMessage(title, content)
     await bindTransactionToNotification(id, "BudgetMessageId", newMessageId)
   }
 
