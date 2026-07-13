@@ -69,6 +69,6 @@ export class BudgetSumUpJob extends SimpleJob {
     const accountBalance = currentAccount.data.attributes.current_balance || "0"
     const accountCurrency = currentAccount.data.attributes.currency_symbol || "€"
 
-    await this.sendUniqueNotification("Budgets Sum Up", TemplateName.BudgetSumUp, { insights, accountBalance, accountCurrency })
+    await this.sendUniqueNotification(TemplateName.BudgetSumUp, { insights, accountBalance, accountCurrency })
   }
 }

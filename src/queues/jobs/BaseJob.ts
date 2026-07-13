@@ -88,7 +88,7 @@ export abstract class BaseJob {
     }
   }
 
-  async sendUniqueNotification<T extends TemplateName>(title: string, template: T, data: TemplateContextMap[T]): Promise<void> {
+  async sendUniqueNotification<T extends TemplateName>(template: T, data: TemplateContextMap[T]): Promise<void> {
     if (!this.uniqueNotificationKey) {
       throw new Error("uniqueNotificationKey is not set for this job")
     }
@@ -107,8 +107,8 @@ export abstract class BaseJob {
       }
     }
 
-    const msg = await renderTemplate(template, data)
-    const notificationId = await notifier.sendMessage(title, msg)
+    const { title, content } = await renderTemplate(template, data)
+    const notificationId = await notifier.sendMessage(title, content)
     await redis.set(this.uniqueNotificationKey, notificationId)
   }
 }

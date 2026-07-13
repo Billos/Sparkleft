@@ -96,7 +96,7 @@ export class AutoImportJob extends SimpleJob {
 
     const assetAccount = await AccountsService.getAccount({ client, path: { id: currentAccountId } })
 
-    await this.sendUniqueNotification("Auto Import", TemplateName.AutoImport, {
+    await this.sendUniqueNotification(TemplateName.AutoImport, {
       diffExpenses,
       diffDeposits,
       diffTransfers,

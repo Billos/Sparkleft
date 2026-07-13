@@ -149,9 +149,25 @@ njkEnv.addFilter("i18n", function (this: { ctx: object }, str: string) {
   return njkEnv.renderString(translated, this.ctx)
 })
 
-export async function renderTemplate<T extends TemplateName>(templateName: T, context: TemplateContextMap[T]): Promise<string> {
+// Maps each template to its i18next title translation key.
+const templateTitleKeys: Record<TemplateName, string> = {
+  [TemplateName.AutoImport]: "notif_title_auto_import",
+  [TemplateName.BudgetOverspent]: "notif_title_budget_overspent",
+  [TemplateName.BudgetSumUp]: "notif_title_budget_sumup",
+  [TemplateName.UnbudgetedTransaction]: "notif_title_unbudgeted_transaction",
+  [TemplateName.UncategorizedTransaction]: "notif_title_uncategorized_transaction",
+}
+
+export type RenderedTemplate = {
+  title: string
+  content: string
+}
+
+export async function renderTemplate<T extends TemplateName>(templateName: T, context: TemplateContextMap[T]): Promise<RenderedTemplate> {
   const locale = await DynamicConfig.get(VConfig.Locale)
 
   i18next.changeLanguage(locale || "en")
-  return njkEnv.render(templateName, context).trim()
+  const title = i18next.t(templateTitleKeys[templateName])
+  const content = njkEnv.render(templateName, context).trim()
+  return { title, content }
 }

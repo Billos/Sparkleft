@@ -41,7 +41,8 @@ describe("renderTemplate auto-import.njk", () => {
     })
 
     expect(DynamicConfig.get).toHaveBeenCalledWith(VConfig.Locale)
-    expect(result).toContain("http://sparkleft:3000/control?api_token=myapitoken")
+    expect(result.title).toBe("Auto Import")
+    expect(result.content).toContain("http://sparkleft:3000/control?api_token=myapitoken")
   })
 
   it("lists imported transfers when diffTransfers is positive", async () => {
@@ -62,8 +63,8 @@ describe("renderTemplate auto-import.njk", () => {
     })
 
     expect(DynamicConfig.get).toHaveBeenCalledWith(VConfig.Locale)
-    expect(result).toContain("Imported 1 transfers.")
-    expect(result).toContain("Savings")
+    expect(result.content).toContain("Imported 1 transfers.")
+    expect(result.content).toContain("Savings")
   })
 
   it("shows no transfers message when diffTransfers is zero", async () => {
@@ -79,6 +80,6 @@ describe("renderTemplate auto-import.njk", () => {
     })
 
     expect(DynamicConfig.get).toHaveBeenCalledWith(VConfig.Locale)
-    expect(result).toContain("No new transfers imported.")
+    expect(result.content).toContain("No new transfers imported.")
   })
 })
