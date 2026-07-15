@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import BlockContainer from "../molecules/BlockContainer.vue"
-import TextInput from "../molecules/TextInput.vue"
 import { Config } from "../../src/endpoints/config.ts"
+import TextInput from "../molecules/TextInput.vue"
 
 const props = defineProps<{
   config?: Config

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import ControlBlock from "./organisms/ControlBlock.vue"
-import SchedulesBlock from "./organisms/SchedulesBlock.vue"
-import RolesBlock from "./organisms/RolesBlock.vue"
-import CategoryBlock from "./organisms/CategoryBlock.vue"
-import AboutBlock from "./organisms/AboutBlock.vue"
-import NotifiersBlock from "./organisms/NotifiersBlock.vue"
 import { Config } from "../src/endpoints/config.ts"
+import AboutBlock from "./organisms/AboutBlock.vue"
+import CategoryBlock from "./organisms/CategoryBlock.vue"
+import ControlBlock from "./organisms/ControlBlock.vue"
 import CurrentAccountsBlock from "./organisms/CurrentAccountsBlock.vue"
+import NotifiersBlock from "./organisms/NotifiersBlock.vue"
+import RolesBlock from "./organisms/RolesBlock.vue"
+import SchedulesBlock from "./organisms/SchedulesBlock.vue"
 import UserLocaleBlock from "./organisms/UserLocaleBlock.vue"
 
 const config = ref<Config | undefined>()

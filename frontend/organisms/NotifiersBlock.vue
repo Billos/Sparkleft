@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import BlockContainer from "../molecules/BlockContainer.vue"
 import { Config } from "../../src/endpoints/config.ts"
 import { Notifiers } from "../../src/modules/notifiers/types.ts"
 import ActionButton from "../atoms/ActionButton.vue"
-import { Method } from "../types/method.ts"
+import BlockContainer from "../molecules/BlockContainer.vue"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
+import { Method } from "../types/method.ts"
 import GotifyBlock from "./GotifyBlock.vue"
 
 const props = defineProps<{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue"
+import { computed } from "vue"
 import ActionButton from "../atoms/ActionButton.vue"
 
 const props = defineProps<{

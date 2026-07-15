@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import BlockContainer from "../molecules/BlockContainer.vue"
-import LabeledValue from "../atoms/LabeledValue.vue"
 import { About } from "../../src/endpoints/config.ts"
+import LabeledValue from "../atoms/LabeledValue.vue"
+import BlockContainer from "../molecules/BlockContainer.vue"
 
 const props = defineProps<{ about?: About }>()
 </script>
