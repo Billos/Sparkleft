@@ -10,6 +10,12 @@ export function getStartOfCurrentMonth(): string {
   return start.toPlainDate().toString()
 }
 
+export function getTodayDate(): string {
+  const now = Temporal.Now.zonedDateTimeISO(env.timezone)
+  const today = now.startOfDay()
+  return today.toPlainDate().toString()
+}
+
 export function getEndOfCurrentMonth(): string {
   const now = Temporal.Now.zonedDateTimeISO(env.timezone)
   const end = now.with({ day: now.daysInMonth }).with({ hour: 23, minute: 59, second: 59, millisecond: 999 })

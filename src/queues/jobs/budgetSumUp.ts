@@ -2,7 +2,7 @@ import { AccountsService, BudgetsService } from "@billos/firefly-iii-sdk"
 
 import { client } from "../../client"
 import DynamicConfig, { AConfig, VConfig } from "../../modules/config/dynamic"
-import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "../../utils/date"
+import { getEndOfCurrentMonth, getStartOfCurrentMonth, getTodayDate } from "../../utils/date"
 import { TemplateName } from "../../utils/renderTemplate"
 import { BudgetSumUpData } from "../../utils/types/budgetSumUp"
 import { SimpleJob } from "./BaseJob"
@@ -69,6 +69,13 @@ export class BudgetSumUpJob extends SimpleJob {
     const accountBalance = currentAccount.data.attributes.current_balance || "0"
     const accountCurrency = currentAccount.data.attributes.currency_symbol || "€"
 
-    await this.sendUniqueNotification(TemplateName.BudgetSumUp, { insights, accountBalance, accountCurrency })
+    await this.sendUniqueNotification(TemplateName.BudgetSumUp, {
+      insights,
+      accountBalance,
+      accountCurrency,
+      remainingDays,
+      startDay: getTodayDate(),
+      endDay: end,
+    })
   }
 }
