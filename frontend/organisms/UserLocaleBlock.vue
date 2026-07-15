@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { Config } from "../../src/endpoints/config.ts"
+import ActionButton from "../atoms/ActionButton.vue"
 import BlockContainer from "../molecules/BlockContainer.vue"
 import ButtonList from "../molecules/ButtonList.vue"
-import ActionButton from "../atoms/ActionButton.vue"
-import { Method } from "../types/method.ts"
 import { blueishBg, greyBg } from "../types/btnBg.ts"
-import { Config } from "../../src/endpoints/config.ts"
+import { Method } from "../types/method.ts"
 
 const props = defineProps<{
   config?: Config

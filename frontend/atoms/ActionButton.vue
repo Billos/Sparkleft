@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import { Method } from "../types/method"
 import { activeBg, disabledBg, loadingBg } from "../types/btnBg"
+import { Method } from "../types/method"
 
 const {
   method = Method.POST,
