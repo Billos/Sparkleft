@@ -44,6 +44,9 @@ export type BudgetSumUpContext = {
   insights: BudgetSumUpData[]
   accountBalance: string
   accountCurrency: string
+  remainingDays: number
+  startDay: string
+  endDay: string
 }
 
 export type UnbudgetedTransactionContext = {

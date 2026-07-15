@@ -57,5 +57,6 @@
   "notif_title_budget_sumup": "Budgets Sum Up",
   "notif_title_unbudgeted_transaction": "Unbudgeted Transaction",
   "notif_title_uncategorized_transaction": "Uncategorized Transaction",
-  "precolon": ""
+  "precolon": "",
+  "days_left": "Days left"
 }
